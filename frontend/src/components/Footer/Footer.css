@@ -1,0 +1,44 @@
+.footerBar{
+    position: absolute;
+    left: 0;
+    right: 0;;
+    bottom: 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 24px;;
+    background: rgba(4, 48, 45, .98);
+    color: white;
+    z-index: 30;
+}
+
+.footerBtn{
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    border-radius: var(--radius);
+}
+
+.footerBtnText {
+    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.footerBtnIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.footerBtn:hover{
+    background: rgba(255,255,255,.14);
+}

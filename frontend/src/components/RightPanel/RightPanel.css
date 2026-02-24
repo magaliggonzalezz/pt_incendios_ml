@@ -1,0 +1,111 @@
+.rightPanel{
+    position: absolute;
+    top: 60px;
+    bottom: 60px;
+    right: 12px;
+    width: 280px;
+    z-index: 700;
+    transition: transform .2s ease;
+}
+
+.rightPanel.closed{ 
+    transform: translateX(calc(280px + 12px)); 
+}
+
+.rightPanel .toggleBtn{
+    position: absolute;
+    top: 1px;
+    left: -44px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    background: var(--panel);
+    box-shadow: var(--shadow);
+}
+
+.kpiBody{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kpiActions{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto;
+}
+
+.kpiCard{
+    background: var(--bg);
+    color: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 12px;
+    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.kpiHeader{
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.kpiHeaderIcon{
+    font-size: 16px;
+    line-height: 1;
+}
+
+.kpiBox{
+    background: var(--right-boxes);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.kpiLabel{
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 400;
+    opacity: 1;
+    margin-bottom: 6px;
+}
+
+.kpiValue{
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.kpiCard .primaryBtn{
+    width: 100%;
+    height: 36px;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    margin-top: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
+}
+
+.kpiCard .secondaryBtn{
+    width: 100%;
+    height: 36px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,.20);
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    margin-top: 8px;
+    background: #00786F;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);   
+}

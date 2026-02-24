@@ -1,0 +1,35 @@
+.appHeader{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    background: rgba(4, 48, 45, .92);
+    z-index: 30;
+}
+
+.appHeaderTitleRow{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 28px;
+}
+
+.appHeaderIcon{
+    width: 25px;
+    height: 25px;
+    display: block;
+    flex: 0 0 28px;
+}
+
+.appHeaderTitle{
+    color: #FFFFFF;
+    font-family: Arimo, system-ui, Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    white-space: nowrap;
+}
