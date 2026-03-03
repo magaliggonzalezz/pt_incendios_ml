@@ -1,6 +1,6 @@
-// src/components/Modals/SourcesModal/SourcesModal.jsx
 import "./SourcesModal.css";
-import { X, ExternalLink } from "lucide-react";
+import ModalShell from "./ModalShell";
+import { ExternalLink } from "lucide-react";
 
 const SOURCES = [
     {
@@ -31,31 +31,19 @@ const SOURCES = [
 ];
 
 export default function SourcesModal({ open, onClose }) {
-    if (!open) return null;
-
-    const onBackdropMouseDown = (e) => {
-        // Cierra solo si das click en el backdrop
-        if (e.target === e.currentTarget) onClose?.();
-    };
-
     return (
-        <div className="smBackdrop" onMouseDown={onBackdropMouseDown}>
-            <div className="smModal" role="dialog" aria-modal="true" aria-label="Fuentes de Datos">
-                <div className="smHeader">
-                    <div className="smHeaderText">
-                        <div className="smTitleRow">
-                            <h2 className="smTitle">Fuentes de Datos</h2>
-                        </div>
-                        <p className="smSubtitle">
-                            Esta aplicación web integra información de múltiples fuentes oficiales listadas a continuación:
-                        </p>
-                    </div>
-                    <button className="smCloseBtn" type="button" onClick={onClose} aria-label="Cerrar">
-                        <X className="smCloseIcon" aria-hidden="true" />
-                    </button>
-                </div>
-
-                <div className="smList">
+        <ModalShell 
+        open={open} 
+        onClose={onClose} 
+        title="Fuentes de datos" 
+        width={550}
+        allowOverlayClose={true}
+        footer={null}
+        >
+            <p className="smSubtitle">
+                Esta aplicación web integra información de múltiples fuentes oficiales listadas a continuación:
+            </p>
+            <div className="smList">
                 {SOURCES.map((s) => (
                     <a
                     key={s.name}
@@ -64,16 +52,15 @@ export default function SourcesModal({ open, onClose }) {
                     target="_blank"
                     rel="noreferrer"
                     >
-                    <div className="smCardText">
-                        <div className="smCardTitle">{s.name}</div>
-                        <div className="smCardSub">{s.subtitle}</div>
-                    </div>
+                        <div className="smCardText">
+                            <div className="smCardTitle">{s.name}</div>
+                            <div className="smCardSub">{s.subtitle}</div>
+                        </div>
 
-                    <ExternalLink className="smExtIcon" aria-hidden="true" />
+                        <ExternalLink className="smExtIcon" aria-hidden="true" />
                     </a>
                 ))}
-                </div>
             </div>
-        </div>
+        </ModalShell>
     );
 }

@@ -15,7 +15,7 @@ export default function Footer() {
             onClick={() => setOpenSources(true)}
             aria-label="Ver fuentes de datos"
             > 
-                <span className="footerBtnText">Ver Fuentes de Datos</span>
+                <span className="footerBtnText">Ver fuentes de datos</span>
                 <Database className="footerBtnIcon" aria-hidden="true" />
             </button>
         </footer>
