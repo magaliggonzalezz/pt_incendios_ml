@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import dns from "node:dns";
+
 import { env } from "./config/env.js";
 import { connectMongo } from "./data/database/mongo.js";
 import incendiosRoutes from "./presentation/routes/incendios.routes.js";
@@ -10,6 +12,9 @@ import sesionesAnalisisRoutes from "./presentation/routes/sesionesAnalisis.route
 import ndviRoutes from "./presentation/routes/ndvi.routes.js";
 import datasetsRoutes from "./presentation/routes/datasets.routes.js";
 import integracionDatasetRoutes from "./presentation/routes/integracionDataset.routes.js";
+
+// Forzar DNS públicos para resolver correctamente MongoDB Atlas SRV
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const app = express();
 
