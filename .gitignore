@@ -47,3 +47,6 @@ __pycache__/
 venv/
 env/
 .ipynb_checkpoints/
+
+.env
+backend/api-rest/.env
