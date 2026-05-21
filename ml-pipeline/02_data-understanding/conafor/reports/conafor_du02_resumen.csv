@@ -1,0 +1,19 @@
+﻿fuente,grupo_fuente,formato,ruta,tipo_geometria,registros,columnas,campos_fecha,campos_temporal_anual,campos_geograficos,campos_identificador,campos_categoricos,campos_numericos,campos_texto_libre,campos_vacios
+2025_Incendios_forestales,csv_evento,csv,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\2025_Incendios_forestales.csv,,7016,74,2,1,6,0,19,45,1,0
+estadisticasIncendiosForestales2015-2024,excel_evento,xlsx,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\estadisticasIncendiosForestales2015-2024.xlsx,,71089,37,2,1,8,5,13,8,0,0
+Historico_IncendiosForestales_1970-2024,historico_agregado_1970_2024,xlsx,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\Historico_IncendiosForestales_1970-2024.xlsx,,1760,5,0,1,0,0,2,2,0,0
+historico_incendios_activos_2001-2025,historico_shp_evento_multianual,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\historico_incendios_2001-2025\historico_incendios_activos_2001-2025.shp,Point,127333,30,2,0,2,2,10,14,0,0
+incendios_2010,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2010\incendios_2010.shp,Polygon,311,22,2,1,0,2,9,8,0,0
+incendios_2011,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2011\incendios_2011.shp,"Polygon, MultiPolygon",343,21,2,0,0,2,8,9,0,0
+incendios_2012,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2012\incendios_2012.shp,"Polygon, MultiPolygon",224,23,2,0,0,2,7,12,0,0
+incendios_2013,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2013\incendios_2013.shp,"Polygon, MultiPolygon",552,22,2,1,0,2,9,8,0,0
+incendios_2014,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2014\incendios_2014.shp,"Polygon, MultiPolygon",628,22,2,1,0,2,8,9,0,0
+incendios_2015,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2015\incendios_2015.shp,"Polygon, MultiPolygon",1105,23,2,0,0,0,11,9,1,0
+incendios_2016,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2016\incendios_2016.shp,"Polygon, MultiPolygon",3244,22,2,0,0,2,9,9,0,0
+incendios_2017,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2017\incendios_2017.shp,"Polygon, MultiPolygon",4545,22,2,0,0,2,9,9,0,0
+incendios_2018,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2018\incendios_2018.shp,"Polygon, MultiPolygon",3416,22,2,0,0,2,9,9,0,0
+incendios_2019,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2019\incendios_2019.shp,"Polygon, MultiPolygon",4265,22,2,0,0,2,9,9,0,0
+incendios_2020,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2020\incendios_2020.shp,"Polygon, MultiPolygon",5778,20,2,0,0,2,8,8,0,0
+incendios_2021,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2021\incendios_2021.shp,"Polygon, MultiPolygon",7272,20,2,0,0,2,8,8,0,0
+incendios_2022,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2022\incendios_2022.shp,"Polygon, MultiPolygon",6718,15,2,0,0,2,8,3,0,0
+incendios_2023,serie_anual_shp_evento,shp,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\conafor\incendios_2023\incendios_2023.shp,"Polygon, MultiPolygon",7513,15,2,0,0,2,8,3,0,0

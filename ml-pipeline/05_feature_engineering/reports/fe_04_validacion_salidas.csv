@@ -1,0 +1,27 @@
+﻿dataset,validacion,estatus,detalle,valor
+fe_municipio_dia_matriz,existencia_archivo,OK,El archivo existe.,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\05_feature_engineering\datasets\fe_municipio_dia_matriz.csv
+fe_municipio_dia_matriz,numero_columnas,OK,Número de columnas detectadas.,244
+fe_municipio_dia_matriz,columnas_duplicadas_por_nombre,OK,No hay nombres de columnas duplicados.,0
+fe_municipio_dia_matriz,columnas_requeridas,OK,Todas las columnas requeridas están presentes.,17
+fe_municipio_dia_matriz,columnas_excluidas_por_decision_metodologica,OK,No están presentes columnas excluidas metodológicamente.,0
+fe_municipio_dia_matriz,conteo_filas_vs_base_integracion,OK,La matriz FE conserva el mismo número de filas que la base de Integration.,11154221
+fe_municipio_dia_matriz,filas_totales,OK,El dataset contiene filas.,11154221
+fe_municipio_dia_matriz,llaves_espaciales_nulas,OK,No hay llaves espaciales nulas.,0
+fe_municipio_dia_matriz,fechas_nulas_o_invalidas,OK,No hay fechas nulas o inválidas.,0
+fe_municipio_dia_matriz,fechas_fuera_periodo,OK,No hay fechas fuera del periodo 2001-2025.,0
+fe_municipio_dia_matriz,duplicados_llave_espacio_temporal,OK,"No hay duplicados por llave ['cvegeo', 'fecha'].",0
+fe_municipio_dia_matriz,columnas_totalmente_nulas,OK,No hay columnas totalmente nulas.,0
+fe_municipio_dia_matriz,columnas_constantes,OK,No hay columnas constantes.,0
+fe_entidad_dia_matriz,existencia_archivo,OK,El archivo existe.,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\05_feature_engineering\datasets\fe_entidad_dia_matriz.csv
+fe_entidad_dia_matriz,numero_columnas,OK,Número de columnas detectadas.,334
+fe_entidad_dia_matriz,columnas_duplicadas_por_nombre,OK,No hay nombres de columnas duplicados.,0
+fe_entidad_dia_matriz,columnas_requeridas,OK,Todas las columnas requeridas están presentes.,14
+fe_entidad_dia_matriz,columnas_excluidas_por_decision_metodologica,OK,No están presentes columnas excluidas metodológicamente.,0
+fe_entidad_dia_matriz,conteo_filas_vs_base_integracion,OK,La matriz FE conserva el mismo número de filas que la base de Integration.,292146
+fe_entidad_dia_matriz,filas_totales,OK,El dataset contiene filas.,292146
+fe_entidad_dia_matriz,llaves_espaciales_nulas,OK,No hay llaves espaciales nulas.,0
+fe_entidad_dia_matriz,fechas_nulas_o_invalidas,OK,No hay fechas nulas o inválidas.,0
+fe_entidad_dia_matriz,fechas_fuera_periodo,OK,No hay fechas fuera del periodo 2001-2025.,0
+fe_entidad_dia_matriz,duplicados_llave_espacio_temporal,OK,"No hay duplicados por llave ['cve_ent', 'fecha'].",0
+fe_entidad_dia_matriz,columnas_totalmente_nulas,OK,No hay columnas totalmente nulas.,0
+fe_entidad_dia_matriz,columnas_constantes,OK,No hay columnas constantes.,0

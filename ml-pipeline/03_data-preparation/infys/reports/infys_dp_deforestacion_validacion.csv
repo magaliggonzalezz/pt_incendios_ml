@@ -1,0 +1,4 @@
+﻿dataset,archivo_origen,hoja_origen,filas_leidas,columnas_leidas,filas_finales,columnas_finales,filas_eliminadas,anio_min,anio_max,anios_distintos,anios_fuera_periodo,nulos_clave,valores_numericos_nulos,valores_numericos_negativos,duplicados_exactos_finales,duplicados_por_clave,superficie_total_ha,estado_validacion,observaciones,max_diferencia_abs_ha,anios_con_diferencia_mayor_0_01ha
+infys_deforestacion_superficie_nacional_limpio,DeforestacionNacional_2024.xlsx,SuperficieDeforestadaNacional,840,4,840,7,0,2001,2024,24,0,0,0,0,0,0,4885244.916645311,ok,,,
+infys_deforestacion_incertidumbre_nacional_limpio,DeforestacionNacional_2024.xlsx,IncertidumbreNacional,24,6,24,9,0,2001,2024,24,0,0,0,0,0,0,4885244.91664531,ok,,,
+consistencia_superficie_vs_incertidumbre,DeforestacionNacional_2024.xlsx,SuperficieDeforestadaNacional | IncertidumbreNacional,24,4,24,4,0,2001,2024,24,0,0,0,0,0,0,4885244.916645311,ok,,5.820766091346741e-10,0.0

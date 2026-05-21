@@ -1,0 +1,405 @@
+﻿anio,clave_incendio,estado,municipio,cve_ent,cve_mun,fecha_inicio,fecha_termino,latitud,longitud,estado_integracion,clasificacion_match,flag_error_bloqueante,flag_advertencia,flag_apto_ml_espacial,flag_apto_agregacion_municipal,flag_apto_variables_duracion,motivos_qc
+2017,17-07-0001,Chiapas,Arriaga,07,009,2016-12-30,2017-01-01,16.353472222222223,-94.0286111111111,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2016,16-07-0002,Chiapas,Villaflores,07,108,2015-12-31,2016-01-02,16.20613888888889,-93.51030555555556,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2025,25-08-0002,Chihuahua,Guachochi,08,027,2024-12-30,2025-01-04,27.07111111111111,-107.40555555555557,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2025,25-08-0001,Chihuahua,Guadalupe Y Calvo,08,029,2024-12-20,2025-01-04,26.016111111111112,-107.01388888888889,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2025,25-08-0007,Chihuahua,Guadalupe Y Calvo,08,029,2024-12-30,2025-01-02,26.19861111111112,-106.62638888888888,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2017,17-12-0001,Guerrero,Atenango Del Río,12,008,2016-12-29,2017-01-01,18.164655555555555,-98.908725,both,match_consistente_medio,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2021,21-15-0001,México,Amecameca,15,009,2020-12-31,2021-01-01,19.11200833333333,-98.64048055555556,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2017,17-20-0001,Oaxaca,Magdalena Tequisistlán,20,052,2016-12-27,2017-01-04,16.184055555555556,-95.69869444444444,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2017,17-20-0003,Oaxaca,Putla Villa De Guerrero,20,073,2016-12-31,2017-01-02,17.000555555555554,-98.00722222222224,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2017,17-20-0002,Oaxaca,San Carlos Yautepec,20,125,2016-12-30,2017-01-05,16.141333333333332,-96.024,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2024,24-20-0001,Oaxaca,San Pedro Tapanatepec,20,327,2023-12-31,2024-01-07,16.2517167,-94.0491222,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2017,17-20-0114,Oaxaca,Santiago Matatlán,20,475,2016-12-27,2017-01-04,16.830544444444445,-96.36844722222222,both,match_debil,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2022,22-21-0002,Puebla,Ahuacatlán,21,006,2021-12-31,2022-01-03,20.02175,-97.84477777777778,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2022,22-21-0001,Puebla,Tlachichuca,21,179,2021-12-31,2022-01-01,19.06925,-97.28069444444444,both,match_consistente_alto,False,True,True,True,True,qc_anio_fecha_inicio_diferente
+2008,08-01-0016,Aguascalientes,Aguascalientes Y Jose Maria,01,,2008-04-13,2008-04-18,21.8824005,-102.4219971,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-01-0017,Aguascalientes,Aguascalientes Y Jose Maria,01,,2008-04-20,2008-04-23,21.8346004,-102.387001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-02-0307,Baja California,Ensenada,02,001,2005-09-30,2005-09-29,31.9916,-116.7460022,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2014,06-02-0023,Baja California,Ensenada,02,001,2014-02-11,2006-02-13,31.3334999,-115.8610001,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-02-0104,Baja California,Tecate,02,003,2008-07-16,2008-07-08,32.5382996,-116.3720016,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-04-0017,Campeche,Escárcega,04,009,2008-05-28,2008-05-05,18.3374004,-90.4326019,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2013,13-07-0090,Chiapas,Belisario Dominguez,07,,2013-03-05,2013-03-06,16.5340004,-94.191803,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-07-0089,Chiapas,Belisario Dominguez,07,,2013-03-07,2013-03-08,16.5489998,-94.1975021,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-07-0407,Chiapas,Belisario Dominguez,07,,2013-05-21,2013-05-24,16.6856003,-94.1706009,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2012,12-07-0192,Chiapas,Belisario Domínguez,07,,2012-03-09,2012-03-13,16.5030994,-94.1520996,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2012,12-07-0050,Chiapas,Belisario Domínguez,07,,2012-03-19,2012-03-20,16.5459003,-94.1927032,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-07-0053,Chiapas,Cintalapa,07,017,2007-03-27,2007-03-02,16.0,-93.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-07-0044,Chiapas,Cintalapa,07,017,2007-03-28,2007-03-01,16.0,-92.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-07-0358,Chiapas,Cintalapa,07,017,2007-05-16,2007-05-13,26.0216007,-106.887001,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-07-0094,Chiapas,Huixtla,07,040,2007-03-18,2007-03-16,17.0928001,-93.0233002,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-07-0215,Chiapas,La Concordia/Chicomuselo,07,,2008-03-31,2008-04-08,16.0,-92.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-07-0256,Chiapas,San Juan Chamula,07,,2007-04-27,2007-04-27,17.0,-94.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-07-0414,Chiapas,San Juan Chamula,07,,2007-05-24,2007-05-25,17.0,-93.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-07-0041,Chiapas,Villa Corzo,07,107,2007-02-26,2007-01-02,16.0,-93.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-07-0096,Chiapas,Villa De Acala,07,,2008-03-15,2008-03-16,16.0,-93.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-08-0056,Chihuahua,Balleza Y Guachochi,08,,2005-04-13,2005-04-13,27.0475006,-106.9629974,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-08-0550,Chihuahua,Bocoyna,08,009,2008-05-06,2008-04-28,27.6975002,-107.5859985,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-08-0250,Chihuahua,Bocoyna,08,009,2008-06-21,2008-04-21,28.0142002,-107.6050034,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-08-0155,Chihuahua,Villa Coronado,08,,2006-03-15,2006-03-16,26.4932995,-105.3539963,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-08-0147,Chihuahua,Álamos y Milpillas,08,,2007-04-21,2007-04-25,27.3689003,-108.6780014,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-05-0150,Coahuila De Zaragoza,Acuña,05,002,2008-06-15,2008-06-11,29.3167,-102.1669998,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-05-0151,Coahuila De Zaragoza,Acuña,05,002,2008-06-15,2008-06-11,28.8999996,-102.4000015,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-05-0149,Coahuila De Zaragoza,Múzquiz,05,020,2008-06-14,2008-06-11,21.0,-101.8499985,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-05-0111,Coahuila De Zaragoza,Nadadores Y Ocampo,05,,2008-04-19,2008-04-25,27.3500004,-101.9000015,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-05-0019,Coahuila De Zaragoza,Ocampo,05,023,2007-04-05,2007-01-07,29.0,-102.5999985,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-05-0036,Coahuila De Zaragoza,Saltillo,05,030,2006-03-02,2006-03-01,25.4139004,-100.9110031,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0073,Durango,Canatlán,10,001,2008-04-21,2005-04-25,24.6142006,-105.1070023,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0119,Durango,Durango,10,005,2008-05-28,2008-05-01,24.1333008,-105.2080002,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-10-0007,Durango,Durango,10,005,2009-04-25,2009-02-13,24.1816998,-104.7310028,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0029,Durango,Pueblo Nuevo,10,023,2008-03-02,2008-02-23,23.7269001,-105.5839996,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0108,Durango,Pueblo Nuevo,10,023,2008-05-23,2008-05-02,23.5139008,-105.4570007,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0090,Durango,Pueblo Nuevo,10,023,2008-05-30,2008-05-02,23.3908005,-104.8450012,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-10-0132,Durango,San Dimas,10,026,2009-05-07,2009-05-06,24.4253006,-105.848999,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-10-0126,Durango,San Dimas,10,026,2009-06-26,2009-04-26,24.4335995,-105.7829971,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0069,Durango,"Súchil, Vicente Guerrero",10,,2008-04-19,2008-04-21,23.6674995,-103.8150024,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-10-0060,Durango,Tamazula,10,034,2005-04-16,2005-04-06,25.4130993,-106.9909973,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-10-0086,Durango,Tepehuanes,10,035,2008-04-27,2007-04-27,25.2402992,-105.8939972,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-11-0001,Guanajuato,Allende,11,,2006-01-15,2006-01-17,20.8225002,-100.7460022,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-11-0013,Guanajuato,Allende,11,,2006-04-14,2006-04-14,20.9610996,-100.7020035,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-11-0001,Guanajuato,Guanajuato,11,015,2005-03-02,2005-02-02,21.9832993,-102.3330002,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-11-0005,Guanajuato,San Felipe,11,030,2005-03-25,2005-03-23,20.4549999,-100.6910019,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-12-0247,Guerrero,Axcapulco,12,,2008-06-01,2008-06-03,17.1133003,-99.6611023,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-12-0125,Guerrero,Chilpancingo de los Bravo,12,029,2006-04-30,2006-04-01,17.5046997,-99.5616989,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-12-0177,Guerrero,Chilpancingo de los Bravo,12,029,2008-04-30,2008-04-01,17.2705994,-99.4682999,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-12-0103,Guerrero,Jose Azueta,12,,2008-04-03,2008-04-07,18.0132999,-101.1940002,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-12-0115,Guerrero,Jose Azueta,12,,2008-04-08,2008-04-12,17.9902992,-101.2109985,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-12-0089,Guerrero,Metlatónoc,12,043,2005-04-22,2005-04-15,17.0960999,-98.5594025,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-12-0092,Guerrero,Tepetixtla,12,,2007-04-15,2007-04-15,17.3288994,-100.1029968,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-12-0215,Guerrero,Tlapa De Comonfort,12,066,2009-05-29,2009-05-26,17.5193005,-98.9072037,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-12-0030,Guerrero,Tlatlauquitepec,12,,2005-03-23,2005-03-23,17.4897003,-99.8394012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-13-0230,Hidalgo,Metzquititlán,13,,2008-04-20,2008-04-20,20.5783997,-98.5254974,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-13-0068,Hidalgo,Tlaxiaca,13,,2008-02-28,2008-02-28,20.1618004,-98.7304001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-13-0221,Hidalgo,Tlaxiaca,13,,2009-02-27,2009-02-27,20.1336994,-98.8151016,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-13-0222,Hidalgo,Tlaxiaca,13,,2009-02-27,2009-02-28,20.1324005,-98.8234024,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-14-0105,Jalisco,Autlan De Navarro Y Casimiro Castillo,14,,2007-04-16,2007-04-18,19.6905994,-104.4089966,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0647,Jalisco,Autlan Y Cuautitlan,14,,2005-05-26,2008-05-30,19.5699997,-104.1760025,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0576,Jalisco,Autlan Y El Grullo,14,,2005-05-24,2005-05-28,19.7985992,-104.3040009,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0561,Jalisco,Cabo Corrientes Y Tomatlan,14,,2005-05-21,2005-05-22,20.3024998,-105.2470016,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0355,Jalisco,Casimiro Castillo,14,021,2005-05-04,2005-04-06,19.7982998,-104.5199966,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-14-0553,Jalisco,Cuautitlan,14,027,2005-05-18,2005-05-17,19.5125008,-104.2559967,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-14-0630,Jalisco,Cuautla Y Atengo,14,,2005-06-04,2005-06-04,20.1786003,-104.3180008,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-14-0329,Jalisco,Manuel M. Dieguez,14,,2006-04-29,2006-04-30,19.5550003,-102.8199997,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0117,Jalisco,Mezquitic,14,061,2005-04-07,2005-03-08,20.1203003,-103.8539963,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-14-0342,Jalisco,San Juanito,14,,2008-04-26,2008-04-27,20.75,-103.9670029,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0366,Jalisco,San Juanito,14,,2008-04-30,2008-05-01,20.7880993,-103.9660034,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0367,Jalisco,San Juanito,14,,2008-05-02,2008-05-03,20.8027992,-103.9309998,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0368,Jalisco,San Juanito,14,,2008-05-03,2008-05-03,20.8097,-103.9639969,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0412,Jalisco,San Juanito,14,,2008-05-11,2008-05-12,20.8274994,-103.9029999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0438,Jalisco,San Juanito,14,,2008-05-12,2008-05-12,20.8164005,-103.9100037,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0536,Jalisco,San Juanito,14,,2008-05-23,2008-05-24,20.8061008,-103.901001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0564,Jalisco,San Juanito,14,,2008-05-31,2008-05-31,20.7922001,-103.9029999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-14-0590,Jalisco,San Juanito,14,,2008-06-06,2008-06-06,20.8031006,-103.9029999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0550,Jalisco,San Martin De Bolaños,14,076,2005-05-17,2005-05-16,21.6042004,-103.8860016,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-14-0004,Jalisco,Santa Maria De Los Angeles,14,081,2005-01-28,2005-01-18,22.2322006,-103.1110001,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-14-0586,Jalisco,Tecolotlan Y Cocula,14,,2006-06-07,2006-06-08,20.3064003,-103.9349976,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-14-0159,Jalisco,Tecolotlan Y Tanamaxtlan,14,,2006-04-10,2006-04-10,20.1977997,-104.1060028,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-14-0403,Jalisco,Tomatlan Y Talpa De Allende,14,,2007-05-26,2007-05-27,20.3547001,-105.1060028,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0563,Jalisco,Tonaya,14,102,2005-05-22,2005-05-21,19.8069,-103.9990005,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-14-0150,Jalisco,Zapoltitic,14,,2005-04-09,2005-04-09,19.6005993,-103.401001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0114,Jalisco,Zapopan,14,120,2005-03-04,2003-03-04,20.7763996,-103.322998,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-14-0705,Jalisco,Zapotitlan De Badillo,14,,2005-06-14,2005-06-14,19.6082993,-103.8010025,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-14-0151,Jalisco,Zapotitlan De Badillo,14,,2006-04-06,2006-04-07,19.4475002,-103.7350006,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-14-0564,Jalisco,Zapotlan El Grande,14,023,2005-05-23,2005-05-22,19.6721992,-103.5899963,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-16-0128,Michoacán De Ocampo,Charapan,16,021,2006-03-27,2006-03-23,19.6797009,-102.2180023,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-16-0278,Michoacán De Ocampo,Chilchota,16,025,2009-04-01,2009-01-01,19.8132992,-102.1600037,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-16-0366,Michoacán De Ocampo,Francisco J. Mujica,16,,2005-04-18,2005-04-18,19.1009998,-102.1050034,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-16-0175,Michoacán De Ocampo,San Juan Nuevo,16,,2007-04-05,2007-04-05,19.2458,-102.2190018,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-16-0192,Michoacán De Ocampo,San Juan Nuevo,16,,2007-04-08,2007-04-08,19.4839001,-101.9169998,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-16-0332,Michoacán De Ocampo,San Juan Nuevo,16,,2007-04-21,2007-04-22,19.6569004,-102.2180023,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-16-0784,Michoacán De Ocampo,San Juan Nuevo,16,,2007-06-02,2007-06-03,19.4799995,-102.9000015,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-16-0354,Michoacán De Ocampo,San Juan Nuevo,16,,2008-03-21,2008-03-21,19.4283009,-102.1340027,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-16-0755,Michoacán De Ocampo,San Juan Nuevo,16,,2008-04-24,2008-04-24,19.0,-102.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-16-0716,Michoacán De Ocampo,San Juan Nuevo,16,,2010-04-19,2010-04-19,19.4263992,-102.2170029,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-16-0717,Michoacán De Ocampo,San Juan Nuevo,16,,2010-05-06,2010-05-06,19.5485992,-102.2409973,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-16-0718,Michoacán De Ocampo,San Juan Nuevo,16,,2010-06-03,2010-06-04,19.3736,-102.2470016,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-16-0798,Michoacán De Ocampo,Tangancicuaro,16,085,2008-04-23,2008-04-19,20.0,-102.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-16-0169,Michoacán De Ocampo,Tingambato,16,090,2007-04-03,2007-04-02,19.6499996,-102.2170029,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-16-0849,Michoacán De Ocampo,Tuxpan,16,098,2006-05-10,2005-05-10,19.5296993,-100.5810013,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-16-0741,Michoacán De Ocampo,Villa Morelos,16,,2008-04-28,2008-04-28,20.0,-102.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-17-0214,Morelos,,17,,2008-06-04,2008-06-04,19.0464001,-99.3103027,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-15-0385,México,Santiago Tianguistenco,15,,2007-04-09,2007-04-09,19.7469006,-99.7997971,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-15-0735,México,Santo Tomas De Los Platanos,15,,2007-05-02,2007-05-03,18.9615993,-100.151001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-15-0090,México,Tlalnepantla,15,,2008-02-13,2008-02-13,19.5981007,-99.1707993,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0059,Nayarit,Samao,18,,2011-04-09,2011-04-09,21.2189007,-104.6689987,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0062,Nayarit,Samao,18,,2011-04-15,2011-04-15,21.1868992,-104.5709991,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0069,Nayarit,Samao,18,,2011-04-22,2011-04-22,21.3222008,-104.6780014,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0071,Nayarit,Samao,18,,2011-04-23,2011-04-23,21.3069,-104.6559982,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0073,Nayarit,Samao,18,,2011-04-23,2011-04-23,21.2831001,-104.5540009,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0075,Nayarit,Samao,18,,2011-04-25,2011-04-25,21.3113995,-104.6790009,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0078,Nayarit,Samao,18,,2011-04-27,2011-04-27,21.2318993,-104.5709991,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0102,Nayarit,Samao,18,,2011-05-11,2011-05-13,21.2394009,-104.5690002,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0103,Nayarit,Samao,18,,2011-05-13,2011-05-13,21.2877998,-104.5670013,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0106,Nayarit,Samao,18,,2011-05-13,2011-05-14,21.3250008,-104.7539978,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0104,Nayarit,Samao,18,,2011-05-14,2011-05-14,21.3764,-104.5810013,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0108,Nayarit,Samao,18,,2011-05-15,2011-05-15,21.2758007,-104.5429993,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0112,Nayarit,Samao,18,,2011-05-16,2011-05-16,21.2849998,-104.5070038,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0116,Nayarit,Samao,18,,2011-05-18,2011-05-18,21.3027992,-104.5360031,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-18-0117,Nayarit,Samao,18,,2011-05-18,2011-05-18,21.2264004,-104.6279984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0001,Nuevo León,Amealco De Bonfil,19,,2010-05-01,2010-05-01,20.0905991,-99.9385986,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0002,Nuevo León,Amealco De Bonfil,19,,2010-05-04,2010-05-04,20.0891991,-99.9385986,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0007,Nuevo León,Arroyo Seco,19,,2010-06-05,2010-06-06,21.3537998,-99.6104965,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0008,Nuevo León,Cadereyta De Montes,19,,2010-12-07,2010-12-07,20.7614002,-99.8321991,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0010,Nuevo León,Corregidora,19,,2010-11-11,2010-11-11,20.5153008,-100.413002,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0014,Nuevo León,El Marques,19,,2010-05-06,2010-05-06,20.5687008,-100.3499985,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0016,Nuevo León,El Marques,19,,2010-10-26,2010-10-26,20.6595993,-100.3619995,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0017,Nuevo León,El Marques,19,,2010-11-05,2010-11-05,20.6086998,-100.3099976,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0020,Nuevo León,El Marques,19,,2010-12-05,2010-12-05,20.5245991,-100.3209991,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0011,Nuevo León,Huimilpan,19,,2010-10-12,2010-10-13,20.3432007,-100.2939987,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0013,Nuevo León,Landa De Matamoros,19,,2010-01-01,2010-12-30,21.3055992,-99.1069031,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0021,Nuevo León,Pedro Escobedo,19,,2010-06-03,2010-06-03,20.5221004,-100.0699997,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0022,Nuevo León,Pedro Escobedo,19,,2010-12-15,2010-12-15,20.5319004,-100.0940018,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0006,Nuevo León,Pinal De Amoles,19,,2010-04-23,2010-04-23,21.1219006,-99.5503006,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0023,Nuevo León,Querétaro,19,,2010-10-23,2010-10-23,20.5629997,-100.3560028,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0025,Nuevo León,Querétaro,19,,2010-11-11,2010-11-11,20.5723,-100.3590012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0028,Nuevo León,San Juan Del Río,19,,2010-06-01,2010-06-01,20.3850994,-99.9264984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0029,Nuevo León,San Juan Del Río,19,,2010-12-22,2010-12-22,20.4113007,-100.0599976,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0032,Nuevo León,Tequisquiapan,19,,2010-06-03,2010-06-03,20.6112003,-99.9069977,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-22-0033,Nuevo León,Tequisquiapan,19,,2010-11-25,2010-11-25,20.6058006,-99.9100037,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0166,Oaxaca,Ayoquesco De Aldama,20,,2008-04-20,2008-04-21,16.6369991,-96.884201,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0041,Oaxaca,Ejutla De Crespo,20,,2008-02-14,2008-02-14,16.5918007,-96.8386993,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0008,Oaxaca,H. Cd. De Ejutla De Crespo,20,,2010-01-20,2010-01-24,16.5939007,-96.6138992,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-20-0113,Oaxaca,Inotepa Nacional,20,,2005-02-28,2005-02-28,19.4834995,-98.0449982,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0102,Oaxaca,La Compañía Y H. Cd. Ejutla De Crespo,20,,2008-03-27,2008-03-28,16.5988998,-96.9180984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2014,05-20-0283,Oaxaca,La Reforma Putla,20,,2014-06-01,2014-06-05,16.6665001,-97.9292984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2014,05-20-0285,Oaxaca,La Reforma Putla,20,,2014-06-04,2014-06-06,16.6849003,-97.8943024,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0146,Oaxaca,La Reforma Y Putla Villa De Guerrero,20,,2007-05-17,2007-05-19,16.6287003,-97.8992004,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0072,Oaxaca,La Trinidad Vista Hermosa Y Miahuatlan De Porfiri*,20,,2008-03-14,2008-03-14,16.2880993,-96.5923004,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0094,Oaxaca,Magdalena Apasco,20,,2013-03-16,2013-03-17,17.2339001,-96.8005981,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0112,Oaxaca,Magdalena Apasco,20,,2013-03-24,2013-03-24,17.2488995,-96.8091965,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0014,Oaxaca,Magdelena Apazco,20,,2006-02-04,2006-02-04,17.2112007,-96.8667984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0018,Oaxaca,Miahuatlan De Porfirio Diaz,20,,2007-03-02,2007-03-02,16.2500992,-96.6042023,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0065,Oaxaca,Miahuatlan De Porfirio Diaz,20,,2007-04-12,2007-04-13,16.2716999,-96.282402,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0196,Oaxaca,Miahuatlan De Porfirio Diaz,20,,2008-04-26,2008-04-26,16.4025993,-96.6429977,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-20-0067,Oaxaca,Miahuatlan De Porfirio Diaz,20,,2009-04-01,2009-04-03,16.2357998,-96.4913025,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0013,Oaxaca,Miahuatlan De Porfirio Díaz,20,,2010-05-06,2010-05-06,16.4729004,-96.717598,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0110,Oaxaca,Miahuatlán de Porfirio Díaz,20,,2013-03-23,2013-03-24,16.3932991,-96.6278,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0110,Oaxaca,Nativitas Coatlan,20,,2008-03-28,2008-04-03,16.7817001,-95.5650024,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0078,Oaxaca,Nuevo Zooquiapan,20,,2006-03-22,2006-03-22,17.2695999,-96.6361008,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0009,Oaxaca,San Andres Hauyapan,20,,2006-01-24,2006-01-24,17.1177998,-96.6578979,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0147,Oaxaca,San Andres Huayapan,20,,2008-04-11,2008-04-11,17.1693993,-96.6611023,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0187,Oaxaca,San Andres Huayapan,20,,2008-04-24,2008-04-24,17.0907993,-96.6595993,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0037,Oaxaca,"San Carlos Yautepec, San Bartolo Yautepec, Nejapa*",20,,2007-03-16,2007-03-24,16.406601,-96.0546036,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0082,Oaxaca,San Dionicio Ocotepec,20,,2006-03-29,2006-03-29,16.8106003,-96.4098969,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0067,Oaxaca,"San Felipe Guila, San Bartolome Quialana Y San Lu*",20,,2007-04-12,2007-04-15,16.8530998,-96.4978027,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0045,Oaxaca,San Felipe Tejalapa,20,,2006-03-04,2006-03-04,17.0359001,-96.9131012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-20-0008,Oaxaca,San Felipe Tejalapa,20,,2011-01-19,2011-01-19,17.1711998,-96.8444977,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-20-0122,Oaxaca,San Felipe Tejalapan,20,,2005-03-27,2005-03-27,17.6667995,-97.6607971,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0233,Oaxaca,San Felipe Tejalapan,20,,2006-05-16,2006-05-16,17.2022991,-96.2018967,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0005,Oaxaca,San Juan Lachao Nuevo,20,,2006-01-07,2006-01-08,16.1966991,-97.1240997,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2014,05-20-0179,Oaxaca,San Juan Lachao Nuevo,20,,2014-04-05,2014-04-05,16.5646,-97.6517029,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0007,Oaxaca,San Juan Mixtepec - Dto. 26,20,,2013-01-17,2013-01-19,17.3047009,-97.8296967,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-20-0679,Oaxaca,San Martin Cuevas (San Martin Duraznos),20,,2009-04-07,2009-04-10,17.1926994,-98.115303,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0358,Oaxaca,San Mateo Yucutindó,20,,2013-05-20,2013-05-22,16.6814003,-96.6080017,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0062,Oaxaca,San Miguel Chimalapas,20,,2007-04-11,2007-04-12,16.5417004,-94.1996994,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0054,Oaxaca,San Miguel Sola De Vega,20,,2007-04-04,2007-04-04,16.4701004,-97.1220016,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0208,Oaxaca,San Miguel Y Santa Maria Coatlan,20,,2006-04-30,2006-05-03,16.2117996,-96.7082977,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0079,Oaxaca,San Pedro Mixtepec - Dto. 22,20,,2013-03-03,2013-03-06,15.9893999,-97.1269989,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0137,Oaxaca,San Pedro Mixtepec - Dto. 22,20,,2013-04-02,2013-04-02,15.9376001,-96.1076965,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-20-0372,Oaxaca,San Pedro Mixtepec -Dto. 22 -,20,,2009-04-04,2009-04-05,15.9454002,-97.0167007,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-20-0373,Oaxaca,San Pedro Mixtepec -Dto. 22 -,20,,2009-04-21,2009-04-30,16.2110996,-96.1735001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-20-0374,Oaxaca,San Pedro Mixtepec -Dto. 22 -,20,,2009-04-22,2009-04-25,16.2294006,-96.2193985,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0104,Oaxaca,San Pedro Mixtepec -Dto. 22 -,20,,2010-05-31,2010-06-03,16.2164993,-96.2598038,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-20-0174,Oaxaca,San Pedro Mixtepec -Dto. 22 -,20,,2011-04-27,2011-04-29,16.2500992,-96.2773972,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0014,Oaxaca,San Pedro Topiltepec Teposc,20,,2007-02-26,2007-02-27,17.4365005,-97.3646011,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-20-0112,Oaxaca,San Pedro Tututepec,20,,2005-03-12,2005-03-12,16.0,-97.521698,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0053,Oaxaca,San Pedro Tututepec,20,,2006-03-08,2006-03-10,16.2187996,-95.5503998,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0255,Oaxaca,San Pedro Tututepec,20,,2008-05-16,2008-05-19,16.2178993,-97.5187988,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0213,Oaxaca,San Pedro Yosotato,20,,2010-04-13,2010-04-16,16.9652004,-97.7913971,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0075,Oaxaca,San Sebastian Sedas Y San Francisco Telixtlahuaca,20,,2007-04-15,2007-04-15,17.3262997,-96.9645996,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0214,Oaxaca,Santa Ana Miahuatlán,20,,2010-03-06,2010-03-06,16.2859001,-96.7022018,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0138,Oaxaca,Santa Gertrudi,20,,2010-05-14,2010-05-14,16.7936993,-96.8283997,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-20-0684,Oaxaca,Santa Ines Del Rio Zaragoza,20,,2009-05-29,2009-05-29,17.2884998,-97.0851974,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0113,Oaxaca,Santa Lucia Monte Verde,20,,2006-04-06,2006-04-08,16.9985008,-97.7024994,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0264,Oaxaca,Santa Maria Chimalapa,20,407,2008-05-24,2008-04-25,16.9655991,-94.8557968,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-20-0061,Oaxaca,Santa Maria Chimalapas,20,,2007-04-10,2007-04-14,16.8736,-94.6081009,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0063,Oaxaca,Santa Maria Chimalapas,20,,2007-04-11,2007-04-14,16.9344997,-94.5805969,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0111,Oaxaca,Santa Maria El Palmar Miahuatlan,20,,2008-03-31,2008-04-01,16.2497005,-96.4395981,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0175,Oaxaca,Santa Maria Quiegolani Y San Juan Ozolotepec,20,,2008-04-20,2008-04-25,16.2059002,-96.1414032,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0022,Oaxaca,Santa Maria Yocuhite,20,,2008-01-21,2008-01-22,17.0482006,-97.7911987,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0227,Oaxaca,Santiago Clavellinas,20,,2010-03-04,2010-03-04,16.9382992,-96.8975983,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0217,Oaxaca,Santiago Lapaguia(Cerro Negro),20,,2010-06-02,2010-06-04,16.1597004,-96.1054001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0052,Oaxaca,Santiago Yogana,20,,2006-03-07,2006-03-09,16.4290009,-96.8143997,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0021,Oaxaca,Santiago Yogana,20,,2007-03-03,2007-03-04,16.4113998,-96.8104019,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0219,Oaxaca,Santo Domingo Amatlán,20,,2010-04-17,2010-04-17,16.4666996,-96.7184982,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0180,Oaxaca,Santo Domingo Cacalotepec,20,,2007-06-17,2007-06-17,17.4216995,-96.4266968,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0153,Oaxaca,Santo Domingo Coatlan,20,,2006-04-16,2006-04-17,16.0991001,-96.9172974,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2014,13-20-0109,Oaxaca,Santo Domingo Tomaltepec,20,519,2014-03-23,2013-03-23,17.0606003,-96.6228027,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-20-0069,Oaxaca,Sola De Vega,20,,2008-03-13,2008-03-14,16.4428005,-97.0366974,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2011,11-20-0302,Oaxaca,Tehuantepec,20,,2011-05-03,2011-05-31,16.8857994,-95.5044022,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0207,Oaxaca,Teotitlan Del Valle Y Tlalixtac De Cabrera,20,,2008-05-01,2008-05-01,17.0478992,-96.5901031,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-20-0118,Oaxaca,Tepelmeme De Morelos,20,,2007-05-05,2007-05-11,17.9648991,-97.2149963,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0224,Oaxaca,Trinidad De Viguera,20,,2010-04-15,2010-04-15,17.1355,-96.7218018,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-20-0027,Oaxaca,Valdeflores,20,,2006-02-17,2006-02-17,16.7432003,-96.8159027,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0108,Oaxaca,Villa De Tututepec De Melchor Ocampo,20,,2010-05-06,2010-05-09,16.0895996,-97.5399017,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-20-0109,Oaxaca,Villa De Tututepec De Melchor Ocampo,20,,2010-05-17,2010-05-18,16.0312004,-97.7440033,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0063,Oaxaca,Villa Hidalgo,20,,2013-02-26,2013-02-27,17.2026005,-96.1784973,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2013,13-20-0219,Oaxaca,Villa de Tututepec de Melchor Ocampo,20,,2013-04-21,2013-04-21,16.1282997,-97.6085968,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-20-0020,Oaxaca,Zapotitlan Del Rio,20,,2008-01-18,2008-01-19,16.7073002,-97.6034012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0077,Puebla,Atempan Y Tlatlauquitepec,21,,2008-02-29,2008-02-29,19.7518997,-97.4587021,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0441,Puebla,Atzompa,21,,2008-12-03,2008-12-03,19.007,-98.3216019,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-21-0164,Puebla,Canoa,21,,2007-04-10,2007-04-10,19.1459007,-98.0474014,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-21-0179,Puebla,Canoa,21,,2007-04-13,2007-04-13,19.1790009,-98.0606995,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0259,Puebla,Cd. Serdan,21,,2008-04-05,2008-04-05,19.5513,-97.3730011,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0416,Puebla,Cholula,21,,2008-05-16,2008-05-16,19.0729008,-98.3792038,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-21-0111,Puebla,Cuyuaco,21,,2006-02-23,2006-02-26,19.5501995,-97.5597,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0100,Puebla,General Felipe Gonzalez,21,,2008-03-07,2008-03-08,19.0333996,-97.6380005,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-21-0242,Puebla,Huitzilan,21,,2007-06-07,2007-06-07,19.9288998,-97.6680984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-21-0020,Puebla,Mazailtepec De Juarez,21,,2006-01-13,2006-01-13,19.0839005,-97.6780014,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-21-0143,Puebla,Nicolas Bravo,21,103,2005-03-23,2005-03-21,18.6532993,-97.2817001,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-21-0300,Puebla,Pahuatlan Del Valle,21,,2008-04-10,2008-04-11,20.2562008,-98.1557999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0062,Puebla,San Lorenzo Chauzingo,21,,2008-02-24,2008-02-24,19.1851997,-98.5602036,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0266,Puebla,San Lorenzo Chauzingo,21,,2008-04-05,2008-04-05,19.2325001,-98.5839996,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0349,Puebla,San Niolas De Los Ranchos,21,,2008-04-22,2008-04-22,19.0664005,-98.4893036,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0144,Puebla,Santa Rita Tlahuapan,21,,2008-03-17,2008-03-17,19.3036995,-98.5893021,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-21-0237,Puebla,Tetela De Ocampo,21,172,2005-04-06,2005-04-05,19.8414993,-97.8225021,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-21-0258,Puebla,Tlacotepec De Benito Juerez,21,,2008-04-04,2008-04-04,18.7357998,-97.5931015,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-21-0507,Puebla,Tlahuapan,21,180,2009-02-18,1900-02-19,19.2908001,-98.6130981,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-21-0276,Puebla,Tlahuapan Y San Salvador El Verde,21,,2008-04-02,2008-04-04,19.2206993,-98.6311035,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0301,Puebla,Tlahuapan Y San Salvador El Verde,21,,2008-04-02,2008-04-04,19.2206993,-98.6311035,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-21-0119,Puebla,Tlatlauquietepec,21,,2005-03-19,2005-03-19,19.7143002,-97.5014038,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-21-0081,Puebla,Tlauapan,21,,2007-03-06,2007-03-06,19.3017998,-98.581398,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-21-0139,Puebla,Xautzingo,21,,2008-03-15,2008-03-15,19.1583004,-98.5714035,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-21-0241,Puebla,Xochitlan,21,,2007-06-06,2007-06-07,19.9116993,-97.6275024,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-21-0081,Puebla,Yehualtepec Y Zochitlan Todos Santos,21,,2006-02-16,2006-02-17,18.7464008,-97.7621994,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-21-0165,Puebla,Zacatlan,21,208,2005-03-23,2005-03-22,19.9470005,-98.001297,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-21-0032,Puebla,Zinautla,21,,2008-02-16,2008-02-16,19.8194008,-97.4001007,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-22-0019,Querétaro,Amealco De Bonfil,22,001,2006-03-13,2006-03-12,20.1149998,-100.1660004,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-22-0069,Querétaro,Salitrillo,22,,2005-04-04,2005-04-05,20.3360996,-100.3249969,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-23-0154,Quintana Roo,Jose Maria Morelos,23,006,2009-05-17,2009-05-10,19.3248005,-88.9027023,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-23-0185,Quintana Roo,Lazaro Cardenas,23,007,2009-08-05,2009-04-16,21.2541008,-87.1022034,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-23-0083,Quintana Roo,Othon P. Blanco,23,004,2009-04-27,2009-04-13,18.6644993,-87.8057022,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-23-0215,Quintana Roo,Tulum,23,009,2009-06-08,2009-05-26,20.3500004,-87.4293976,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-24-0042,San Luis Potosí,Cuidad Valles,24,,2006-04-15,2006-04-15,21.9321003,-98.993103,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-24-0100,San Luis Potosí,Mexquitic De Carmona,24,021,2008-04-10,2008-01-10,22.2110996,-101.0370026,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2010,10-24-0020,San Luis Potosí,Río Verde,24,,2010-06-04,2010-06-07,21.9596996,-100.2300034,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-24-0025,San Luis Potosí,San Lui Potosí,24,,2010-03-12,2010-03-12,22.1133003,-101.0309982,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-24-0023,San Luis Potosí,San Lui Potosí,24,,2010-04-01,2010-04-01,22.0888996,-100.9609985,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-24-0024,San Luis Potosí,San Lui Potosí,24,,2010-11-23,2010-11-23,22.1009998,-100.9639969,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-24-0022,San Luis Potosí,San Lui Potosí,24,,2010-12-31,2010-12-31,22.1086006,-101.098999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-24-0057,San Luis Potosí,Tamasopo,24,036,2005-05-30,2005-05-01,22.1133003,-99.4182968,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-24-0091,San Luis Potosí,Tamuin,24,040,2008-05-04,2008-04-05,22.0296001,-98.8880005,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,08-24-0002,San Luis Potosí,Villa De Zaragoza,24,,2007-12-31,2008-06-22,22.0860996,-101.2519989,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-24-0072,San Luis Potosí,Villa De Zaragoza,24,,2008-03-17,2008-03-17,22.0510998,-100.5910034,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-24-0073,San Luis Potosí,Villa De Zaragoza,24,,2008-03-17,2008-03-17,22.1000004,-100.7630005,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-24-0108,San Luis Potosí,Villa De Zaragoza,24,,2008-04-11,2008-04-11,21.9652996,-100.5719986,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-24-0035,San Luis Potosí,Villa Hidalgo,24,051,2008-03-03,2008-03-02,22.8733997,-100.4599991,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-24-0115,San Luis Potosí,Villa Hidalgo,24,051,2009-04-10,2009-03-05,22.6266994,-100.6529999,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0006,Sinaloa,Badiraguato,25,003,2007-03-30,2007-02-25,25.8922997,-107.5500031,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-25-0068,Sinaloa,Badiraguato,25,003,2008-05-24,2008-05-16,25.7777996,-107.6559982,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-25-0057,Sinaloa,Choix,25,007,2005-06-27,2005-06-26,26.6084995,-108.1149979,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0036,Sinaloa,Choix,25,007,2007-05-16,2007-05-14,26.8073006,-108.1549988,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0040,Sinaloa,Choix,25,007,2007-05-20,2007-05-14,26.7796001,-108.1689987,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0041,Sinaloa,Choix,25,007,2007-05-21,2007-05-14,26.8106003,-108.1669998,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0037,Sinaloa,Concordia,25,004,2007-05-16,2007-05-14,23.3806992,-105.8160019,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0038,Sinaloa,Concordia,25,004,2007-05-17,2007-05-14,23.3866997,-105.8089981,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-25-0039,Sinaloa,Concordia,25,004,2007-05-17,2007-05-14,23.5484009,-105.836998,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-25-0082,Sinaloa,,25,,2008-06-19,2008-06-19,23.4808998,-105.8919983,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-25-0083,Sinaloa,,25,,2008-06-19,2008-06-20,25.8384991,-107.5250015,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-25-0084,Sinaloa,,25,,2008-06-20,2008-06-20,23.4617004,-105.8789978,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-26-0003,Sonora,Bermuda Chihuahua,26,,2008-03-12,2008-03-12,28.2994003,-109.0279999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-26-0026,Sonora,Cananea,26,019,2009-05-31,2009-05-07,31.0823002,-110.3960037,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-26-0031,Sonora,Ej Yecora,26,,2007-06-15,2007-06-15,28.3518009,-108.9369965,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-26-0004,Sonora,El Hechadero Del Descanso,26,,2006-01-20,2006-01-21,26.9827995,-108.9840012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2012,12-26-0042,Sonora,Heroica Nogales,26,,2012-06-06,2012-06-14,31.0417004,-111.0589981,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-26-0020,Sonora,Sahauripa,26,,2006-04-25,2006-04-30,28.7395,-108.8669968,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-26-0066,Sonora,Sahuaripa,26,052,2009-06-01,2009-04-17,28.5685005,-108.7139969,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-26-0001,Sonora,Yecora,26,069,2005-06-27,2005-06-26,28.3584003,-109.0019989,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-26-0002,Sonora,Yecora,26,069,2005-06-27,2005-06-26,28.3278999,-109.0,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-26-0003,Sonora,Yecora,26,069,2005-06-27,2005-06-26,28.3209,-109.012001,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-27-0014,Tabasco,Centla,27,003,2007-07-06,2007-06-29,18.4766998,-92.6278,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-27-0043,Tabasco,Centla,27,003,2008-05-18,2008-05-15,18.3880005,-92.6828003,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-27-0051,Tabasco,Centla,27,003,2009-05-30,2009-05-02,18.2971992,-92.8082962,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-27-0036,Tabasco,Hiumanguillo,27,,2008-05-15,2008-05-17,17.3519001,-93.6166992,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-27-0016,Tabasco,Jalpa,27,,2007-08-02,2007-08-03,18.3208008,-93.0811005,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-28-0038,Tamaulipas,Jaumave,28,017,2006-05-06,2006-04-08,23.3022003,-99.4297028,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-29-0184,Tlaxcala,Humantla,29,,2008-04-20,2008-04-20,19.2474995,-97.9682999,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-29-0081,Tlaxcala,Tecopilco,29,,2007-04-11,2007-04-11,19.5035992,-98.2497025,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0107,Tlaxcala,Teolochcolco,29,,2008-03-17,2008-03-17,19.1993999,-98.0697021,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0006,Tlaxcala,Vicente Guerrero,29,,2005-01-19,2005-01-19,19.2063999,-98.0789032,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0017,Tlaxcala,Vicente Guerrero,29,,2005-02-03,2005-02-03,19.2110996,-98.1063995,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0046,Tlaxcala,Vicente Guerrero,29,,2005-02-20,2005-02-20,19.2052994,-98.0988998,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0077,Tlaxcala,Vicente Guerrero,29,,2005-03-08,2005-03-08,19.1760998,-98.1299973,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0136,Tlaxcala,Vicente Guerrero,29,,2005-03-27,2005-03-27,19.1816998,-98.1268997,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0140,Tlaxcala,Vicente Guerrero,29,,2005-03-28,2005-03-28,19.1933002,-98.0702972,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0142,Tlaxcala,Vicente Guerrero,29,,2005-03-28,2005-03-28,19.1821995,-98.125,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0154,Tlaxcala,Vicente Guerrero,29,,2005-04-01,2005-04-01,19.1989002,-98.0942001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0156,Tlaxcala,Vicente Guerrero,29,,2005-04-01,2005-04-01,19.1797009,-98.1128006,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0188,Tlaxcala,Vicente Guerrero,29,,2005-04-11,2005-04-11,19.1499996,-98.1222,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0208,Tlaxcala,Vicente Guerrero,29,,2005-05-04,2005-05-04,19.1774998,-98.1339035,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-29-0211,Tlaxcala,Vicente Guerrero,29,,2005-05-05,2005-05-05,19.1821995,-98.1303024,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-29-0028,Tlaxcala,Vicente Guerrero,29,,2006-02-13,2006-02-13,19.2108002,-98.1046982,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-29-0059,Tlaxcala,Vicente Guerrero,29,,2006-03-05,2006-03-05,19.1793995,-98.1306,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-29-0096,Tlaxcala,Vicente Guerrero,29,,2006-03-10,2006-03-10,19.2150002,-98.0986023,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-29-0097,Tlaxcala,Vicente Guerrero,29,,2006-03-10,2006-03-10,19.2155991,-98.1228027,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-29-0108,Tlaxcala,Vicente Guerrero,29,,2006-03-14,2006-03-14,19.1944008,-98.0836029,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-29-0151,Tlaxcala,Vicente Guerrero,29,,2006-04-02,2006-04-02,19.1814003,-98.1283035,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-29-0032,Tlaxcala,Vicente Guerrero,29,,2007-03-15,2007-03-15,19.2175007,-98.2639008,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-29-0064,Tlaxcala,Vicente Guerrero,29,,2007-04-07,2007-04-07,19.2075005,-98.1046982,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-29-0080,Tlaxcala,Vicente Guerrero,29,,2007-04-11,2007-04-11,19.2049999,-98.0772018,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0032,Tlaxcala,Vicente Guerrero,29,,2008-02-18,2008-02-18,19.2141991,-98.0942001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0054,Tlaxcala,Vicente Guerrero,29,,2008-02-25,2008-02-25,19.2024994,-98.0914001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0057,Tlaxcala,Vicente Guerrero,29,,2008-02-25,2008-02-25,19.1797009,-98.1406021,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0060,Tlaxcala,Vicente Guerrero,29,,2008-02-25,2008-02-25,19.2024994,-98.0674973,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0087,Tlaxcala,Vicente Guerrero,29,,2008-03-08,2008-03-08,19.1952991,-98.0824966,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0091,Tlaxcala,Vicente Guerrero,29,,2008-03-09,2008-03-09,19.1963997,-98.0836029,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-29-0145,Tlaxcala,Vicente Guerrero,29,,2008-03-29,2008-03-29,19.1793995,-98.131897,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0251,Veracruz De Ignacio De La Llave,Acajete,30,001,2008-12-24,2008-12-20,19.5531006,-97.0690002,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-30-0041,Veracruz De Ignacio De La Llave,Ayahualul Co,30,,2008-02-24,2008-02-24,19.3694,-97.1847,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0173,Veracruz De Ignacio De La Llave,Ayahualulco,30,025,2005-06-01,2005-05-01,19.4615002,-97.1736984,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-30-0047,Veracruz De Ignacio De La Llave,Camerino Z Mendoza,30,,2008-02-26,2008-02-26,18.7796993,-97.143898,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0094,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2005-04-08,2005-04-08,18.8101006,-97.1869965,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0122,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2005-04-17,2005-04-17,18.7833004,-97.1652985,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0075,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2008-03-14,2008-03-14,18.7831993,-97.1722031,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0115,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2008-03-27,2008-03-28,18.7971992,-97.1576004,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-30-0411,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2009-04-12,2009-04-12,18.7794991,-97.1343002,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-30-0410,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2009-05-11,2009-05-12,18.7639008,-97.1779022,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-30-0199,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2010-03-12,2010-03-12,18.7810001,-97.1572037,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-30-0200,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2010-03-12,2010-03-12,18.7796001,-97.1847992,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-30-0198,Veracruz De Ignacio De La Llave,Cd. Mendoza,30,,2010-06-12,2010-06-12,18.7723007,-97.1464005,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-30-0041,Veracruz De Ignacio De La Llave,Coatcoatzintla,30,,2006-03-10,2006-03-10,19.6380997,-96.9644012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-30-0050,Veracruz De Ignacio De La Llave,Cosoloacaque,30,,2007-04-10,2007-04-10,18.0417004,-94.5,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0055,Veracruz De Ignacio De La Llave,Emiliano Zapata,30,065,2008-03-03,2008-02-03,19.4319,-96.6875,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0182,Veracruz De Ignacio De La Llave,Hidalgotitlan,30,070,2005-06-04,2005-05-04,17.4582996,-94.6750031,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-30-0032,Veracruz De Ignacio De La Llave,Huayaco Cotla,30,,2008-02-21,2008-02-21,20.4396992,-98.4384003,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0174,Veracruz De Ignacio De La Llave,Huayacocotla,30,072,2005-06-01,2005-05-01,20.4559002,-98.4693985,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0181,Veracruz De Ignacio De La Llave,Huayacocotla,30,072,2005-06-03,2005-05-03,20.4557991,-98.5187988,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0092,Veracruz De Ignacio De La Llave,Huiloapan,30,,2005-04-04,2005-04-04,18.8096008,-97.1651001,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-30-0052,Veracruz De Ignacio De La Llave,Huiloapan,30,,2010-06-06,2010-06-06,18.8255997,-97.1163025,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2010,10-30-0053,Veracruz De Ignacio De La Llave,Huiloapan,30,,2010-06-08,2010-06-08,18.8253002,-97.1160965,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0192,Veracruz De Ignacio De La Llave,Ixtazoquitlan,30,,2005-06-13,2005-06-13,18.8439007,-97.0027008,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2007,07-30-0046,Veracruz De Ignacio De La Llave,Jacomulco,30,,2007-03-23,2007-03-24,19.3610992,-96.7861023,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0180,Veracruz De Ignacio De La Llave,Jalacingo,30,086,2005-06-03,2005-05-03,19.8106003,-97.3277969,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0009,Veracruz De Ignacio De La Llave,Maltrata,30,099,2005-01-10,2005-01-05,18.8486004,-97.2414017,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0022,Veracruz De Ignacio De La Llave,Maltrata,30,099,2005-02-08,2005-02-05,18.8428993,-97.2822037,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-30-0051,Veracruz De Ignacio De La Llave,Maltrta,30,,2008-03-03,2008-03-03,18.8218994,-97.2661972,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0175,Veracruz De Ignacio De La Llave,Mecayapan,30,104,2005-06-01,2005-05-01,18.2486,-94.8360977,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0171,Veracruz De Ignacio De La Llave,Perote,30,128,2005-06-01,2005-05-01,19.5291004,-97.1955032,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0172,Veracruz De Ignacio De La Llave,Perote,30,128,2005-06-01,2005-05-01,19.4825993,-97.1937027,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0176,Veracruz De Ignacio De La Llave,Perote,30,128,2005-06-02,2005-05-02,19.5373001,-97.2317963,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0177,Veracruz De Ignacio De La Llave,Perote,30,128,2005-06-02,2005-05-02,19.5583,-97.1844025,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2005,05-30-0179,Veracruz De Ignacio De La Llave,Perote,30,128,2005-06-03,2005-05-03,19.5303993,-97.237999,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2006,06-30-0011,Veracruz De Ignacio De La Llave,San Andres Tenejapa,30,,2006-02-07,2006-02-07,18.7766991,-98.1682968,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2006,06-30-0008,Veracruz De Ignacio De La Llave,San Andres Tlalnehuayocan,30,,2006-01-20,2006-01-20,19.5723991,-96.9840012,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0250,Veracruz De Ignacio De La Llave,Tatatila Tlacolulan,30,,2008-12-20,2008-12-20,19.7019005,-97.0400009,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2005,05-30-0110,Veracruz De Ignacio De La Llave,Tlachichica,30,,2005-04-11,2005-04-11,20.5051003,-98.266098,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0225,Veracruz De Ignacio De La Llave,Tlalapan,30,,2008-05-15,2008-05-15,18.7854996,-96.0654984,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-30-0050,Veracruz De Ignacio De La Llave,Zacualpan,30,198,2008-03-02,2008-02-02,20.4162998,-98.4200974,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2012,12-30-0077,Veracruz de Ignacio de la Llave,Fortín de las Flores,30,,2012-04-29,2012-04-29,18.9136009,-96.9925995,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2012,12-30-0096,Veracruz de Ignacio de la Llave,Zontecomatlán,30,,2012-05-25,2012-05-25,20.7773991,-98.2994003,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-31-0081,Yucatán,Dzizantun,31,,2008-05-15,2008-05-15,21.2339001,-89.1218033,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-31-0019,Yucatán,Iza,31,,2008-04-18,2008-04-18,20.8966999,-88.7918015,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-31-0091,Yucatán,Tekax,31,079,2009-04-06,2009-03-06,20.2567005,-89.4524002,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-31-0092,Yucatán,Tekax,31,079,2009-04-07,2009-03-07,20.2616005,-89.4487991,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2007,07-31-0009,Yucatán,Telchac Pblo,31,,2007-04-16,2007-04-18,21.2525997,-88.2679977,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-31-0074,Yucatán,Tixpeual,31,,2008-05-14,2008-05-19,20.9836006,-89.4191971,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-31-0109,Yucatán,Tizimin,31,096,2009-04-29,2009-04-27,21.2721004,-87.6928024,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-31-0110,Yucatán,Tizimin,31,096,2009-04-29,2009-04-27,21.2677994,-87.6298981,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2009,09-31-0111,Yucatán,Tizimin,31,096,2009-04-29,2009-04-27,21.2835999,-87.6652985,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2008,08-31-0011,Yucatán,Valladolis,31,,2008-03-19,2008-03-20,20.7810993,-88.0422974,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2008,08-32-0006,Zacatecas,Cuahutemoc,32,,2008-05-04,2008-05-06,22.4705009,-102.3860016,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-32-0057,Zacatecas,Iii Del Oro,32,,2009-04-17,2009-04-17,21.1686001,-103.2850037,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-32-0058,Zacatecas,Iii Del Oro,32,,2009-05-02,2009-05-04,21.2749004,-103.2679977,historico_shp_2005_2014,historico_solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2009,09-32-0125,Zacatecas,Tlaltenango,32,048,2009-05-27,2009-05-08,21.7493992,-103.1100006,historico_shp_2005_2014,historico_solo_shp,False,True,True,True,False,qc_fecha_invertida
+2024,24-12-0021,Guerrero,Apaxtla,12,,2024-03-02,2024-03-05,18.13,-100.0387,solo_shp,solo_shp,False,True,True,False,True,qc_cve_mun_nula
+2024,24-12-0099,Guerrero,Apaxtla,12,,2024-04-13,2024-05-01,18.1268,-100.0073,solo_shp,solo_shp,False,True,True,False,True,qc_cve_mun_nula

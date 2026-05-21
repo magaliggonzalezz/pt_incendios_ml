@@ -1,0 +1,3 @@
+﻿archivo,registros,clave_validada,duplicados_clave,nulos_clave,geometrias_nulas,crs,estatus_validacion,observacion
+integration_catalogo_entidades.csv,32,cve_ent,0,0,0,EPSG:6365,ok,Catálogo de entidades construido correctamente.
+integration_catalogo_municipios.csv,2478,cvegeo,0,0,0,EPSG:6365,ok,Catálogo de municipios construido correctamente.

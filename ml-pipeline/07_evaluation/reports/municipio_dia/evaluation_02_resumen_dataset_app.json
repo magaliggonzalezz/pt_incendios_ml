@@ -1,0 +1,39 @@
+{
+  "fase_crisp_dm": "Evaluation",
+  "flujo_principal": "municipio_dia",
+  "modelo_final": "PCA + SOM + KMeans",
+  "objetivo": "Generar dataset reducido para consumo de API/frontend",
+  "archivo_dataset_app": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_municipio_dia.csv",
+  "archivo_sample_app": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_municipio_dia_sample.csv",
+  "archivo_diagnostico": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\reports\\evaluation_02_diagnostico_dataset_app.csv",
+  "filas_generadas": 11154221,
+  "clusters_detectados": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "conteo_por_cluster": {
+    "1": 2215258,
+    "2": 2143076,
+    "3": 1779448,
+    "4": 1514204,
+    "5": 1410173,
+    "6": 691830,
+    "7": 668685,
+    "8": 327007,
+    "9": 224258,
+    "10": 108145,
+    "11": 72137
+  },
+  "validaciones_ok": 12,
+  "warnings": 0,
+  "errores": 0
+}

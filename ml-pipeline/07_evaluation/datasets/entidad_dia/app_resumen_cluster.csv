@@ -1,0 +1,10 @@
+﻿cluster_id,n_observaciones,dias_con_conafor,firms_total,cluster_label,cluster_name,nivel_actividad_firms,nivel_confirmacion_conafor,nivel_cobertura_smn,color_sugerido,orden_visualizacion
+1,72744,17052,3580192.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+2,63694,8078,1342668.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+3,37005,3174,588583.0,Cluster 3,Baja actividad térmica,Baja,Baja,Baja,#2563EB,4
+4,27406,3074,327927.0,Cluster 4,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+5,27393,1699,1333720.0,Cluster 5,Actividad térmica intermedia,Media,Baja,Baja,#D97706,3
+6,18261,1842,95197.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Media,Alta,#2563EB,4
+7,18261,4046,20901.0,Cluster 7,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+8,18251,3386,539191.0,Cluster 8,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+9,9131,461,468533.0,Cluster 9,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Alta,#EA580C,2

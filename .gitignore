@@ -50,3 +50,11 @@ env/
 
 .env
 backend/api-rest/.env
+
+node_modules/
+backend/api-rest/node_modules/
+frontend/node_modules/
+
+.env
+backend/api-rest/.env
+frontend/.env

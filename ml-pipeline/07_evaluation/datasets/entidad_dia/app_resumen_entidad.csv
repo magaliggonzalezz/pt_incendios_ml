@@ -1,0 +1,33 @@
+﻿cve_ent,n_observaciones,dias_con_conafor,firms_total,cluster_label,cluster_name,nivel_actividad_firms,nivel_confirmacion_conafor,nivel_cobertura_smn,color_sugerido,orden_visualizacion
+1,9131,617,14368.0,Cluster 3,Baja actividad térmica,Baja,Baja,Baja,#2563EB,4
+2,9131,2027,98948.0,Cluster 4,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+3,9131,221,11328.0,Cluster 4,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+4,9130,353,802728.0,Cluster 5,Actividad térmica intermedia,Media,Baja,Baja,#D97706,3
+5,9131,932,137342.0,Cluster 8,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+6,9127,740,51254.0,Cluster 3,Baja actividad térmica,Baja,Baja,Baja,#2563EB,4
+7,9131,2018,763030.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+8,9131,2458,415407.0,Cluster 8,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+9,9131,2202,6432.0,Cluster 7,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+10,9131,1893,336187.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+11,9131,638,143626.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+12,9131,1945,831686.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+13,9131,1122,78383.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Media,Alta,#2563EB,4
+14,9131,2991,591635.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+15,9131,2708,106453.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+16,9131,2731,534219.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+17,9131,1445,43993.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+18,9090,1062,270302.0,Cluster 3,Baja actividad térmica,Baja,Baja,Baja,#2563EB,4
+19,9131,595,112524.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+20,9131,1826,505225.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+21,9131,2118,94550.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+22,9131,721,16822.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Media,Alta,#2563EB,4
+23,9131,884,187646.0,Cluster 5,Actividad térmica intermedia,Media,Baja,Baja,#D97706,3
+24,9131,811,88546.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+25,9131,766,289678.0,Cluster 3,Baja actividad térmica,Baja,Baja,Baja,#2563EB,4
+26,9131,825,224187.0,Cluster 4,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+27,9131,461,468533.0,Cluster 9,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Alta,#EA580C,2
+28,9131,387,198504.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3
+29,9131,1845,14474.0,Cluster 7,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+30,9131,2045,454745.0,Cluster 1,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+31,9131,461,342295.0,Cluster 5,Actividad térmica intermedia,Media,Baja,Baja,#D97706,3
+32,9131,964,61862.0,Cluster 2,Actividad térmica intermedia,Media,Media,Alta,#D97706,3

@@ -1,0 +1,17 @@
+﻿flujo,archivo,estado,detalle
+municipio_dia,app_cluster_catalog.json,OK,Registros JSON: 11
+municipio_dia,app_municipio_dia_sample.json,OK,Registros JSON: 12812
+municipio_dia,app_resumen_cluster.json,OK,Registros JSON: 11
+municipio_dia,app_resumen_mes.json,OK,Registros JSON: 300
+municipio_dia,app_resumen_entidad.json,OK,Registros JSON: 32
+municipio_dia,app_resumen_municipio.json,OK,Registros JSON: 2450
+municipio_dia,app_resumen_entidad_cluster.json,OK,Registros JSON: 282
+municipio_dia,app_resumen_municipio_cluster.json,OK,Registros JSON: 8526
+municipio_dia,index.json,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\app_ready\municipio_dia\index.json
+entidad_dia,app_cluster_catalog.json,OK,Registros JSON: 9
+entidad_dia,app_entidad_dia_sample.json,OK,Registros JSON: 19976
+entidad_dia,app_resumen_cluster.json,OK,Registros JSON: 9
+entidad_dia,app_resumen_mes.json,OK,Registros JSON: 300
+entidad_dia,app_resumen_entidad.json,OK,Registros JSON: 32
+entidad_dia,app_resumen_entidad_cluster.json,OK,Registros JSON: 53
+entidad_dia,index.json,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\app_ready\entidad_dia\index.json

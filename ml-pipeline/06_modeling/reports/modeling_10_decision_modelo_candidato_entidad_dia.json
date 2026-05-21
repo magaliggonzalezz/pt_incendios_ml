@@ -1,0 +1,26 @@
+{
+  "flujo": "entidad_dia",
+  "modelo_candidato_principal": "PCA_18PCs__SOM_30x30_sigma2_full__KMeans_k9",
+  "pca": {
+    "componentes_seleccionados": 18,
+    "varianza_acumulada_pct": 90.36405809019448
+  },
+  "som": {
+    "configuracion": "som_sigma2_full",
+    "grid": "30x30",
+    "sigma": 2.0,
+    "entrenamiento": "dataset_completo_entidad_dia",
+    "motivo": "mejor equilibrio entre estabilidad topologica, ocupacion de nodos y defensa metodologica"
+  },
+  "clustering_principal": {
+    "algoritmo": "KMeans sobre nodos SOM ocupados",
+    "k": 9,
+    "motivo": "mejor silhouette entre k probados y segmentacion interpretable sin ruido"
+  },
+  "clustering_comparativo": {
+    "algoritmo": "HDBSCAN sobre nodos SOM ocupados",
+    "estatus": "comparativo_exploratorio",
+    "motivo": "mejores metricas internas pero demasiados clusters para interpretacion y aplicacion web"
+  },
+  "nota_crisp_dm": "Estas metricas corresponden a comparacion interna dentro de Modeling; no constituyen Evaluation formal."
+}

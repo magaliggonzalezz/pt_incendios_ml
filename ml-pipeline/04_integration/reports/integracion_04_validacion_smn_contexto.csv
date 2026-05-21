@@ -1,0 +1,14 @@
+﻿indicador,valor,estatus,observacion
+smn_registros_diarios_leidos,22860628,ok,Total de observaciones diarias SMN leídas desde DP.
+fecha_min,2001-01-01,ok,Fecha mínima detectada en SMN.
+fecha_max,2025-12-31,ok,Fecha máxima detectada en SMN.
+smn_fecha_nula,0,ok,Observaciones SMN sin fecha válida.
+smn_fuera_periodo_proyecto_2001_2025,0,ok,Observaciones SMN fuera del periodo general del proyecto.
+smn_estaciones_contexto,3488,ok,Estaciones únicas SMN contextualizadas.
+smn_estaciones_duplicadas_id,0,ok,Duplicados por id_estacion en catálogo de estaciones contextualizadas.
+smn_estaciones_coordenada_invalida,0,ok,Estaciones sin coordenadas válidas según BBOX INEGI 2025.
+smn_estaciones_cvegeo_nula,0,ok,Estaciones sin municipio asignado por join espacial.
+smn_estaciones_sin_catalogo_municipal,0,ok,Estaciones cuyo cvegeo no encontró correspondencia en catálogo municipal.
+smn_observaciones_sin_municipio,0,ok,Observaciones diarias asociadas a estaciones sin municipio asignado.
+municipio_dia_registros,10676715,ok,Registros generados en integracion_smn_municipio_dia.csv.
+municipio_dia_duplicados_cvegeo_fecha,0,ok,Duplicados por clave cvegeo + fecha en agregación municipio-día.

@@ -1,0 +1,13 @@
+﻿campo_tabular,campo_shp_puntos,tipo_equivalencia,fuerza_para_matching,usable
+anio,derivado de fecha_inicio / f_inicio,derivado,fuerte,sí
+clave_incendio,clave_ince,renombrar,muy_fuerte,sí
+estado,estado,directo,fuerte,sí
+municipio,municipio,directo,fuerte,sí
+predio,predio_par,renombrar,medio,sí
+latitud,geometry.y,derivado_geometria,muy_fuerte,sí
+longitud,geometry.x,derivado_geometria,muy_fuerte,sí
+fecha_inicio,f_inicio,renombrar,muy_fuerte,sí
+fecha_termino,f_fin,renombrar,fuerte,sí
+superficie_total_ha,sup_ha,renombrar,medio,sí
+cve_ent,clvent,renombrar,medio,parcial
+cve_mun,clvmun,renombrar,medio,parcial

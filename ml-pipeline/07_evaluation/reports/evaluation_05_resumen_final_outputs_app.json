@@ -1,0 +1,35 @@
+{
+  "fase_crisp_dm": "Evaluation",
+  "objetivo": "Validación final de salidas para aplicación web",
+  "flujos_validados": [
+    "municipio_dia",
+    "entidad_dia"
+  ],
+  "resultado_general": {
+    "validaciones_totales": 36,
+    "ok": 36,
+    "warnings": 0,
+    "errores": 0
+  },
+  "flujos": {
+    "municipio_dia": {
+      "dataset_principal": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\municipio_dia\\app_municipio_dia.csv",
+      "filas_dataset": 11154221,
+      "filas_esperadas": 11154221,
+      "clusters_dataset": 11,
+      "clusters_catalogo": 11,
+      "clusters_esperados": 11,
+      "filas_sample": 12812
+    },
+    "entidad_dia": {
+      "dataset_principal": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_entidad_dia.csv",
+      "filas_dataset": 292146,
+      "filas_esperadas": 292146,
+      "clusters_dataset": 9,
+      "clusters_catalogo": 9,
+      "clusters_esperados": 9,
+      "filas_sample": 19976
+    }
+  },
+  "archivo_validacion": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\reports\\evaluation_05_validacion_final_outputs_app.csv"
+}

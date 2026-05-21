@@ -1,0 +1,18 @@
+﻿indicador,valor,estatus,observacion
+catalogo_municipios_registros,2478,ok,Municipios en catálogo de integración.
+catalogo_entidades_registros,32,ok,Entidades en catálogo de integración.
+municipios_geometria_registros,2478,ok,Municipios con geometría cargada desde INEGI.
+crs_metric_calculos_area_longitud,EPSG:6372,ok,CRS métrico usado para calcular áreas y longitudes en contexto INEGI.
+municipio_contexto_registros,2478,ok,Registros generados en integracion_inegi_municipio_contexto.csv.
+municipio_contexto_cvegeo_duplicado,0,ok,Duplicados por cvegeo en contexto municipal.
+municipio_contexto_cvegeo_sin_catalogo,0,ok,Municipios de contexto sin correspondencia de catálogo.
+entidad_contexto_registros,32,ok,Registros generados en integracion_inegi_entidad_contexto.csv.
+entidad_contexto_cve_ent_duplicado,0,ok,Duplicados por cve_ent en contexto estatal.
+capa_edafologia,75491,ok,Capa poligonal integrada por área. Columna categórica usada: n_cp_g1. Geometría: polygon.
+municipios_con_contexto_edafologia,2478,ok,Municipios con al menos un valor integrado para edafologia.
+capa_fisiografia,733,ok,Capa poligonal integrada por área. Columna categórica usada: nombre. Geometría: polygon.
+municipios_con_contexto_fisiografia,2478,ok,Municipios con al menos un valor integrado para fisiografia.
+capa_uso_suelo_vegetacion,179099,ok,Capa poligonal integrada por área. Columna categórica usada: clave. Geometría: polygon.
+municipios_con_contexto_uso_suelo_vegetacion,2478,ok,Municipios con al menos un valor integrado para uso_suelo_vegetacion.
+capa_hidrografia,112994,ok,Capa lineal integrada por longitud. Columna categórica usada: tipo. Geometría: line.
+municipios_con_contexto_hidrografia,2346,ok,Municipios con al menos un valor integrado para hidrografia.

@@ -1,0 +1,38 @@
+{
+  "flujo": "municipio_dia",
+  "descripcion": "municipio-día principal",
+  "archivos": {
+    "clusters": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_cluster_catalog.json",
+      "registros": 11
+    },
+    "sample": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_municipio_dia_sample.json",
+      "registros": 12812
+    },
+    "resumen_cluster": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_cluster.json",
+      "registros": 11
+    },
+    "resumen_mes": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_mes.json",
+      "registros": 300
+    },
+    "resumen_entidad": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_entidad.json",
+      "registros": 32
+    },
+    "resumen_municipio": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_municipio.json",
+      "registros": 2450
+    },
+    "resumen_entidad_cluster": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_entidad_cluster.json",
+      "registros": 282
+    },
+    "resumen_municipio_cluster": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_municipio_cluster.json",
+      "registros": 8526
+    }
+  }
+}
