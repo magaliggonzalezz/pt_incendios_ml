@@ -1,0 +1,25 @@
+.dash{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: var(--bg);
+    overflow: hidden;
+    
+    --gap: 8px;
+    --right-panel-w: 290px;
+}
+
+/* el mapa siempre al fondo */
+.dash > :first-child {
+    z-index: 0;
+}
+
+/* cuando el right panel está abierto, el “safe right” es panel + gap */
+.dash.right-open{
+  --right-safe: calc(var(--right-panel-w) + var(--gap));
+}
+
+/* cuando está cerrado, solo el gap */
+.dash.right-closed{
+  --right-safe: var(--gap);
+}
