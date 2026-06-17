@@ -1,15 +1,21 @@
 .rightPanel{
     position: absolute;
-    top: 60px;
-    bottom: 60px;
-    right: 12px;
-    width: 280px;
+    top: var(--side-top, 60px);
+    right: var(--right-panel-offset, 12px);
+    width: var(--right-panel-w, 280px);
+    max-height: calc(100dvh - var(--side-top, 60px) - var(--side-bottom, 82px));
     z-index: 700;
     transition: transform .2s ease;
 }
 
-.rightPanel.closed{ 
-    transform: translateX(calc(280px + 12px)); 
+.rightPanel.closed{
+    transform: translateX(calc(var(--right-panel-w, 280px) + var(--right-panel-offset, 12px)));
+    pointer-events: none;
+}
+
+.rightPanel.closed .toggleBtn{
+    left: -52px;
+    pointer-events: auto;
 }
 
 .rightPanel .toggleBtn{
@@ -23,19 +29,14 @@
     cursor: pointer;
     background: var(--panel);
     box-shadow: var(--shadow);
-}
-
-.kpiBody{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.kpiActions{
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: auto;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-family: system-ui, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    z-index: 900;
 }
 
 .kpiCard{
@@ -43,88 +44,396 @@
     color: white;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 12px;
+    padding: 12px 12px 14px;
     font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    max-height: inherit;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .kpiHeader{
     font-weight: 700;
-    margin-bottom: 12px;
-    font-size: 16px;
-    line-height: 28px;
-    text-align: center;
+    margin-bottom: 14px;
+    font-size: 17px;
+    line-height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 9px;
+    text-align: left;
+}
+
+.kpiHeader span:last-child{
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kpiBody{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 0 1 auto;
+    max-height: calc(100dvh - var(--side-top, 60px) - var(--side-bottom, 82px) - 116px);
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-right: -8px;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #8A8A8A transparent;
+}
+
+.kpiBody::-webkit-scrollbar{
+    width: 6px;
+}
+
+.kpiBody::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.kpiBody::-webkit-scrollbar-thumb{
+    background: #8A8A8A;
+    border-radius: 999px;
+}
+
+.emptyState{
+    background: var(--right-boxes);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 12px;
+    color: rgba(255,255,255,.86);
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.metaGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
+}
+
+.metaBox{
+    min-width: 0;
+    background: var(--right-boxes);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 11px;
+    min-height: 60px;
+    padding: 9px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.metaIcon{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    position: relative;
+    display: block;
+    background: rgba(255,255,255,.13);
+    flex: 0 0 auto;
+}
+
+.metaBox span,
+.mlCluster span,
+.miniMetric span{
+    display: block;
+    color: rgba(255,255,255,.72);
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.metaBox strong,
+.mlCluster strong,
+.miniMetric strong{
+    display: block;
+    margin-top: 2px;
+    color: white;
+    font-size: 14px;
+    line-height: 17px;
+    overflow-wrap: anywhere;
+}
+
+.kpiBox,
+.mlBox,
+.visualContextBox{
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    flex: 0 0 auto;
+    min-width: 0;
 }
 
 .kpiBox{
     background: var(--right-boxes);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 12px;
-    padding: 10px;
+    min-height: 82px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
 }
 
-.kpiLabel{
-    font-size: 14px;
-    line-height: 16px;
-    font-weight: 400;
-    opacity: 1;
+.mlBox{
+    background: rgba(0,0,0,.20);
+    padding: 12px;
+    min-height: 0;
+    margin-top: 0;
+    overflow: hidden;
 }
 
-.kpiValue{
-    font-size: 22px;
-    font-weight: 700;
-    text-align: center;
-    margin: 8px 0 8px 0;
-}
-
-.kpiCard .primaryBtn{
-    width: 100%;
-    height: 36px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,.20);
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    margin-top: 8px;
-    background: #00786F;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
-}
-
-.kpiCard .secondaryBtn{
-    width: 100%;
-    height: 36px;
-    border: 0;
-    border-radius: var(--radius);
-    background: var(--accent);
-    color: white;
-    cursor: pointer;
-    margin-top: 6px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
+.visualContextBox{
+    background: rgba(255,255,255,.09);
+    padding: 12px;
+    margin-top: 2px;
+    display: grid;
+    gap: 9px;
+    clear: both;
 }
 
 .kpiTopRow{
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left;
 }
 
-.kpiIcon svg,
-.kpiHeaderIcon svg{
+.kpiLabel{
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+}
+
+.kpiValue{
+    font-size: 24px;
+    line-height: 29px;
+    font-weight: 800;
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    margin: 0;
+}
+
+.visualContextTitle,
+.mlTitle{
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.visualContextTitle{
+    margin-bottom: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,.14);
+}
+
+.visualContextList{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 9px;
+    max-height: 178px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.35) transparent;
+}
+
+.visualContextList::-webkit-scrollbar{
+    width: 5px;
+}
+
+.visualContextList::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.visualContextList::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.35);
+    border-radius: 999px;
+}
+
+.visualContextList li{
+    border-top: 1px solid rgba(255,255,255,.10);
+    padding-top: 9px;
+    min-width: 0;
+}
+
+.visualContextList li:first-child{
+    border-top: 0;
+    padding-top: 0;
+}
+
+.visualContextList strong,
+.visualContextList span,
+.visualContextList em,
+.visualContextEmpty,
+.visualContextMore{
     display: block;
-    flex-shrink: 0;
+    font-size: 12px;
+    line-height: 16px;
+    overflow-wrap: anywhere;
 }
 
-.kpiActions .primaryBtn,
-.kpiActions .secondaryBtn{
+.visualContextList strong{
+    color: white;
+    font-size: 13px;
+    line-height: 17px;
+    margin-bottom: 2px;
+}
+
+.visualContextList span,
+.visualContextList em,
+.visualContextEmpty,
+.visualContextMore{
+    color: rgba(255,255,255,.74);
+}
+
+.visualContextList em{
+    font-style: normal;
+    margin-top: 3px;
+}
+
+.visualContextEmpty,
+.visualContextMore{
+    margin: 0;
+}
+
+.mlCluster{
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 7px;
+    min-width: 0;
+}
+
+.mlCluster:last-of-type{
+    margin-bottom: 8px;
+}
+
+.mlBox p{
+    margin: 0;
+    color: rgba(255,255,255,.82);
+    font-size: 12px;
+    line-height: 16px;
+    overflow-wrap: anywhere;
+}
+
+.miniGrid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.miniMetric{
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 11px;
+    background: rgba(255,255,255,.08);
+    padding: 9px 10px;
+}
+
+.miniMetric span{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.kpiActions{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+    padding-right: 10px;
+    margin-right: -8px;
+    position: static;
+    flex: 0 0 auto;
+}
+
+.kpiCard .primaryBtn,
+.kpiCard .secondaryBtn{
+    width: 100%;
+    min-height: 38px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    font: inherit;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+}
+
+.kpiCard .primaryBtn{
+    border: 1px solid rgba(255,255,255,.20);
+    background: #00786F;
+}
+
+.kpiCard .primaryBtn:disabled{
+    cursor: not-allowed;
+    opacity: .55;
+}
+
+.kpiCard .secondaryBtn{
+    border: 0;
+    background: #A76218;
+    color: #D7B88B;
+}
+
+.kpiCard .secondaryBtn:disabled{
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.kpiIcon svg,
+.kpiHeaderIcon svg,
+.metaIcon svg{
+    display: block;
+    flex-shrink: 0;
+}
+
+.metaIcon svg{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.metaIconLevel svg{
+    transform: translate(-50%, -50%) translate(1px, 1px);
+}
+
+@media (max-width: 1024px){
+    .metaGrid{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-height: 680px){
+    .kpiBody{
+        gap: 7px;
+    }
+
+    .kpiBox,
+    .mlBox{
+        padding: 8px;
+    }
+
+    .kpiValue{
+        font-size: 19px;
+        line-height: 23px;
+    }
 }

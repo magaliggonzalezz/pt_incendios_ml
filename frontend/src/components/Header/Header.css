@@ -4,10 +4,10 @@
     left: 0;
     right: 0;
     height: 50px;
-    padding: 16px 32px;
+    padding: 12px clamp(16px, 2.5vw, 32px);
     display: flex;
     align-items: center;
-    background: rgba(4, 48, 45, .92);
+    background: var(--bg);
     z-index: 30;
 }
 
@@ -32,4 +32,23 @@
     font-weight: 600;
     line-height: 28px;
     white-space: nowrap;
+    overflow: visible;
+}
+
+@media (min-width: 1920px){
+    .appHeaderTitle{
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 1180px){
+    .appHeaderTitle{
+        font-size: 17px;
+    }
+
+    .appHeaderIcon{
+        width: 22px;
+        height: 22px;
+        flex-basis: 22px;
+    }
 }

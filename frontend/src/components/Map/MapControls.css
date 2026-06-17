@@ -1,13 +1,18 @@
 .mapControls {
     position: absolute;
-    bottom: 60px;
-    right: var(--right-safe); /* Usa la variable CSS para el espacio seguro a la derecha */
+    top: var(--map-controls-top, 108px);
+    right: var(--map-controls-right, 16px);
     display: flex;
     width: 40px;
     flex-direction: column;
     gap: 8px;
-    z-index: 800; /* Asegura que los controles estén por encima del mapa */
+    z-index: 800;
     align-items: center;
+    transition: top .2s ease, right .2s ease;
+}
+
+.mapControls.rightPanelOpen{
+    right: calc(var(--right-panel-w, 280px) + var(--right-panel-offset, 12px) + 6px);
 }
 
 .ctl{
@@ -27,8 +32,8 @@
 .searchPanel{
     position: absolute;
     top: 0;
-    right: calc(36px + 8px);
-    width: 240px;
+    right: calc(100% + 8px);
+    width: min(240px, calc(100vw - var(--right-safe, 8px) - 72px));
     background: #FFFFFF;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -95,15 +100,16 @@
 
 .layersMenu{
     position: absolute;
-    bottom: 0px;
-    right: calc(36px + 8px);
+    bottom: 0;
+    right: calc(100% + 8px);
+    min-width: 168px;
     background: #FFFFFF;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
     padding: 8px 0;
-    z-index: 850; /* Asegura que el menú de capas esté por encima de todo */
+    z-index: 850;
 }
 
 .layersItem{
@@ -113,10 +119,19 @@
     text-align: left;
     width: 100%;
     cursor: pointer;
-    cursor: pointer;
     color: #0B4F4A;
 }
 
 .layersItem:hover{ background: rgba(11,79,74,.08); }
 
 .layersItem.isActive{ background: rgba(11,79,74,.12); }
+
+@media (max-width: 1024px){
+    .mapControls.rightPanelOpen{
+        right: calc(var(--right-panel-w, 260px) + var(--right-panel-offset, 8px) + 4px);
+    }
+
+    .searchPanel{
+        width: min(220px, calc(100vw - var(--right-safe, 8px) - 60px));
+    }
+}

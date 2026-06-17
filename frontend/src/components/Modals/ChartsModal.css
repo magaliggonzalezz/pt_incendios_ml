@@ -13,6 +13,7 @@
     border-radius: 999px;
     padding: 6px;
     margin-bottom: 14px;
+    overflow-x: auto;
 }
 
 .cmTab{
@@ -31,9 +32,445 @@
     color: #101828;
 }
 
+.cmTab:focus-visible{
+    outline: 3px solid rgba(0,120,111,.26);
+    outline-offset: 2px;
+}
+
 .cmTab.isActive{
     background: #fff;
     box-shadow: 0 1px 2px rgba(16,24,40,0.08);
+}
+
+.cmPanel{
+    border-radius: var(--radius);
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+    padding: 14px;
+}
+
+.cmSummaryGrid,
+.cmModelGrid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.cmSummaryItem{
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,0.06);
+    padding: 10px;
+    min-width: 0;
+}
+
+.cmSummaryItem span{
+    display: block;
+    font-size: 12px;
+    line-height: 14px;
+    color: #667085;
+    margin-bottom: 4px;
+}
+
+.cmSummaryItem strong{
+    display: block;
+    font-size: 14px;
+    line-height: 18px;
+    color: #101828;
+    overflow-wrap: anywhere;
+}
+
+.cmMlSummary{
+    margin-top: 12px;
+    border-radius: 10px;
+    background: #F6FEFC;
+    border: 1px solid rgba(20,184,166,0.18);
+    padding: 12px;
+}
+
+.cmTwoColumn{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+}
+
+.cmTwoColumn .cmMlSummary{
+    margin-top: 12px;
+}
+
+.cmVisualContext{
+    margin-top: 12px;
+    border-radius: 10px;
+    background: #FFF7ED;
+    border: 1px solid rgba(245,158,11,0.24);
+    padding: 12px;
+}
+
+.cmVisualContext p{
+    margin: 0;
+    font-size: 13px;
+    line-height: 18px;
+    color: #344054;
+}
+
+.cmVisualContext ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.cmVisualContext li{
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 8px;
+}
+
+.cmVisualContext li:first-child{
+    border-top: 0;
+    padding-top: 0;
+}
+
+.cmVisualContext strong,
+.cmVisualContext span,
+.cmVisualContext em{
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmVisualContext strong{
+    color: #101828;
+}
+
+.cmVisualContext span,
+.cmVisualContext em{
+    color: #667085;
+}
+
+.cmVisualContext em{
+    font-style: normal;
+    margin-top: 2px;
+}
+
+.cmPanelTitle{
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+    color: #0B4F4A;
+    margin-bottom: 8px;
+}
+
+.cmMlSummary p{
+    margin: 8px 0 0 0;
+    font-size: 13px;
+    line-height: 18px;
+    color: #344054;
+}
+
+.cmNote{
+    color: #667085;
+}
+
+.cmChartsGrid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.cmChartsGrid.isSingle{
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.cmChartsStack{
+    display: grid;
+    gap: 12px;
+}
+
+.cmChartsHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cmClearBtn{
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #fff;
+    color: #0B4F4A;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font: 700 12px/14px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    cursor: pointer;
+}
+
+.cmClusterCards{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.cmClusterCard{
+    border: 1px solid rgba(0,0,0,0.08);
+    border-left: 3px solid #64748B;
+    border-radius: 8px;
+    background: #fff;
+    min-width: 0;
+    padding: 10px;
+    text-align: left;
+    cursor: pointer;
+    transition: box-shadow .16s ease, transform .16s ease, opacity .16s ease, border-left-width .16s ease;
+}
+
+.cmClusterCard:hover,
+.cmClusterCard:focus-visible{
+    box-shadow: 0 8px 22px rgba(16,24,40,.12);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.cmClusterCard.isActive{
+    border-left-width: 6px;
+}
+
+.cmClusterCard.isDimmed{
+    opacity: .5;
+}
+
+.cmClusterCard strong,
+.cmClusterCard span{
+    display: block;
+}
+
+.cmClusterCard strong{
+    color: #101828;
+    font-size: 13px;
+    line-height: 17px;
+    margin-bottom: 6px;
+}
+
+.cmClusterCard > span{
+    color: #667085;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmBadges{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.cmBadge{
+    border-radius: 999px;
+    padding: 4px 7px;
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: 700;
+}
+
+.cmDominant{
+    margin-top: 12px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-left: 5px solid #0F766E;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+}
+
+.cmDominant strong{
+    display: block;
+    color: #101828;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.cmDominant p,
+.cmDominant summary{
+    color: #344054;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.cmDominant summary{
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.cmFixedFooter{
+    position: sticky;
+    bottom: -14px;
+    margin: 12px -14px -14px;
+    padding: 10px 14px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    background: rgba(255,255,255,.96);
+    color: #667085;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmUnavailableText{
+    color: #667085;
+    font-size: 13px;
+    line-height: 18px;
+    margin: 0;
+    text-align: center;
+}
+
+.cmRangeCard{
+    display: grid;
+    grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    border-radius: var(--radius);
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+    padding: 12px;
+}
+
+.cmRangeCard strong,
+.cmRangeCard span{
+    display: block;
+    font-size: 13px;
+    line-height: 17px;
+}
+
+.cmRangeCard strong{
+    color: #101828;
+}
+
+.cmRangeCard span{
+    color: #667085;
+}
+
+.cmSourceOverview{
+    margin-top: 12px;
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,0.06);
+    padding: 12px;
+}
+
+.cmSourceList{
+    display: grid;
+    gap: 8px;
+}
+
+.cmSourceItem{
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr);
+    gap: 9px;
+    align-items: start;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding-top: 8px;
+}
+
+.cmSourceItem:first-child{
+    border-top: 0;
+    padding-top: 0;
+}
+
+.cmSourceItem i{
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    margin-top: 3px;
+}
+
+.cmSourceItem strong,
+.cmSourceItem span,
+.cmSourceItem em{
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmSourceItem strong{
+    color: #101828;
+}
+
+.cmSourceItem span,
+.cmSourceItem em{
+    color: #667085;
+}
+
+.cmSourceItem em{
+    font-style: normal;
+}
+
+.cmClusterLegend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cmClusterLegend span{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    max-width: 100%;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #F8FAFC;
+    padding: 7px 10px;
+    font-size: 12px;
+    line-height: 15px;
+    color: #344054;
+}
+
+.cmClusterLegend i{
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    flex: 0 0 auto;
+}
+
+.cmSourceSection{
+    display: grid;
+    gap: 10px;
+}
+
+.cmSourceTitle{
+    color: #0B4F4A;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 800;
+}
+
+.cmAvailability{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cmAvailabilityItem{
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #F2F4F7;
+    color: #667085;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.cmAvailabilityItem.isAvailable{
+    background: #F6FEFC;
+    border-color: rgba(20,184,166,0.24);
+    color: #0B4F4A;
+}
+
+.cmChartCard{
+    border-radius: var(--radius);
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+    padding: 12px;
+}
+
+.cmChartCard.isUnavailable{
+    background: #F8FAFC;
 }
 
 .cmChartTitle{
@@ -41,105 +478,388 @@
     font-weight: 600;
     font-size: 14px;
     color: #101828;
-    margin: 6px 0 10px 0;
+    margin: 0 0 8px 0;
     text-align: center;
 }
 
-.cmChartWrap{
-    height: 520px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(0,0,0,0.08);
-    background: #fff;
-    padding: 12px;
+.cmChartSubtitle{
+    margin: -2px 0 10px 0;
+    color: #667085;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
 }
 
-.cmExportBtn{
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(0,0,0,0.12);
-    background: #F2F4F7;
-    cursor: pointer;
-}
-
-/* --- Serie temporal: layout principal + selector inferior --- */
-.cmTimeLayout{
-    height: 100%;
+.cmChartText{
     display: grid;
-    grid-template-rows: 1fr auto;
+    gap: 4px;
+    margin-bottom: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+.cmChartText p,
+.cmChartText small{
+    margin: 0;
+    color: #4A5565;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmChartText small{
+    color: #667085;
+}
+
+.cmChartMeta{
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0 0 10px 0;
+}
+
+.cmChartMeta div{
+    min-width: 0;
+    border-radius: 8px;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,0.06);
+    padding: 7px;
+}
+
+.cmChartMeta dt,
+.cmChartMeta dd{
+    margin: 0;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.cmChartMeta dt{
+    color: #667085;
+    font-weight: 700;
+}
+
+.cmChartMeta dd{
+    color: #101828;
+    overflow-wrap: anywhere;
+}
+
+.cmChartBox{
+    min-width: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.cmChartCanvas{
+    height: clamp(220px, 32vh, 300px);
+    min-width: 0;
+}
+
+.cmTemporalRange{
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+.cmTemporalRangeLabels{
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #344054;
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 700;
+}
+
+.cmTemporalSliders{
+    position: relative;
+    min-height: 28px;
+}
+
+.cmTemporalSliders::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 11px;
+    height: 8px;
+    border-radius: 999px;
+    border: 1px solid #98A2B3;
+    background:
+        linear-gradient(
+            to right,
+            #EEF2F6 0%,
+            #EEF2F6 var(--range-start, 0%),
+            #0B4F4A var(--range-start, 0%),
+            #0B4F4A var(--range-end, 100%),
+            #EEF2F6 var(--range-end, 100%),
+            #EEF2F6 100%
+        );
+    pointer-events: none;
+}
+
+.cmTemporalSliders input[type="range"]{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cmTemporalSliders input[type="range"]::-webkit-slider-runnable-track{
+    height: 8px;
+    background: transparent;
+    border: 0;
+}
+
+.cmTemporalSliders input[type="range"]::-moz-range-track{
+    height: 8px;
+    background: transparent;
+    border: 0;
+}
+
+.cmTemporalSliders input[type="range"]::-moz-range-progress{
+    background: transparent;
+}
+
+.cmTemporalSliders input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 2px solid #FFFFFF;
+    background: #667085;
+    box-shadow: 0 1px 4px rgba(16,24,40,.35);
+    margin-top: -7px;
+    pointer-events: auto;
+    cursor: grab;
+}
+
+.cmTemporalSliders input[type="range"]::-moz-range-thumb{
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    border: 2px solid #FFFFFF;
+    background: #667085;
+    box-shadow: 0 1px 4px rgba(16,24,40,.35);
+    pointer-events: auto;
+    cursor: grab;
+}
+
+.cmTemporalSliders input[type="range"]:focus-visible::-webkit-slider-thumb{
+    outline: 3px solid rgba(11,79,74,.24);
+    outline-offset: 2px;
+}
+
+.cmTemporalSliders input[type="range"]:focus-visible::-moz-range-thumb{
+    outline: 3px solid rgba(11,79,74,.24);
+    outline-offset: 2px;
+}
+
+.cmChartUnavailable{
+    min-height: 160px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #F2F4F7;
+    color: #667085;
+    font-size: 13px;
+    text-align: center;
+    padding: 16px;
+}
+
+.cmMapGrid{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 12px;
 }
 
-.cmTimeMain{
-    min-height: 0;
+.cmMapOptions{
+    display: grid;
+    gap: 10px;
 }
 
-.cmTimeRange{
+.cmMapOption{
     border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.08);
-    background: #F6FEFC;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,0.06);
     padding: 10px;
 }
 
-.cmMini{
-    height: 44px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(20,184,166,0.18);
-    overflow: hidden;
+.cmMapOption strong,
+.cmMapOption span{
+    display: block;
+    font-size: 13px;
+    line-height: 17px;
 }
 
-.cmRangeUi{ margin-top: 8px; }
+.cmMapOption strong{
+    color: #101828;
+    margin-bottom: 3px;
+}
 
-.cmRangeLabels{
-    display: flex;
-    justify-content: space-between;
-    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+.cmMapOption span{
+    color: #667085;
+}
+
+.cmHeatmap{
+    display: grid;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.cmHeatmapRow{
+    display: grid;
+    grid-template-columns: 42px repeat(6, minmax(32px, 1fr));
+    align-items: center;
+    gap: 6px;
+}
+
+.cmHeatmapRow span{
+    color: #667085;
     font-size: 12px;
-    color: #344054;
-    margin-bottom: 6px;
 }
 
-/* doble range: dos sliders superpuestos */
-.cmDoubleRange{
-    position: relative;
-    height: 22px;
+.cmHeatmapRow i{
+    min-height: 34px;
+    border-radius: 8px;
+    background: #0F766E;
+    color: white;
+    display: grid;
+    place-items: center;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 700;
 }
 
-.cmRange{
-    -webkit-appearance: none;
-    appearance: none;
-    position: absolute;
-    left: 0;
-    top: 2px;
-    width: 100%;
-    height: 18px;
-    background: transparent;
-    pointer-events: none; /* solo el thumb captura */
+.cmTableWrap{
+    border-radius: var(--radius);
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+    overflow: auto;
+    max-height: min(420px, calc(100dvh - 260px));
+}
+
+.cmDataPanel{
+    display: grid;
+    gap: 12px;
+}
+
+.cmDataSubtitle{
     margin: 0;
+    color: #667085;
+    font-size: 13px;
+    line-height: 18px;
 }
 
-.cmRange::-webkit-slider-runnable-track{
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(16, 185, 129, 0.20);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+.cmTableWrap.isPreview{
+    max-height: 300px;
+    overflow-y: auto;
 }
 
-.cmRange::-webkit-slider-thumb{
-    -webkit-appearance: none;
-    appearance: none;
-    width: 14px;
-    height: 14px;
+.cmDataActions{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cmExportBtn{
+    border: 0;
     border-radius: 999px;
-    background: #0EA5A4;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-    pointer-events: auto;
+    background: #0B4F4A;
+    color: #fff;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 13px/16px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     cursor: pointer;
-    margin-top: -5px;
 }
 
-.cmRangeEnd{ z-index: 2; }
+.cmExportBtn:focus-visible{
+    outline: 3px solid rgba(11,79,74,.24);
+    outline-offset: 2px;
+}
+
+.cmTable{
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 13px;
+}
+
+.cmTable th,
+.cmTable td{
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.cmTable th{
+    background: #F8FAFC;
+    color: #344054;
+    font-weight: 700;
+}
+
+.cmTable td{
+    color: #101828;
+}
+
+@media (max-width: 760px){
+    .cmTabs{
+        border-radius: var(--radius);
+        flex-wrap: wrap;
+    }
+
+    .cmTab{
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .cmSummaryGrid,
+    .cmModelGrid,
+    .cmChartsGrid,
+    .cmChartMeta,
+    .cmMapGrid,
+    .cmTwoColumn,
+    .cmRangeCard{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1180px){
+    .cmSummaryGrid,
+    .cmModelGrid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cmChartsGrid{
+        grid-template-columns: 1fr;
+    }
+
+    .cmClusterCards{
+        grid-template-columns: 1fr;
+    }
+
+    .cmMapGrid,
+    .cmTwoColumn,
+    .cmRangeCard{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-height: 720px){
+    .cmChartCanvas{
+        height: 220px;
+    }
+
+    .cmTableWrap{
+        max-height: calc(100dvh - 220px);
+    }
+}

@@ -2,11 +2,10 @@
     position: absolute;
     top: 60px;
     left: 16px;
-    bottom: 56px;
     width: 260px;
+    max-height: calc(100vh - 132px);
     display: flex;
     flex-direction: column;
-    gap: 10px;
     transition: transform .2s ease;
     z-index: 10;
 }
@@ -28,6 +27,33 @@
     box-shadow: var(--shadow);
 }
 
+.panelContent{
+    max-height: inherit;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 2px;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #8A8A8A transparent;
+}
+
+.panelContent::-webkit-scrollbar{
+    width: 6px;
+}
+
+.panelContent::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.panelContent::-webkit-scrollbar-thumb{
+    background: #8A8A8A;
+    border-radius: 999px;
+}
+
 .panelCard{
     background: var(--panel);
     border-radius: var(--radius);
@@ -46,16 +72,99 @@
 
 .row{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     font-size: 13px;
     margin: 6px 0;
+    line-height: 17px;
 }
 
-.row input[type="checkbox"]{
+.row input[type="checkbox"],
+.row input[type="radio"]{
   width: 16px;
   height: 16px;
   accent-color: #0B4F4A;
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.row span{
+    min-width: 0;
+}
+
+.row small{
+    display: block;
+    margin-top: 2px;
+    color: rgba(0,0,0,.55);
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.layersCard{
+    flex: 0 0 auto;
+}
+
+.layerGroups{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.layerGroup{
+    border-top: 1px solid rgba(0,0,0,.08);
+    padding-top: 9px;
+}
+
+.layerGroup:first-child{
+    border-top: 0;
+    padding-top: 0;
+}
+
+.layerGroupTitle{
+    color: #0B4F4A;
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.layerRow{
+    margin: 7px 0;
+}
+
+.layerRow.isDisabled{
+    opacity: .52;
+}
+
+.smnFilters{
+    margin: 8px 0 2px 24px;
+    padding: 8px 9px;
+    border-radius: 10px;
+    background: rgba(11,79,74,.07);
+    border: 1px solid rgba(11,79,74,.10);
+}
+
+.smnFilters.isDisabled{
+    opacity: .55;
+}
+
+.smnFiltersTitle{
+    margin-bottom: 5px;
+    color: rgba(0,0,0,.62);
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 700;
+}
+
+.smnFilterBlock + .smnFilterBlock{
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(11,79,74,.12);
+}
+
+.smnFilterRow{
+    margin: 5px 0;
+    font-size: 12px;
 }
 
 .field{
@@ -74,6 +183,21 @@
     border: none;
     padding: 0 10px;
     outline: none;
+}
+
+.field .textInput{
+    height: 40px;
+    border-radius: 10px;
+    border: 0;
+    background: #F3F3F5;
+    padding: 0 12px;
+    outline: none;
+    font: inherit;
+    color: var(--text-field);
+}
+
+.field .textInput:focus{
+    box-shadow: 0 0 0 3px rgba(11,79,74,.18);
 }
 
 .field input[type="date"]{
@@ -112,6 +236,15 @@
     box-shadow: 0 0 0 3px rgba(11,79,74,.18);
 }
 
+.toggleBtn:focus-visible,
+.primaryBtn:focus-visible,
+.ghostBtn:focus-visible,
+.row input[type="checkbox"]:focus-visible,
+.row input[type="radio"]:focus-visible{
+    outline: 3px solid rgba(11,79,74,.24);
+    outline-offset: 2px;
+}
+
 .selectInput:disabled{
     opacity: .55;
     cursor: not-allowed;
@@ -141,11 +274,16 @@
     width: 100%;
     height: 36px;
     border-radius: var(--radius);
-    border: 0;
+    border: 1px solid var(--bg);
     cursor: pointer;
     margin-top: 8px;
-    background: var(--inactive-btn);
-    color: white;
+    background: transparent;
+    color: var(--bg);
+    font-weight: 600;
+}
+
+.ghostBtn:hover:not(:disabled){
+    background: rgba(62,124,89,.10);
 }
 
 .ghostBtn:disabled{
