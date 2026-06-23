@@ -1,0 +1,55 @@
+{
+  "fase_crisp_dm": "Evaluation",
+  "flujo_principal": "municipio_dia",
+  "modelo_final": "PCA + SOM + KMeans",
+  "objetivo": "Generar resúmenes agregados para app web",
+  "dataset_origen": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_municipio_dia.csv",
+  "resumenes": [
+    {
+      "nombre": "app_resumen_cluster",
+      "generado": true,
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_resumen_cluster.csv",
+      "filas": 11,
+      "motivo": "OK"
+    },
+    {
+      "nombre": "app_resumen_mes",
+      "generado": true,
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_resumen_mes.csv",
+      "filas": 300,
+      "motivo": "OK"
+    },
+    {
+      "nombre": "app_resumen_entidad",
+      "generado": true,
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_resumen_entidad.csv",
+      "filas": 32,
+      "motivo": "OK"
+    },
+    {
+      "nombre": "app_resumen_municipio",
+      "generado": true,
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_resumen_municipio.csv",
+      "filas": 2450,
+      "motivo": "OK"
+    },
+    {
+      "nombre": "app_resumen_entidad_cluster",
+      "generado": true,
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_resumen_entidad_cluster.csv",
+      "filas": 282,
+      "motivo": "OK"
+    },
+    {
+      "nombre": "app_resumen_municipio_cluster",
+      "generado": true,
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\app_resumen_municipio_cluster.csv",
+      "filas": 8526,
+      "motivo": "OK"
+    }
+  ],
+  "archivo_diagnostico": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\reports\\evaluation_03_diagnostico_resumenes_app.csv",
+  "validaciones_ok": 8,
+  "warnings": 0,
+  "errores": 0
+}

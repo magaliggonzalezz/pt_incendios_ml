@@ -1,0 +1,11 @@
+﻿indicador,valor,estatus,observacion
+firms_registros_leidos,8304775,ok,Total de registros FIRMS leídos desde DP.
+fecha_min,2001-01-01,ok,Fecha mínima detectada en FIRMS.
+fecha_max,2025-12-31,ok,Fecha máxima detectada en FIRMS.
+firms_fecha_nula,0,ok,Registros FIRMS sin fecha válida.
+firms_coordenada_invalida,0,ok,Registros FIRMS sin coordenadas válidas para México.
+firms_cvegeo_nula,7863,warning,Registros FIRMS sin municipio asignado por join espacial.
+firms_sin_catalogo_municipal,0,ok,Registros cuyo cvegeo no encontró correspondencia en catálogo municipal.
+firms_fuera_periodo_proyecto_2001_2025,0,ok,Registros FIRMS fuera del periodo general del proyecto.
+municipio_dia_registros,1417289,ok,Registros generados en integration_firms_municipio_dia.csv.
+municipio_dia_duplicados_cvegeo_fecha,0,ok,Duplicados por clave cvegeo + fecha en agregación municipio-día.

@@ -1,0 +1,15 @@
+﻿indicador,valor,estatus,observacion
+catalogo_municipios_registros,2478,ok,Municipios disponibles en catálogo de integración.
+conafor_municipio_dia_registros,105606,ok,Registros de CONAFOR municipio-día usados como insumo.
+firms_municipio_dia_registros,1417289,ok,Registros de FIRMS municipio-día usados como insumo.
+smn_municipio_dia_registros,10676715,ok,Registros de SMN municipio-día usados como insumo.
+base_municipio_dia_registros,11154221,ok,Registros generados en integracion_municipio_dia_base.csv.
+base_fecha_min,2001-01-01,ok,Fecha mínima en base municipio-día.
+base_fecha_max,2025-12-31,ok,Fecha máxima en base municipio-día.
+base_duplicados_cvegeo_fecha,0,ok,Duplicados por clave cvegeo + fecha en base integrada.
+base_cvegeo_sin_catalogo,0,ok,Registros de base cuyo cvegeo no encontró correspondencia en catálogo municipal.
+base_fuera_periodo_proyecto_2001_2025,0,ok,Registros fuera del periodo general del proyecto.
+has_conafor_suma,105606,ok,Total de filas con has_conafor=1.
+has_firms_suma,1417289,ok,Total de filas con has_firms=1.
+has_smn_suma,10676715,ok,Total de filas con has_smn=1.
+conafor_disponible_suma,9396774,ok,Filas dentro del periodo con disponibilidad CONAFOR 2005-2025.

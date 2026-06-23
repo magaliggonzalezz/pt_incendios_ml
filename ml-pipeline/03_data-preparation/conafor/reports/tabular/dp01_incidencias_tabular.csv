@@ -1,0 +1,697 @@
+﻿fuente,anio,clave_incendio,estado,cve_ent,municipio,cve_mun,latitud,longitud,fecha_inicio,fecha_termino,deteccion,llegada,duracion,motivos_revision
+estadisticasIncendiosForestales2015-2024,2015,15-02-0095,Baja California,02,Ensenada,001,,,2015-12-01,2015-12-02,00:05:00,00:49:00,23:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-05-0021,Coahuila,05,Ocampo,023,,,2015-08-18,2015-08-19,00:10:00,16:00:00,22:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0003,Chihuahua,08,Chihuahua,019,,,2015-02-09,2015-02-09,00:05:00,00:10:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0008,Chihuahua,08,Chihuahua,019,,,2015-03-17,2015-03-17,00:25:00,01:20:00,11:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0014,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-06,2015-04-06,00:10:00,01:00:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0016,Chihuahua,08,Ocampo,051,,,2015-04-06,2015-04-07,00:25:00,02:30:00,36:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0054,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-24,2015-04-24,00:05:00,01:30:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0055,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-27,2015-04-27,00:05:00,02:00:00,07:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0056,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-27,2015-04-27,00:05:00,01:00:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0057,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-24,2015-04-24,00:05:00,00:45:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0058,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-26,2015-04-26,00:05:00,01:00:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0059,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-17,2015-04-17,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0060,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-28,2015-04-28,00:05:00,00:30:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0061,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-30,2015-04-30,00:05:00,00:30:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0062,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-01,2015-05-01,00:05:00,01:00:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0063,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-01,2015-05-01,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0064,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-23,2015-04-23,00:05:00,00:40:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0065,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-26,2015-04-26,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0066,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-26,2015-04-26,00:05:00,00:40:00,03:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0067,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-16,2015-04-16,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0068,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-04-24,2015-04-24,00:05:00,00:20:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0088,Chihuahua,08,Guerrero,031,,,2015-05-17,2015-05-17,00:05:00,02:30:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0095,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-06,2015-05-06,00:05:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0096,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-07,2015-05-07,00:05:00,01:00:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0097,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-07,2015-05-07,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0098,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-10,2015-05-10,00:05:00,00:20:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0099,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-04,2015-05-04,00:05:00,02:00:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0100,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-07,2015-05-08,00:10:00,03:00:00,25:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0101,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-04,2015-05-04,00:05:00,04:00:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0102,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-07,2015-05-07,00:10:00,02:40:00,10:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0103,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-09,2015-05-09,00:06:00,00:20:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0104,Chihuahua,08,Uruachi,066,,,2015-05-11,2015-05-11,00:05:00,00:15:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0105,Chihuahua,08,Temósachic,063,,,2015-05-16,2015-05-16,00:05:00,00:30:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0106,Chihuahua,08,Ocampo,051,,,2015-05-07,2015-05-07,00:05:00,00:15:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0107,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-18,2015-05-18,00:05:00,00:40:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0108,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-19,2015-05-19,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0109,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,02:00:00,15:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0110,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-19,2015-05-19,00:05:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0111,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,03:20:00,05:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0112,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-22,2015-05-22,00:05:00,02:00:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0113,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-19,2015-05-19,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0114,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,01:00:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0115,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,01:00:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0116,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-21,2015-05-21,00:05:00,00:40:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0117,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-21,2015-05-21,00:05:00,00:30:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0118,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-21,2015-05-21,00:05:00,02:30:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0119,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-22,2015-05-22,00:05:00,00:40:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0120,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-18,2015-05-18,00:05:00,01:30:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0121,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-21,2015-05-21,00:05:00,01:30:00,04:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0122,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-23,2015-05-23,00:05:00,01:30:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0123,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-09,2015-05-09,00:05:00,00:20:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0124,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-11,2015-05-11,00:05:00,00:40:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0125,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-12,2015-05-12,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0126,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-08,2015-05-08,00:05:00,02:00:00,09:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0127,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-01,2015-05-01,00:05:00,01:30:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0128,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-04,2015-05-04,00:05:00,00:35:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0129,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-11,2015-05-11,00:05:00,00:50:00,06:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0130,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-13,2015-05-13,00:05:00,01:00:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0131,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-19,2015-05-19,00:05:00,00:15:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0132,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-19,2015-05-19,00:05:00,00:20:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0133,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-19,2015-05-19,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0134,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,00:15:00,03:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0135,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0136,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,00:30:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0137,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0138,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0139,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-20,2015-05-20,00:05:00,00:50:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0140,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-21,2015-05-21,00:05:00,01:10:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0146,Chihuahua,08,Bocoyna,009,,,2015-05-04,2015-05-04,00:05:00,00:50:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0152,Chihuahua,08,Guazapares,030,,,2015-05-22,2015-05-22,00:05:00,00:15:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0167,Chihuahua,08,Urique,065,,,2015-05-31,2015-05-31,00:05:00,00:35:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0185,Chihuahua,08,Ocampo,051,,,2015-05-25,2015-05-25,00:06:00,01:30:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0186,Chihuahua,08,Moris,047,,,2015-05-25,2015-05-25,00:06:00,00:15:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0187,Chihuahua,08,Temósachic,063,,,2015-05-25,2015-05-25,00:06:00,00:15:00,02:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0188,Chihuahua,08,Temósachic,063,,,2015-05-25,2015-05-25,00:07:00,01:00:00,06:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0189,Chihuahua,08,Ocampo,051,,,2015-05-27,2015-05-27,00:07:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0190,Chihuahua,08,Temósachic,063,,,2015-05-28,2015-05-29,00:07:00,01:30:00,23:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0191,Chihuahua,08,Ocampo,051,,,2015-05-31,2015-05-31,00:10:00,01:00:00,10:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0205,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-25,2015-05-25,00:05:00,02:00:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0206,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-25,2015-05-25,00:05:00,01:00:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0207,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-26,2015-05-26,00:05:00,01:00:00,12:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0208,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-26,2015-05-26,00:05:00,00:40:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0209,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-27,2015-05-27,00:05:00,00:30:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0210,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-28,2015-05-28,00:05:00,01:00:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0211,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-29,2015-05-29,00:05:00,00:20:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0212,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-30,2015-05-30,00:05:00,01:30:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0213,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-30,2015-05-30,00:05:00,01:10:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0214,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-28,2015-05-28,00:05:00,00:50:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0215,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-29,2015-05-29,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0216,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-30,2015-05-30,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0217,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-30,2015-05-30,00:05:00,02:15:00,15:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0218,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-30,2015-05-30,00:05:00,00:45:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0219,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-31,2015-05-31,00:05:00,01:00:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0220,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-31,2015-05-31,00:05:00,01:00:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0221,Chihuahua,08,Guadalupe Y Calvo,029,,,2015-05-31,2015-05-31,00:05:00,00:50:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0222,Chihuahua,08,Nuevo Casas Grandes,050,,,2015-06-12,2015-06-12,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0223,Chihuahua,08,Ocampo,051,,,2015-06-12,2015-06-12,00:05:00,00:25:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-08-0245,Chihuahua,08,Urique,065,,,2015-06-19,2015-06-19,00:07:00,01:00:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0003,Ciudad de México,09,Tláhuac,011,,,2015-01-01,2015-01-01,00:05:00,00:10:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0007,Ciudad de México,09,Xochimilco,013,,,2015-01-06,2015-01-06,00:05:00,00:10:00,00:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0010,Ciudad de México,09,Iztapalapa,007,,,2015-01-10,2015-01-10,00:05:00,00:18:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0011,Ciudad de México,09,Milpa Alta,009,,,2015-01-10,2015-01-10,00:05:00,00:04:00,00:48:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0013,Ciudad de México,09,Iztapalapa,007,,,2015-01-11,2015-01-11,00:05:00,00:30:00,01:42:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0026,Ciudad de México,09,Cuajimalpa De Morelos,004,,,2015-01-18,2015-01-18,00:05:00,00:30:00,03:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0042,Ciudad de México,09,Milpa Alta,009,,,2015-01-25,2015-01-25,00:05:00,00:10:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0048,Ciudad de México,09,Milpa Alta,009,,,2015-01-28,2015-01-28,00:05:00,00:33:00,01:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0068,Ciudad de México,09,Milpa Alta,009,,,2015-01-31,2015-01-31,00:05:00,00:18:00,02:08:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0069,Ciudad de México,09,Milpa Alta,009,,,2015-01-31,2015-01-31,00:05:00,00:07:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0073,Ciudad de México,09,Milpa Alta,009,,,2015-02-05,2015-02-05,00:05:00,00:20:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0076,Ciudad de México,09,Cuajimalpa De Morelos,004,,,2015-02-06,2015-02-06,00:05:00,00:25:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0086,Ciudad de México,09,Xochimilco,013,,,2015-02-08,2015-02-08,00:05:00,00:10:00,00:51:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0090,Ciudad de México,09,Milpa Alta,009,,,2015-02-09,2015-02-09,00:05:00,00:13:00,00:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0095,Ciudad de México,09,Milpa Alta,009,,,2015-02-09,2015-02-09,00:05:00,00:25:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0101,Ciudad de México,09,Milpa Alta,009,,,2015-02-10,2015-02-10,00:05:00,00:27:00,01:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0104,Ciudad de México,09,Milpa Alta,009,,,2015-02-10,2015-02-10,00:05:00,00:18:00,00:36:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0105,Ciudad de México,09,Milpa Alta,009,,,2015-02-10,2015-02-10,00:05:00,01:10:00,03:34:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0132,Ciudad de México,09,Xochimilco,013,,,2015-02-22,2015-02-22,00:05:00,00:12:00,01:01:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0137,Ciudad de México,09,Milpa Alta,009,,,2015-02-23,2015-02-23,00:05:00,00:10:00,01:01:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0140,Ciudad de México,09,Milpa Alta,009,,,2015-02-23,2015-02-23,00:05:00,01:06:00,02:26:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0153,Ciudad de México,09,Tlalpan,012,,,2015-02-24,2015-02-24,00:05:00,00:30:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0160,Ciudad de México,09,Milpa Alta,009,,,2015-02-24,2015-02-24,00:05:00,00:07:00,00:01:02,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0166,Ciudad de México,09,Milpa Alta,009,,,2015-02-25,2015-02-25,00:05:00,00:44:00,01:14:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0172,Ciudad de México,09,Xochimilco,013,,,2015-02-26,2015-02-26,00:05:00,00:23:00,01:11:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0182,Ciudad de México,09,Milpa Alta,009,,,2015-02-27,2015-02-27,00:05:00,00:33:00,01:02:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0183,Ciudad de México,09,Milpa Alta,009,,,2015-02-27,2015-02-27,00:05:00,00:10:00,00:58:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0185,Ciudad de México,09,Milpa Alta,009,,,2015-02-27,2015-02-27,00:05:00,00:21:00,00:52:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0186,Ciudad de México,09,Milpa Alta,009,,,2015-02-27,2015-02-27,00:05:00,00:25:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0191,Ciudad de México,09,Gustavo A. Madero,005,,,2015-02-27,2015-02-27,00:05:00,00:13:00,00:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0198,Ciudad de México,09,Milpa Alta,009,,,2015-03-01,2015-03-01,00:05:00,00:19:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0202,Ciudad de México,09,Xochimilco,013,,,2015-03-02,2015-03-02,00:05:00,00:11:00,00:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0206,Ciudad de México,09,Milpa Alta,009,,,2015-03-02,2015-03-02,00:05:00,00:52:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0207,Ciudad de México,09,Milpa Alta,009,,,2015-03-02,2015-03-02,00:05:00,00:15:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0212,Ciudad de México,09,Tlalpan,012,,,2015-03-02,2015-03-02,00:05:00,00:20:00,01:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0219,Ciudad de México,09,La Magdalena Contreras,008,,,2015-03-02,2015-03-02,00:05:00,00:30:00,04:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0235,Ciudad de México,09,Milpa Alta,009,,,2015-03-04,2015-03-04,00:05:00,00:37:00,01:41:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0245,Ciudad de México,09,Tlalpan,012,,,2015-03-05,2015-03-05,00:05:00,00:15:00,01:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0256,Ciudad de México,09,Xochimilco,013,,,2015-03-07,2015-03-07,00:05:00,00:15:00,00:59:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0272,Ciudad de México,09,Milpa Alta,009,,,2015-03-09,2015-03-09,00:05:00,00:15:00,01:23:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0273,Ciudad de México,09,Milpa Alta,009,,,2015-03-09,2015-03-09,00:05:00,00:20:00,03:13:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0274,Ciudad de México,09,Milpa Alta,009,,,2015-03-09,2015-03-09,00:05:00,00:30:00,00:49:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0289,Ciudad de México,09,Milpa Alta,009,,,2015-03-17,2015-03-17,00:05:00,00:25:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0290,Ciudad de México,09,Xochimilco,013,,,2015-03-18,2015-03-18,00:05:00,00:15:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0294,Ciudad de México,09,Xochimilco,013,,,2015-03-21,2015-03-21,00:05:00,00:15:00,00:56:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0305,Ciudad de México,09,Milpa Alta,009,,,2015-04-04,2015-04-04,00:05:00,00:17:00,01:06:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0306,Ciudad de México,09,Milpa Alta,009,,,2015-04-04,2015-04-04,00:05:00,00:11:00,01:54:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0308,Ciudad de México,09,Milpa Alta,009,,,2015-04-04,2015-04-04,00:05:00,00:22:00,01:02:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0313,Ciudad de México,09,Milpa Alta,009,,,2015-04-05,2015-04-05,00:05:00,00:15:00,01:17:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0315,Ciudad de México,09,Tláhuac,011,,,2015-04-07,2015-04-07,00:05:00,00:12:00,00:47:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0316,Ciudad de México,09,Milpa Alta,009,,,2015-04-07,2015-04-07,00:05:00,00:18:00,01:08:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0329,Ciudad de México,09,Milpa Alta,009,,,2015-04-09,2015-04-09,00:05:00,00:15:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0332,Ciudad de México,09,Milpa Alta,009,,,2015-04-10,2015-04-10,00:05:00,01:25:00,01:49:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0333,Ciudad de México,09,Milpa Alta,009,,,2015-04-10,2015-04-10,00:05:00,00:15:00,01:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0339,Ciudad de México,09,Milpa Alta,009,,,2015-04-12,2015-04-12,00:05:00,00:36:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0363,Ciudad de México,09,Milpa Alta,009,,,2015-04-15,2015-04-15,00:05:00,00:17:00,00:57:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0372,Ciudad de México,09,Tlalpan,012,,,2015-04-16,2015-04-16,00:05:00,00:10:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0395,Ciudad de México,09,Milpa Alta,009,,,2015-04-20,2015-04-20,00:05:00,00:37:00,01:11:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0396,Ciudad de México,09,Milpa Alta,009,,,2015-04-20,2015-04-20,00:05:00,00:09:00,01:04:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0401,Ciudad de México,09,Milpa Alta,009,,,2015-04-21,2015-04-21,00:05:00,00:32:00,01:01:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0419,Ciudad de México,09,Milpa Alta,009,,,2015-04-24,2015-04-24,00:05:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0422,Ciudad de México,09,Milpa Alta,009,,,2015-04-24,2015-04-24,00:05:00,00:42:00,01:12:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0425,Ciudad de México,09,Tlalpan,012,,,2015-04-24,2015-04-24,00:05:00,00:25:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0429,Ciudad de México,09,Milpa Alta,009,,,2015-04-26,2015-04-26,00:05:00,01:00:00,02:02:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0431,Ciudad de México,09,Milpa Alta,009,,,2015-04-26,2015-04-26,00:05:00,00:36:00,01:07:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0436,Ciudad de México,09,Milpa Alta,009,,,2015-04-27,2015-04-27,00:05:00,00:34:00,01:04:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0441,Ciudad de México,09,Tlalpan,012,,,2015-04-27,2015-04-27,00:05:00,00:55:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0443,Ciudad de México,09,Tlalpan,012,,,2015-04-28,2015-04-28,00:05:00,00:14:00,00:44:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0462,Ciudad de México,09,Milpa Alta,009,,,2015-10-06,2015-10-06,00:05:00,00:35:00,01:43:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0464,Ciudad de México,09,Tlalpan,012,,,2015-10-10,2015-10-10,00:05:00,03:00:00,04:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0471,Ciudad de México,09,Tlalpan,012,,,2015-11-08,2015-11-08,00:05:00,00:15:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0473,Ciudad de México,09,Gustavo A. Madero,005,,,2015-11-11,2015-11-11,00:05:00,00:10:00,01:04:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0475,Ciudad de México,09,Xochimilco,013,,,2015-11-16,2015-11-16,00:05:00,00:39:00,01:18:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0477,Ciudad de México,09,Tláhuac,011,,,2015-12-10,2015-12-10,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0479,Ciudad de México,09,Gustavo A. Madero,005,,,2015-12-16,2015-12-16,00:05:00,00:07:00,01:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0480,Ciudad de México,09,Tláhuac,011,,,2015-02-16,2015-02-16,00:05:00,00:20:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0482,Ciudad de México,09,Milpa Alta,009,,,2015-12-19,2015-12-19,00:05:00,00:32:00,00:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0483,Ciudad de México,09,Gustavo A. Madero,005,,,2015-12-20,2015-12-20,00:05:00,00:06:00,01:07:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0484,Ciudad de México,09,Gustavo A. Madero,005,,,2015-12-21,2015-12-21,00:05:00,00:18:00,01:13:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0485,Ciudad de México,09,Xochimilco,013,,,2015-12-22,2015-12-22,00:05:00,00:15:00,01:31:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0486,Ciudad de México,09,Xochimilco,013,,,2015-12-22,2015-12-22,00:05:00,00:15:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0487,Ciudad de México,09,Milpa Alta,009,,,2015-12-23,2015-12-23,00:05:00,00:25:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0488,Ciudad de México,09,Milpa Alta,009,,,2015-12-23,2015-12-23,00:05:00,00:28:00,01:03:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0489,Ciudad de México,09,Gustavo A. Madero,005,,,2015-12-24,2015-12-24,00:05:00,00:15:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0490,Ciudad de México,09,Milpa Alta,009,,,2015-12-24,2015-12-24,00:05:00,00:25:00,01:32:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0491,Ciudad de México,09,Xochimilco,013,,,2015-12-25,2015-12-25,00:05:00,00:40:00,03:16:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0492,Ciudad de México,09,Iztapalapa,007,,,2015-12-25,2015-12-25,00:05:00,00:30:00,01:11:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0494,Ciudad de México,09,Xochimilco,013,,,2015-12-26,2015-12-26,00:05:00,00:10:00,01:41:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0495,Ciudad de México,09,Tláhuac,011,,,2015-12-27,2015-12-27,00:05:00,00:11:00,00:32:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0496,Ciudad de México,09,Tlalpan,012,,,2015-12-27,2015-12-27,00:05:00,00:35:00,01:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0497,Ciudad de México,09,Gustavo A. Madero,005,,,2015-12-27,2015-12-27,00:05:00,00:07:00,00:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0498,Ciudad de México,09,Milpa Alta,009,,,2015-12-27,2015-12-27,00:05:00,00:23:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0499,Ciudad de México,09,Milpa Alta,009,,,2015-12-27,2015-12-27,00:05:00,00:35:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0500,Ciudad de México,09,Xochimilco,013,,,2015-12-28,2015-12-28,00:05:00,00:25:00,02:12:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-09-0501,Ciudad de México,09,Milpa Alta,009,,,2015-12-28,2015-12-28,00:05:00,01:40:00,02:28:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0002,Hidalgo,13,Zempoala,083,,,2015-02-09,2015-02-09,12:40:00,13:10:00,03:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0003,Hidalgo,13,Tepeapulco,061,,,2015-02-10,2015-02-10,11:30:00,12:30:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0004,Hidalgo,13,Metepec,035,,,2015-02-07,2015-02-07,13:45:00,14:30:00,02:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0005,Hidalgo,13,Epazoyucan,022,,,2015-02-14,2015-02-14,14:10:00,14:10:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0006,Hidalgo,13,Mineral De La Reforma,051,,,2015-02-18,2015-02-18,14:30:00,15:00:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0009,Hidalgo,13,Pachuca De Soto,048,,,2015-02-21,2015-02-21,13:00:00,13:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0010,Hidalgo,13,Pachuca De Soto,048,,,2015-02-21,2015-02-21,13:45:00,14:30:00,01:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0011,Hidalgo,13,Acaxochitlán,002,,,2015-02-21,2015-02-21,14:45:00,15:15:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0013,Hidalgo,13,El Arenal,009,,,2015-02-22,2015-02-22,11:00:00,11:30:00,04:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0014,Hidalgo,13,Pachuca De Soto,048,,,2015-02-22,2015-02-22,14:15:00,14:30:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0015,Hidalgo,13,Almoloya,007,,,2015-02-23,2015-02-23,11:15:00,12:25:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0016,Hidalgo,13,Acaxochitlán,002,,,2015-02-23,2015-02-23,06:45:00,07:30:00,06:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0017,Hidalgo,13,Pachuca De Soto,048,,,2015-02-23,2015-02-23,12:00:00,12:15:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0018,Hidalgo,13,Pachuca De Soto,048,,,2015-02-23,2015-02-23,15:15:00,15:35:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0022,Hidalgo,13,Almoloya,007,,,2015-03-02,2015-03-02,12:30:00,12:45:00,55:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0025,Hidalgo,13,Acaxochitlán,002,,,2015-02-04,2015-02-04,13:45:00,14:00:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0026,Hidalgo,13,Epazoyucan,022,,,2015-02-04,2015-02-04,14:00:00,14:20:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0027,Hidalgo,13,Singuilucan,057,,,2015-03-08,2015-03-08,14:00:00,14:15:00,00:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0028,Hidalgo,13,Pachuca De Soto,048,,,2015-03-09,2015-03-09,14:00:00,14:15:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-13-0030,Hidalgo,13,Acaxochitlán,002,,,2015-05-11,2015-05-11,12:45:00,13:45:00,02:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0034,México,15,Atlautla,015,,,2015-02-05,2015-02-05,00:05:00,00:30:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0044,México,15,Ocuilan,063,,,2015-02-08,2015-02-08,00:10:00,00:20:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0049,México,15,Villa De Allende,111,,,2015-02-09,2015-02-09,00:05:00,00:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0151,México,15,Amanalco,007,,,2015-03-01,2015-03-01,00:10:00,00:30:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0152,México,15,Donato Guerra,032,,,2015-03-02,2015-03-02,00:10:00,01:30:00,04:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0180,México,15,Jocotitlán,048,,,2015-03-04,2015-03-04,00:05:00,01:00:00,05:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0186,México,15,Joquicingo,049,,,2015-03-05,2015-03-05,00:15:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0188,México,15,Jocotitlán,048,,,2015-03-05,2015-03-05,00:10:00,00:55:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0190,México,15,Zinacantepec,118,,,2015-03-05,2015-03-05,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0193,México,15,Villa Guerrero,113,,,2015-03-05,2015-03-05,00:10:00,00:20:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0203,México,15,Villa Guerrero,113,,,2015-03-06,2015-03-06,00:10:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0204,México,15,Villa Guerrero,113,,,2015-03-06,2015-03-06,00:10:00,00:40:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0237,México,15,Tejupilco,082,,,2015-03-10,2015-03-10,00:05:00,00:15:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0260,México,15,Temascaltepec,086,,,2015-04-01,2015-04-01,00:05:00,00:30:00,00:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0262,México,15,Jocotitlán,048,,,2015-04-01,2015-04-01,00:05:00,01:00:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0309,México,15,San José Del Rincón,124,,,2015-04-12,2015-04-12,00:05:00,00:25:00,01:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0315,México,15,Temascaltepec,086,,,2015-04-13,2015-04-13,00:20:00,01:30:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0327,México,15,Valle De Bravo,110,,,2015-04-15,2015-04-15,00:10:00,01:00:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0333,México,15,Valle De Bravo,110,,,2015-04-16,2015-04-16,00:10:00,01:30:00,05:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0340,México,15,Ixtapaluca,039,,,2015-04-17,2015-04-17,00:05:00,00:30:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0345,México,15,Toluca,106,,,2015-04-17,2015-04-17,00:05:00,00:28:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0348,México,15,Temascaltepec,086,,,2015-04-18,2015-04-18,00:10:00,00:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0353,México,15,Valle De Bravo,110,,,2015-04-18,2015-04-18,00:10:00,01:00:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0356,México,15,Tenancingo,088,,,2015-04-19,2015-04-19,00:10:00,00:45:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0357,México,15,San Simón De Guerrero,077,,,2015-04-19,2015-04-19,00:10:00,00:20:00,01:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0383,México,15,Coatepec Harinas,021,,,2015-04-21,2015-04-21,00:10:00,01:40:00,05:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0389,México,15,Malinalco,052,,,2015-04-21,2015-04-21,00:10:00,00:35:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0394,México,15,Coatepec Harinas,021,,,2015-04-22,2015-04-22,00:10:00,00:10:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0397,México,15,Acambay De Ruíz Castañeda,001,,,2015-04-22,2015-04-22,00:05:00,00:40:00,02:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0399,México,15,Malinalco,052,,,2015-04-22,2015-04-22,00:10:00,00:25:00,03:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0409,México,15,Ixtapan De La Sal,040,,,2015-04-23,2015-04-23,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0411,México,15,Zinacantepec,118,,,2015-04-23,2015-04-23,00:05:00,01:10:00,07:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0418,México,15,Villa Guerrero,113,,,2015-04-24,2015-04-24,00:10:00,00:20:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0442,México,15,Villa Guerrero,113,,,2015-04-27,2015-04-27,00:10:00,00:40:00,04:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0488,México,15,Coatepec Harinas,021,,,2015-05-07,2015-05-07,00:10:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-15-0493,México,15,San Simón De Guerrero,077,,,2015-05-07,2015-05-07,00:10:00,00:40:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0035,Michoacán,16,Zinapécuaro,110,,,2015-01-28,2015-01-28,00:10:00,02:00:00,06:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0076,Michoacán,16,Morelia,053,,,2015-03-26,2015-03-26,00:10:00,00:55:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0077,Michoacán,16,Morelia,053,,,2015-03-27,2015-03-27,00:10:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0098,Michoacán,16,La Huacana,035,0.0447222222222222,-46.75972222222222,2015-04-14,2015-04-14,00:15:00,01:00:00,02:30:00,coord_fuera_bbox
+estadisticasIncendiosForestales2015-2024,2015,15-16-0154,Michoacán,16,Zinapécuaro,110,,,2015-04-19,2015-04-19,00:10:00,01:00:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0155,Michoacán,16,Morelia,053,,,2015-04-21,2015-04-21,00:10:00,01:00:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0156,Michoacán,16,Queréndaro,072,,,2015-04-22,2015-04-22,00:10:00,01:00:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0165,Michoacán,16,Morelia,053,,,2015-04-28,2015-04-28,00:10:00,00:30:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0166,Michoacán,16,Queréndaro,072,,,2015-04-23,2015-04-23,00:10:00,01:00:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0180,Michoacán,16,Tzitzio,101,,,2015-05-09,2015-05-09,00:10:00,00:20:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0181,Michoacán,16,Charo,022,,,2015-05-01,2015-05-01,00:30:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0182,Michoacán,16,Charo,022,,,2015-05-01,2015-05-01,00:05:00,00:20:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0183,Michoacán,16,Queréndaro,072,,,2015-05-08,2015-05-08,00:05:00,00:25:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0190,Michoacán,16,Madero,049,,,2015-04-28,2015-04-28,00:20:00,00:55:00,11:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0193,Michoacán,16,Nuevo Urecho,059,,,2015-05-06,2015-05-06,00:15:00,00:20:00,03:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-16-0194,Michoacán,16,Nuevo Urecho,059,,,2015-05-07,2015-05-07,00:40:00,01:00:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2015,15-26-0010,Sonora,26,Ures,066,,,2015-05-23,2015-05-23,00:30:00,00:15:00,10:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-03-0003,Baja California Sur,03,La Paz,003,,,2016-03-01,2016-03-01,12:45:00,13:20:00,04:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-03-0004,Baja California Sur,03,La Paz,003,,,2016-03-02,2016-03-02,14:15:00,14:40:00,02:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-03-0006,Baja California Sur,03,Mulegé,002,,,2016-03-05,2016-03-05,18:05:00,18:10:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-07-0002,Chiapas,07,Villaflores,108,16.20613888888889,-93.51030555555556,2015-12-31,2016-01-02,11:00:00,01:30:00,43:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2016,16-08-0445,Chihuahua,08,Guazapares,030,,,2016-05-20,2016-05-20,00:05:00,01:20:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-08-0606,Chihuahua,08,Guadalupe Y Calvo,029,,,2016-06-01,2016-06-01,00:05:00,01:00:00,05:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0533,Ciudad de México,09,Tlalpan,012,,,2016-03-17,2016-03-17,00:05:00,00:26:00,02:19:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0816,Ciudad de México,09,La Magdalena Contreras,008,,,2016-04-16,2016-04-16,00:05:00,00:35:00,02:28:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0854,Ciudad de México,09,Álvaro Obregón,010,,,2016-04-28,2016-04-28,00:05:00,00:40:00,03:34:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0529,Ciudad de México,09,Milpa Alta,009,,,2016-03-16,2016-03-16,00:05:00,00:24:00,01:11:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0532,Ciudad de México,09,Tlalpan,012,,,2016-03-16,2016-03-16,00:05:00,00:55:00,10:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0819,Ciudad de México,09,Milpa Alta,009,,,2016-04-16,2016-04-16,00:05:00,00:11:00,00:56:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0893,Ciudad de México,09,Milpa Alta,009,,,2016-05-03,2016-05-03,00:05:00,00:40:00,01:36:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0894,Ciudad de México,09,Milpa Alta,009,,,2016-05-03,2016-05-03,00:05:00,00:35:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0895,Ciudad de México,09,Milpa Alta,009,,,2016-05-03,2016-05-03,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0933,Ciudad de México,09,Milpa Alta,009,,,2016-05-25,2016-05-25,00:05:00,00:15:00,00:38:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0938,Ciudad de México,09,Milpa Alta,009,,,2016-05-28,2016-05-28,00:05:00,01:05:00,02:47:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0530,Ciudad de México,09,Milpa Alta,009,,,2016-03-16,2016-03-16,00:05:00,00:20:00,00:44:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-09-0804,Ciudad de México,09,Milpa Alta,009,,,2016-04-15,2016-04-15,00:05:00,00:28:00,01:58:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0001,Hidalgo,13,Mineral De La Reforma,051,,,2016-01-01,2016-01-01,00:05:00,00:10:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0002,Hidalgo,13,Tepeapulco,061,,,2016-01-04,2016-01-04,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0003,Hidalgo,13,Mineral De La Reforma,051,,,2016-01-10,2016-01-10,00:05:00,00:35:00,04:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0004,Hidalgo,13,San Salvador,054,,,2016-01-11,2016-01-11,00:05:00,00:25:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0005,Hidalgo,13,San Agustín Tlaxiaca,052,,,2016-01-14,2016-01-14,00:05:00,00:15:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0007,Hidalgo,13,San Bartolo Tutotepec,053,,,2016-01-16,2016-01-16,00:05:00,00:05:00,02:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0010,Hidalgo,13,Pachuca De Soto,048,,,2016-01-17,2016-01-17,00:05:00,00:15:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0011,Hidalgo,13,Mineral De La Reforma,051,,,2016-01-18,2016-01-18,00:05:00,00:10:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0013,Hidalgo,13,Epazoyucan,022,,,2016-01-19,2016-01-19,00:05:00,00:15:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0014,Hidalgo,13,Pachuca De Soto,048,,,2016-01-20,2016-01-20,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0015,Hidalgo,13,Zempoala,083,,,2016-01-21,2016-01-21,00:05:00,00:30:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0019,Hidalgo,13,Zempoala,083,,,2016-01-23,2016-01-23,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0020,Hidalgo,13,Pachuca De Soto,048,,,2016-01-23,2016-01-23,00:05:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0021,Hidalgo,13,Pachuca De Soto,048,,,2016-01-23,2016-01-23,00:05:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0024,Hidalgo,13,Acaxochitlán,002,,,2016-01-24,2016-01-24,00:05:00,00:25:00,00:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0025,Hidalgo,13,Almoloya,007,,,2016-01-24,2016-01-24,00:05:00,00:35:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0026,Hidalgo,13,Pachuca De Soto,048,,,2016-01-25,2016-01-25,00:05:00,00:40:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0034,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-02-01,2016-02-01,00:05:00,00:20:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0038,Hidalgo,13,Zempoala,083,,,2016-02-02,2016-02-02,00:05:00,00:25:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0039,Hidalgo,13,Agua Blanca De Iturbide,004,,,2016-02-02,2016-02-02,00:05:00,00:30:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0041,Hidalgo,13,Zempoala,083,,,2016-02-02,2016-02-02,00:05:00,00:30:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0042,Hidalgo,13,Acaxochitlán,002,,,2016-02-03,2016-02-03,00:05:00,00:30:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0043,Hidalgo,13,Agua Blanca De Iturbide,004,,,2016-02-03,2016-02-03,00:05:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0047,Hidalgo,13,Epazoyucan,022,,,2016-02-04,2016-02-04,00:05:00,00:20:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0048,Hidalgo,13,Zempoala,083,,,2016-02-05,2016-02-05,00:05:00,00:30:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0052,Hidalgo,13,Epazoyucan,022,,,2016-02-05,2016-02-05,00:05:00,00:40:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0053,Hidalgo,13,Epazoyucan,022,,,2016-02-07,2016-02-07,00:05:00,00:15:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0054,Hidalgo,13,Pachuca De Soto,048,,,2016-02-07,2016-02-07,00:05:00,00:10:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0055,Hidalgo,13,Tulancingo De Bravo,077,,,2016-02-07,2016-02-07,00:05:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0056,Hidalgo,13,Zempoala,083,,,2016-02-07,2016-02-07,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0060,Hidalgo,13,Metztitlán,037,,,2016-02-11,2016-02-11,00:05:00,00:40:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0062,Hidalgo,13,Ixmiquilpan,030,,,2016-02-11,2016-02-11,00:05:00,00:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0064,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-02-12,2016-02-12,00:05:00,01:10:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0065,Hidalgo,13,Epazoyucan,022,,,2016-02-12,2016-02-12,00:05:00,00:20:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0068,Hidalgo,13,Acatlán,001,,,2016-02-12,2016-02-12,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0069,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-02-12,2016-02-12,00:05:00,00:15:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0070,Hidalgo,13,Tulancingo De Bravo,077,,,2016-02-12,2016-02-12,00:05:00,00:20:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0072,Hidalgo,13,Pachuca De Soto,048,,,2016-02-13,2016-02-13,00:05:00,01:00:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0076,Hidalgo,13,Mineral De La Reforma,051,,,2016-02-14,2016-02-14,00:05:00,00:15:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0077,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-02-14,2016-02-14,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0079,Hidalgo,13,Mineral De La Reforma,051,,,2016-02-14,2016-02-14,00:05:00,00:25:00,03:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0080,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-02-14,2016-02-14,00:05:00,00:30:00,03:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0083,Hidalgo,13,Epazoyucan,022,,,2016-02-15,2016-02-15,00:05:00,00:30:00,03:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0085,Hidalgo,13,Acaxochitlán,002,,,2016-02-15,2016-02-15,00:05:00,00:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0089,Hidalgo,13,Epazoyucan,022,,,2016-02-16,2016-02-16,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0092,Hidalgo,13,Singuilucan,057,,,2016-02-17,2016-02-17,00:05:00,00:15:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0093,Hidalgo,13,Epazoyucan,022,,,2016-02-17,2016-02-17,00:05:00,00:20:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0094,Hidalgo,13,Zempoala,083,,,2016-02-17,2016-02-17,00:05:00,00:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0096,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-02-18,2016-02-18,00:05:00,00:50:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0097,Hidalgo,13,Epazoyucan,022,,,2016-02-18,2016-02-18,00:05:00,00:15:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0102,Hidalgo,13,Tlanalapa,072,,,2016-02-21,2016-02-21,00:05:00,00:40:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0103,Hidalgo,13,Tepeapulco,061,,,2016-02-21,2016-02-21,00:05:00,00:40:00,04:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0104,Hidalgo,13,Epazoyucan,022,,,2016-02-21,2016-02-21,00:05:00,00:25:00,02:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0107,Hidalgo,13,Singuilucan,057,,,2016-02-21,2016-02-21,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0108,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-02-22,2016-02-22,00:05:00,00:40:00,02:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0111,Hidalgo,13,Tulancingo De Bravo,077,,,2016-02-23,2016-02-23,00:05:00,00:40:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0112,Hidalgo,13,Acaxochitlán,002,,,2016-02-23,2016-02-23,00:05:00,00:20:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0113,Hidalgo,13,Epazoyucan,022,,,2016-02-23,2016-02-23,00:05:00,00:20:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0115,Hidalgo,13,Singuilucan,057,,,2016-02-23,2016-02-23,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0117,Hidalgo,13,Acaxochitlán,002,,,2016-02-19,2016-02-19,00:05:00,01:20:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0118,Hidalgo,13,Acaxochitlán,002,,,2016-02-20,2016-02-20,00:05:00,00:50:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0119,Hidalgo,13,Acaxochitlán,002,,,2016-02-20,2016-02-20,00:05:00,00:50:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0120,Hidalgo,13,Pachuca De Soto,048,,,2016-02-23,2016-02-23,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0122,Hidalgo,13,Acaxochitlán,002,,,2016-02-23,2016-02-23,00:05:00,00:25:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0123,Hidalgo,13,Almoloya,007,,,2016-02-23,2016-02-23,00:05:00,00:10:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0124,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-02-23,2016-02-23,00:05:00,00:40:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0127,Hidalgo,13,Singuilucan,057,,,2016-02-24,2016-02-24,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0129,Hidalgo,13,Pachuca De Soto,048,,,2016-02-25,2016-02-25,00:05:00,00:09:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0131,Hidalgo,13,Tula De Allende,076,,,2016-02-26,2016-02-26,00:05:00,00:15:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0138,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-03-01,2016-03-01,00:05:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0144,Hidalgo,13,Singuilucan,057,,,2016-03-05,2016-03-05,00:05:00,01:10:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0148,Hidalgo,13,Zempoala,083,,,2016-03-06,2016-03-06,00:05:00,00:30:00,02:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0149,Hidalgo,13,Acaxochitlán,002,,,2016-03-06,2016-03-06,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0150,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-03-06,2016-03-06,00:05:00,00:15:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0151,Hidalgo,13,Metepec,035,,,2016-03-06,2016-03-06,00:05:00,00:20:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0157,Hidalgo,13,Tulancingo De Bravo,077,,,2016-03-07,2016-03-07,00:05:00,00:25:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0160,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-03-08,2016-03-08,00:05:00,00:20:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0161,Hidalgo,13,Epazoyucan,022,,,2016-03-08,2016-03-08,00:05:00,00:25:00,03:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0163,Hidalgo,13,Singuilucan,057,,,2016-03-08,2016-03-08,00:05:00,00:20:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0164,Hidalgo,13,Almoloya,007,,,2016-03-08,2016-03-08,00:05:00,00:10:00,01:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0170,Hidalgo,13,Agua Blanca De Iturbide,004,,,2016-03-10,2016-03-10,00:05:00,00:20:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0172,Hidalgo,13,Acaxochitlán,002,,,2016-03-11,2016-03-11,00:05:00,00:42:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0173,Hidalgo,13,Acatlán,001,,,2016-03-11,2016-03-11,00:05:00,00:30:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0174,Hidalgo,13,Acatlán,001,,,2016-03-11,2016-03-11,00:05:00,00:10:00,00:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0175,Hidalgo,13,Pachuca De Soto,048,,,2016-03-11,2016-03-11,00:05:00,00:15:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0180,Hidalgo,13,Singuilucan,057,,,2016-03-12,2016-03-12,00:05:00,00:20:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0183,Hidalgo,13,Mineral De La Reforma,051,,,2016-03-13,2016-03-13,00:05:00,01:20:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0186,Hidalgo,13,Acaxochitlán,002,,,2016-03-13,2016-03-13,00:05:00,00:40:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0189,Hidalgo,13,Epazoyucan,022,,,2016-03-14,2016-03-14,00:05:00,00:15:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0190,Hidalgo,13,Acaxochitlán,002,,,2016-03-14,2016-03-14,00:05:00,00:50:00,02:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0192,Hidalgo,13,Epazoyucan,022,,,2016-03-14,2016-03-14,00:05:00,00:20:00,04:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0193,Hidalgo,13,Mineral Del Monte,039,,,2016-03-14,2016-03-14,00:05:00,00:30:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0196,Hidalgo,13,Pachuca De Soto,048,,,2016-03-15,2016-03-15,00:05:00,00:30:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0197,Hidalgo,13,Epazoyucan,022,,,2016-03-15,2016-03-15,00:05:00,00:45:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0202,Hidalgo,13,Acaxochitlán,002,,,2016-03-15,2016-03-15,00:05:00,00:40:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0203,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-03-15,2016-03-15,00:05:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0204,Hidalgo,13,Acaxochitlán,002,,,2016-03-16,2016-03-16,00:05:00,00:30:00,06:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0208,Hidalgo,13,Tenango De Doria,060,,,2016-03-17,2016-03-17,00:05:00,00:30:00,12:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0211,Hidalgo,13,Pachuca De Soto,048,,,2016-03-18,2016-03-18,00:05:00,00:45:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0213,Hidalgo,13,Pachuca De Soto,048,,,2016-03-18,2016-03-18,00:05:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0215,Hidalgo,13,Mineral De La Reforma,051,,,2016-03-22,2016-03-22,00:05:00,00:15:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0216,Hidalgo,13,Epazoyucan,022,,,2016-03-22,2016-03-22,00:05:00,00:10:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0217,Hidalgo,13,Epazoyucan,022,,,2016-03-24,2016-03-24,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0222,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-03-24,2016-03-24,00:05:00,01:00:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0234,Hidalgo,13,Epazoyucan,022,,,2016-03-27,2016-03-27,00:05:00,00:25:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0235,Hidalgo,13,Singuilucan,057,,,2016-03-27,2016-03-27,00:05:00,00:25:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0236,Hidalgo,13,Agua Blanca De Iturbide,004,,,2016-03-27,2016-03-27,00:05:00,00:40:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0238,Hidalgo,13,Epazoyucan,022,,,2016-03-27,2016-03-27,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0239,Hidalgo,13,Mineral De La Reforma,051,,,2016-03-27,2016-03-27,00:05:00,00:15:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0240,Hidalgo,13,Almoloya,007,,,2016-03-27,2016-03-27,00:05:00,00:15:00,01:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0241,Hidalgo,13,Epazoyucan,022,,,2016-03-28,2016-03-28,00:05:00,00:20:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0242,Hidalgo,13,Epazoyucan,022,,,2016-03-28,2016-03-28,00:05:00,00:15:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0243,Hidalgo,13,Mineral De La Reforma,051,,,2016-03-29,2016-03-29,00:05:00,00:10:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0244,Hidalgo,13,Epazoyucan,022,,,2016-03-29,2016-03-29,00:05:00,00:25:00,02:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0246,Hidalgo,13,Epazoyucan,022,,,2016-03-29,2016-03-29,00:05:00,00:10:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0251,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-03-30,2016-03-30,00:05:00,00:30:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0252,Hidalgo,13,Singuilucan,057,,,2016-03-30,2016-03-30,00:05:00,00:15:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0255,Hidalgo,13,Singuilucan,057,,,2016-03-30,2016-03-30,00:05:00,00:35:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0257,Hidalgo,13,Singuilucan,057,,,2016-03-30,2016-03-30,00:05:00,00:15:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0259,Hidalgo,13,Mineral Del Monte,039,,,2016-03-30,2016-03-30,00:05:00,00:25:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0260,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-03-31,2016-03-31,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0264,Hidalgo,13,Singuilucan,057,,,2016-03-31,2016-03-31,00:05:00,00:50:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0267,Hidalgo,13,Tulancingo De Bravo,077,,,2016-03-31,2016-03-31,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0272,Hidalgo,13,Jacala De Ledezma,031,,,2016-03-31,2016-04-02,00:05:00,00:45:00,52:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0274,Hidalgo,13,Mineral De La Reforma,051,,,2016-04-02,2016-04-02,00:05:00,00:15:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0275,Hidalgo,13,Mineral De La Reforma,051,,,2016-04-02,2016-04-02,00:05:00,00:35:00,01:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0276,Hidalgo,13,Pachuca De Soto,048,,,2016-04-02,2016-04-02,00:05:00,00:10:00,01:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0278,Hidalgo,13,Singuilucan,057,,,2016-04-03,2016-04-03,00:05:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0281,Hidalgo,13,Zempoala,083,,,2016-04-04,2016-04-04,00:05:00,00:45:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0282,Hidalgo,13,Tulancingo De Bravo,077,,,2016-04-04,2016-04-04,00:05:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0284,Hidalgo,13,Almoloya,007,,,2016-04-05,2016-04-05,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0285,Hidalgo,13,Pachuca De Soto,048,,,2016-04-05,2016-04-05,00:05:00,00:45:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0301,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-04-06,2016-04-06,00:05:00,00:10:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0303,Hidalgo,13,Almoloya,007,,,2016-04-06,2016-04-06,00:05:00,00:35:00,03:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0304,Hidalgo,13,Mineral De La Reforma,051,,,2016-04-06,2016-04-07,00:05:00,00:15:00,03:01:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0308,Hidalgo,13,Almoloya,007,,,2016-04-07,2016-04-07,00:05:00,00:15:00,02:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0310,Hidalgo,13,Singuilucan,057,,,2016-04-08,2016-04-08,00:05:00,00:15:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0311,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-04-08,2016-04-08,00:05:00,00:30:00,03:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0313,Hidalgo,13,Epazoyucan,022,,,2016-04-08,2016-04-08,00:05:00,00:30:00,03:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0315,Hidalgo,13,Acaxochitlán,002,,,2016-04-11,2016-04-11,00:05:00,00:25:00,03:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0317,Hidalgo,13,Tulancingo De Bravo,077,,,2016-04-11,2016-04-11,00:05:00,00:10:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0318,Hidalgo,13,Singuilucan,057,,,2016-04-11,2016-04-11,00:05:00,00:10:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0322,Hidalgo,13,Acaxochitlán,002,,,2016-04-12,2016-04-12,00:05:00,00:40:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0323,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-04-13,2016-04-13,00:05:00,00:15:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0324,Hidalgo,13,Santiago Tulantepec De Lugo Guerrero,056,,,2016-04-13,2016-04-13,00:05:00,00:10:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0328,Hidalgo,13,Almoloya,007,,,2016-04-13,2016-04-13,00:05:00,00:50:00,04:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0329,Hidalgo,13,Singuilucan,057,,,2016-04-14,2016-04-14,00:05:00,00:15:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0333,Hidalgo,13,Singuilucan,057,,,2016-04-16,2016-04-16,00:05:00,00:15:00,03:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0335,Hidalgo,13,Almoloya,007,,,2016-04-16,2016-04-16,00:05:00,00:50:00,01:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0339,Hidalgo,13,Tulancingo De Bravo,077,,,2016-04-17,2016-04-17,00:05:00,02:00:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0341,Hidalgo,13,Almoloya,007,,,2016-04-18,2016-04-18,00:05:00,00:25:00,00:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0345,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-04-25,2016-04-25,00:05:00,09:10:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0346,Hidalgo,13,Apan,008,,,2016-04-25,2016-04-25,00:05:00,12:35:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0347,Hidalgo,13,Epazoyucan,022,,,2016-04-25,2016-04-25,00:05:00,13:55:00,00:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0348,Hidalgo,13,Jacala De Ledezma,031,,,2016-04-27,2016-04-27,00:05:00,00:30:00,06:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0351,Hidalgo,13,La Misión,040,,,2016-04-27,2016-04-27,00:05:00,00:15:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0353,Hidalgo,13,Singuilucan,057,,,2016-04-29,2016-04-29,00:05:00,00:20:00,52:48:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0360,Hidalgo,13,Singuilucan,057,,,2016-05-01,2016-05-01,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0361,Hidalgo,13,Singuilucan,057,,,2016-05-02,2016-05-02,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0362,Hidalgo,13,Singuilucan,057,,,2016-05-02,2016-05-02,00:05:00,00:10:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0363,Hidalgo,13,Mineral Del Monte,039,,,2016-05-02,2016-05-02,00:05:00,00:10:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0366,Hidalgo,13,Singuilucan,057,,,2016-05-03,2016-05-03,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0369,Hidalgo,13,Cuautepec De Hinojosa,016,,,2016-05-06,2016-05-06,00:05:00,01:00:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0370,Hidalgo,13,Epazoyucan,022,,,2016-05-07,2016-05-07,00:05:00,00:10:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0371,Hidalgo,13,Singuilucan,057,,,2016-05-07,2016-05-07,00:05:00,00:30:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0375,Hidalgo,13,Almoloya,007,,,2016-05-08,2016-05-08,00:05:00,00:15:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0377,Hidalgo,13,Singuilucan,057,,,2016-05-08,2016-05-08,00:05:00,00:15:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-13-0384,Hidalgo,13,Metepec,035,,,2016-05-30,2016-05-30,00:05:00,00:15:00,01:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0002,México,15,Villa Guerrero,113,,,2016-01-06,2016-01-06,00:10:00,01:55:00,04:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0009,México,15,Nicolás Romero,060,,,2016-01-18,2016-01-18,00:05:00,00:25:00,01:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0016,México,15,Ixtapaluca,039,,,2016-01-22,2016-01-22,00:05:00,01:00:00,02:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0017,México,15,Ixtapaluca,039,,,2016-01-23,2016-01-23,00:15:00,00:05:00,04:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0023,México,15,Ixtapaluca,039,,,2016-01-24,2016-01-24,00:05:00,00:40:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0025,México,15,Tlalnepantla De Baz,104,,,2016-01-24,2016-01-24,00:10:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0038,México,15,Tenancingo,088,,,2016-01-27,2016-01-27,00:10:00,01:10:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0055,México,15,Nicolás Romero,060,,,2016-01-31,2016-01-31,00:10:00,00:45:00,01:25:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0157,México,15,Ocuilan,063,,,2016-02-11,2016-02-11,00:10:00,00:30:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0162,México,15,Malinalco,052,,,2016-02-12,2016-02-12,00:05:00,00:10:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0190,México,15,Ocuilan,063,,,2016-02-15,2016-02-15,00:10:00,00:15:00,00:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0213,México,15,Ocuilan,063,,,2016-02-17,2016-02-17,00:10:00,00:35:00,05:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0215,México,15,Jocotitlán,048,,,2016-02-17,2016-02-17,00:05:00,01:05:00,03:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0233,México,15,Jocotitlán,048,,,2016-02-18,2016-02-18,00:05:00,00:25:00,00:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0255,México,15,Villa De Allende,111,,,2016-02-19,2016-02-19,00:15:00,00:25:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0302,México,15,Ocuilan,063,,,2016-02-22,2016-02-22,00:10:00,00:10:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0331,México,15,Xalatlaco,043,,,2016-02-24,2016-02-24,00:05:00,00:05:00,01:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0399,México,15,Tejupilco,082,,,2016-03-10,2016-03-10,00:10:00,00:30:00,00:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0410,México,15,Calimaya,018,,,2016-03-13,2016-03-13,00:05:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0466,México,15,Amanalco,007,,,2016-03-20,2016-03-20,00:05:00,00:10:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0547,México,15,Tepotzotlán,095,,,2016-03-26,2016-03-26,00:05:00,00:25:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0555,México,15,Calimaya,018,,,2016-03-26,2016-03-26,00:05:00,00:50:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0586,México,15,Jocotitlán,048,,,2016-03-27,2016-03-27,00:05:00,00:50:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0663,México,15,Jocotitlán,048,,,2016-03-30,2016-03-30,00:05:00,00:25:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0671,México,15,Lerma,051,,,2016-03-31,2016-03-31,00:05:00,00:20:00,06:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0685,México,15,Villa Victoria,114,,,2016-03-31,2016-03-31,00:05:00,00:20:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0686,México,15,Ocuilan,063,,,2016-03-31,2016-03-31,00:05:00,00:05:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0694,México,15,Naucalpan De Juárez,057,,,2016-03-31,2016-03-31,00:05:00,01:10:00,00:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0726,México,15,Texcaltitlán,097,,,2016-04-02,2016-04-02,00:10:00,00:10:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0736,México,15,Zinacantepec,118,,,2016-04-02,2016-04-02,00:10:00,01:00:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0745,México,15,Jocotitlán,048,,,2016-04-02,2016-04-02,00:05:00,00:05:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0749,México,15,Zinacantepec,118,,,2016-04-03,2016-04-03,00:10:00,00:20:00,01:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0821,México,15,Zinacantepec,118,,,2016-04-05,2016-04-05,00:10:00,01:20:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0826,México,15,Jocotitlán,048,,,2016-04-06,2016-04-06,00:05:00,01:00:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0847,México,15,Tlatlaya,105,,,2016-04-07,2016-04-07,00:10:00,01:35:00,10:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0873,México,15,Zinacantepec,118,,,2016-04-08,2016-04-08,00:10:00,01:00:00,04:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0901,México,15,Tianguistenco,101,,,2016-04-09,2016-04-09,00:05:00,00:20:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0919,México,15,Coatepec Harinas,021,,,2016-04-10,2016-04-10,00:10:00,00:25:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0922,México,15,Zinacantepec,118,,,2016-04-10,2016-04-10,05:00:00,01:00:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0953,México,15,Tenango Del Valle,090,,,2016-04-12,2016-04-12,00:05:00,00:25:00,02:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0955,México,15,Huixquilucan,037,,,2016-04-12,2016-04-12,00:05:00,00:35:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0956,México,15,Huixquilucan,037,,,2016-04-12,2016-04-12,00:05:00,00:40:00,03:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0966,México,15,Amanalco,007,,,2016-04-12,2016-04-12,00:05:00,00:05:00,01:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0967,México,15,Donato Guerra,032,,,2016-04-12,2016-04-12,00:05:00,00:50:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0968,México,15,Donato Guerra,032,,,2016-04-12,2016-04-12,00:05:00,00:20:00,05:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-0969,México,15,Ocoyoacac,062,,,2016-04-12,2016-04-12,00:05:00,00:45:00,09:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1029,México,15,Malinalco,052,,,2016-04-15,2016-04-15,00:10:00,00:40:00,03:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1068,México,15,Texcaltitlán,097,,,2016-04-16,2016-04-16,00:10:00,00:35:00,04:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1087,México,15,Toluca,106,,,2016-04-16,2016-04-16,00:10:00,01:00:00,19:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1088,México,15,Zinacantepec,118,,,2016-04-16,2016-04-16,00:10:00,01:00:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1100,México,15,Temascaltepec,086,,,2016-04-17,2016-04-17,00:10:00,00:40:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1119,México,15,Temascaltepec,086,,,2016-04-18,2016-04-18,00:10:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1125,México,15,Valle De Bravo,110,,,2016-04-18,2016-04-18,00:05:00,00:50:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1126,México,15,Sultepec,080,,,2016-04-18,2016-04-18,00:05:00,00:50:00,20:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1154,México,15,Coatepec Harinas,021,,,2016-04-19,2016-04-19,00:10:00,00:25:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1167,México,15,Tepotzotlán,095,,,2016-04-20,2016-04-20,00:05:00,00:08:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1233,México,15,Texcaltitlán,097,,,2016-04-28,2016-04-28,00:20:00,00:25:00,02:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1237,México,15,Tejupilco,082,,,2016-04-28,2016-04-28,00:10:00,00:10:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1242,México,15,Villa De Allende,111,,,2016-04-29,2016-04-29,00:05:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1243,México,15,Donato Guerra,032,,,2016-04-29,2016-04-29,00:05:00,00:20:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1318,México,15,Temascaltepec,086,,,2016-05-02,2016-05-02,00:15:00,00:45:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1320,México,15,Donato Guerra,032,,,2016-05-02,2016-05-02,00:05:00,00:10:00,02:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1339,México,15,Amanalco,007,,,2016-05-02,2016-05-02,00:05:00,00:30:00,06:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1342,México,15,Tejupilco,082,,,2016-05-02,2016-05-02,00:10:00,00:40:00,12:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1358,México,15,Tianguistenco,101,,,2016-05-03,2016-05-03,00:05:00,00:40:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1387,México,15,Amanalco,007,,,2016-05-06,2016-05-06,00:05:00,00:30:00,01:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1431,México,15,Donato Guerra,032,,,2016-05-10,2016-05-10,00:05:00,00:40:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1480,México,15,Luvianos,123,,,2016-05-30,2016-06-01,00:10:00,01:00:00,41:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-15-1482,México,15,Luvianos,123,,,2016-06-07,2016-06-07,00:10:00,00:30:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0298,Michoacán,16,Morelia,053,,,2016-04-06,2016-04-06,00:10:00,00:50:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0299,Michoacán,16,Morelia,053,,,2016-04-05,2016-04-05,00:10:00,00:40:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0300,Michoacán,16,Morelia,053,,,2016-04-06,2016-04-06,00:10:00,00:40:00,06:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0303,Michoacán,16,Morelia,053,,,2016-04-07,2016-04-07,00:10:00,00:40:00,10:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0307,Michoacán,16,Zinapécuaro,110,,,2016-04-07,2016-04-07,00:10:00,01:00:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0308,Michoacán,16,Zinapécuaro,110,,,2016-04-11,2016-04-11,00:10:00,00:20:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0374,Michoacán,16,Arteaga,010,,,2016-04-15,2016-04-15,00:20:00,01:14:00,13:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0375,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-14,2016-04-15,00:15:00,02:00:00,25:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0380,Michoacán,16,Morelia,053,,,2016-04-15,2016-04-15,00:08:00,00:40:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0384,Michoacán,16,Morelia,053,,,2016-04-17,2016-04-17,00:10:00,01:00:00,04:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0385,Michoacán,16,Zinapécuaro,110,,,2016-04-16,2016-04-16,00:08:00,00:50:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0386,Michoacán,16,Madero,049,,,2016-04-17,2016-04-17,00:12:00,01:00:00,06:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0450,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-11,2016-04-11,00:20:00,01:00:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0492,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-20,2016-04-20,00:20:00,00:15:00,06:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0493,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-21,2016-04-21,00:15:00,01:15:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0494,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-26,2016-04-26,00:15:00,01:00:00,17:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0550,Michoacán,16,Queréndaro,072,,,2016-04-25,2016-04-25,00:10:00,00:40:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0551,Michoacán,16,Morelia,053,,,2016-04-25,2016-04-25,00:10:00,00:30:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0552,Michoacán,16,Morelia,053,,,2016-04-26,2016-04-26,00:10:00,00:40:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0553,Michoacán,16,Morelia,053,,,2016-04-24,2016-04-24,00:15:00,00:45:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0554,Michoacán,16,Zinapécuaro,110,,,2016-04-27,2016-04-27,00:15:00,00:50:00,03:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0555,Michoacán,16,Queréndaro,072,,,2016-04-20,2016-04-20,00:15:00,00:50:00,03:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0556,Michoacán,16,Zinapécuaro,110,,,2016-04-28,2016-04-28,00:10:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0557,Michoacán,16,Morelia,053,,,2016-04-28,2016-04-28,00:15:00,00:30:00,06:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0558,Michoacán,16,Zinapécuaro,110,,,2016-04-28,2016-04-28,00:15:00,00:15:00,01:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0562,Michoacán,16,Zinapécuaro,110,,,2016-04-29,2016-04-29,00:10:00,00:50:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0563,Michoacán,16,Morelia,053,,,2016-04-30,2016-04-30,00:10:00,00:50:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0564,Michoacán,16,Madero,049,,,2016-04-30,2016-04-30,00:10:00,01:20:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0566,Michoacán,16,Morelia,053,,,2016-05-01,2016-05-01,00:15:00,01:00:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0567,Michoacán,16,Charo,022,,,2016-04-30,2016-04-30,00:10:00,00:25:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0568,Michoacán,16,Morelia,053,,,2016-04-30,2016-04-30,00:10:00,00:50:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0569,Michoacán,16,Queréndaro,072,,,2016-05-02,2016-05-02,00:10:00,00:50:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0571,Michoacán,16,Madero,049,,,2016-05-03,2016-05-03,00:10:00,01:00:00,04:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0572,Michoacán,16,Morelia,053,,,2016-05-03,2016-05-03,00:05:00,00:30:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0616,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-29,2016-04-29,00:20:00,01:00:00,12:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0617,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-04-29,2016-04-30,00:30:00,02:00:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0618,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-02,2016-05-02,00:05:00,01:00:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0619,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-04,2016-05-04,00:20:00,01:00:00,06:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0643,Michoacán,16,Morelia,053,,,2016-05-03,2016-05-03,00:10:00,00:25:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0644,Michoacán,16,Morelia,053,,,2016-05-03,2016-05-03,00:10:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0647,Michoacán,16,Morelia,053,,,2016-05-05,2016-05-05,00:10:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0648,Michoacán,16,Morelia,053,,,2016-05-06,2016-05-06,00:10:00,00:15:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0649,Michoacán,16,Acuitzio,001,,,2016-05-06,2016-05-06,00:10:00,00:30:00,06:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0652,Michoacán,16,Queréndaro,072,,,2016-05-08,2016-05-08,00:10:00,00:20:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0654,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-07,2016-05-07,00:10:00,00:10:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0731,Michoacán,16,Uruapan,102,,,2016-05-20,2016-05-20,00:05:00,00:05:00,00:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0747,Michoacán,16,Morelia,053,,,2016-05-19,2016-05-19,00:10:00,00:20:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0748,Michoacán,16,Morelia,053,,,2016-05-23,2016-05-23,00:10:00,00:20:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0749,Michoacán,16,Zinapécuaro,110,,,2016-05-24,2016-05-24,00:20:00,00:40:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0759,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-20,2016-05-20,00:10:00,00:15:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0775,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-27,2016-05-27,00:15:00,00:10:00,11:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0776,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-27,2016-05-27,00:20:00,00:50:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0777,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-05-28,2016-05-28,00:20:00,01:00:00,09:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0778,Michoacán,16,Aguililla,002,,,2016-05-30,2016-05-30,00:40:00,00:20:00,05:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0779,Michoacán,16,Morelia,053,,,2016-05-27,2016-05-27,00:10:00,00:15:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0780,Michoacán,16,Charo,022,,,2016-05-28,2016-05-28,00:10:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0781,Michoacán,16,Charo,022,,,2016-05-29,2016-05-29,00:10:00,00:30:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0782,Michoacán,16,Morelia,053,,,2016-04-18,2016-04-18,00:05:00,01:35:00,09:55:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0783,Michoacán,16,Morelia,053,,,2016-04-16,2016-04-16,00:15:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0784,Michoacán,16,Morelia,053,,,2016-04-17,2016-04-17,00:25:00,00:55:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0785,Michoacán,16,Charo,022,,,2016-04-19,2016-04-19,00:15:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0790,Michoacán,16,Morelia,053,,,2016-04-20,2016-04-20,00:10:00,00:30:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0791,Michoacán,16,Zinapécuaro,110,,,2016-04-23,2016-04-23,00:10:00,00:40:00,02:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0792,Michoacán,16,Morelia,053,,,2016-04-22,2016-04-22,00:10:00,00:30:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0793,Michoacán,16,Morelia,053,,,2016-04-24,2016-04-24,00:15:00,01:00:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0794,Michoacán,16,Morelia,053,,,2016-04-25,2016-04-25,00:15:00,00:45:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0795,Michoacán,16,Morelia,053,,,2016-04-18,2016-04-18,00:10:00,00:20:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0808,Michoacán,16,Zinapécuaro,110,,,2016-06-07,2016-06-07,00:05:00,00:20:00,04:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0809,Michoacán,16,Queréndaro,072,,,2016-06-08,2016-06-08,00:10:00,00:20:00,02:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0810,Michoacán,16,Zinapécuaro,110,,,2016-06-09,2016-06-09,00:10:00,00:35:00,05:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-16-0812,Michoacán,16,Coalcomán De Vázquez Pallares,015,,,2016-06-03,2016-06-03,00:30:00,01:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-20-0275,Oaxaca,20,San Antonio De La Cal,107,,,2016-12-08,2016-12-08,00:10:00,00:50:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-20-0276,Oaxaca,20,Oaxaca De Juárez,067,,,2016-12-08,2016-12-08,00:10:00,00:10:00,00:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-20-0277,Oaxaca,20,Heroica Ciudad De Tlaxiaco,397,,,2016-12-11,2016-12-11,00:15:00,00:15:00,07:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-25-0003,Sinaloa,25,San Ignacio,016,,,2016-04-21,2016-04-23,00:00:00,00:00:00,48:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2016,16-29-0320,Tlaxcala,29,Ixtacuixtla De Mariano Matamoros,015,,,2016-04-08,2016-04-08,00:10:00,00:30:00,03:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-07-0001,Chiapas,07,Arriaga,009,16.353472222222223,-94.0286111111111,2016-12-30,2017-01-01,01:00:00,01:00:00,42:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2017,17-10-0509,Durango,10,Súchil,033,,,2017-05-01,2017-05-12,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-10-0510,Durango,10,Mezquital,014,,,2017-05-12,2017-05-13,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-12-0001,Guerrero,12,Atenango Del Río,008,18.164655555555555,-98.908725,2016-12-29,2017-01-01,01:00:00,21:00:00,62:30:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2017,17-16-0194,Michoacán,16,Morelia,053,,,2017-03-21,2017-03-21,00:15:00,00:30:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-16-0279,Michoacán,16,Uruapan,102,,,2017-04-02,2017-04-02,00:05:00,00:20:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-16-0407,Michoacán,16,Morelia,053,,,2017-04-13,2017-04-13,00:10:00,00:20:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-16-0408,Michoacán,16,Morelia,053,,,2017-04-13,2017-04-13,00:16:00,00:25:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-16-0439,Michoacán,16,Cherán,024,,,2017-04-17,2017-04-17,00:05:00,00:10:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-16-0663,Michoacán,16,Madero,049,,,2017-05-10,2017-05-10,00:10:00,00:17:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-16-0664,Michoacán,16,Morelia,053,,,2017-05-07,2017-05-07,00:10:00,00:15:00,01:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0001,Oaxaca,20,Magdalena Tequisistlán,052,16.184055555555556,-95.69869444444444,2016-12-27,2017-01-04,115:00:00,01:00:00,186:30:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2017,17-20-0002,Oaxaca,20,San Carlos Yautepec,125,16.141333333333332,-96.024,2016-12-30,2017-01-05,01:00:00,05:00:00,148:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2017,17-20-0003,Oaxaca,20,Putla Villa De Guerrero,073,17.000555555555554,-98.00722222222224,2016-12-31,2017-01-02,01:00:00,26:30:00,59:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2017,17-20-0005,Oaxaca,20,San Jerónimo Sosola,161,,,2017-01-04,2017-01-04,00:10:00,00:10:00,05:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0007,Oaxaca,20,San Martín Tilcajete,243,,,2017-01-08,2017-01-08,00:10:00,00:20:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0031,Oaxaca,20,Santiago Tenango,487,,,2017-01-26,2017-01-26,00:30:00,00:10:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0034,Oaxaca,20,Santa María Del Rosario,408,,,2017-01-28,2017-01-28,00:05:00,05:00:00,03:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0037,Oaxaca,20,Heroica Ciudad De Tlaxiaco,397,,,2017-01-30,2017-01-30,00:15:00,00:05:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0038,Oaxaca,20,San Martín Tilcajete,243,,,2017-01-31,2017-01-31,00:30:00,00:10:00,02:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0039,Oaxaca,20,Oaxaca De Juárez,067,,,2017-01-31,2017-01-31,00:20:00,00:30:00,04:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0044,Oaxaca,20,San Gabriel Mixtepec,153,,,2017-02-02,2017-02-03,01:30:00,00:30:00,24:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0052,Oaxaca,20,Tlalixtac De Cabrera,553,,,2017-02-10,2017-02-10,00:30:00,00:20:00,02:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0053,Oaxaca,20,San Sebastián Abasolo,343,,,2017-02-12,2017-02-12,00:30:00,00:30:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0087,Oaxaca,20,Magdalena Tlacotepec,053,,,2017-03-05,2017-03-08,00:30:00,05:00:00,66:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0088,Oaxaca,20,San Jerónimo Tlacochahuaya,550,,,2017-03-06,2017-03-06,00:15:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0093,Oaxaca,20,Santa María Quiegolani,428,,,2017-03-10,2017-03-12,01:00:00,03:00:00,53:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0114,Oaxaca,20,Santiago Matatlán,475,16.830544444444445,-96.36844722222222,2016-12-27,2017-01-04,122:00:00,02:00:00,194:30:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2017,17-20-0118,Oaxaca,20,Santa María Zacatepec,447,,,2017-03-22,2017-03-23,01:00:00,04:00:00,20:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0119,Oaxaca,20,Santo Tomás Tamazulapan,533,,,2017-03-23,2017-03-23,00:30:00,00:40:00,14:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0121,Oaxaca,20,San Pedro Pochutla,324,,,2017-03-24,2017-03-25,00:30:00,00:30:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0122,Oaxaca,20,San Pedro Pochutla,324,,,2017-03-24,2017-03-25,00:15:00,01:00:00,24:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0123,Oaxaca,20,Sitio De Xitlapehua,538,,,2017-03-24,2017-03-25,00:24:00,01:00:00,09:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0138,Oaxaca,20,Miahuatlán De Porfirio Díaz,059,,,2017-04-02,2017-04-02,00:10:00,00:20:00,04:35:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0141,Oaxaca,20,Santa María Zacatepec,447,,,2017-03-22,2017-03-23,00:20:00,01:30:00,15:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0143,Oaxaca,20,Santa María Zacatepec,447,,,2017-03-28,2017-03-31,00:50:00,01:00:00,50:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0149,Oaxaca,20,Concepción Pápalo,019,,,2017-04-01,2017-04-04,01:00:00,00:50:00,49:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0151,Oaxaca,20,Chiquihuitlán De Benito Juárez,027,,,2017-04-02,2017-04-05,00:50:00,01:00:00,58:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0163,Oaxaca,20,San Miguel Peras,273,,,2017-04-08,2017-04-14,00:30:00,01:00:00,147:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0171,Oaxaca,20,San Pablo Huixtepec,295,,,2017-04-10,2017-04-10,00:30:00,00:30:00,02:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0180,Oaxaca,20,Santa María Huatulco,413,,,2017-04-13,2017-04-14,00:15:00,02:00:00,14:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0183,Oaxaca,20,Santa María Huatulco,413,,,2017-04-15,2017-04-17,00:15:00,02:00:00,14:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0184,Oaxaca,20,San Pedro Pochutla,324,,,2017-04-15,2017-04-16,00:20:00,01:00:00,19:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0185,Oaxaca,20,Putla Villa De Guerrero,073,,,2017-04-16,2017-04-16,00:40:00,00:10:00,18:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0194,Oaxaca,20,Santos Reyes Nopala,526,,,2017-04-16,2017-04-17,00:50:00,01:00:00,28:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0199,Oaxaca,20,San Miguel Chimalapa,265,,,2017-04-22,2017-04-23,01:00:00,04:00:00,35:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0214,Oaxaca,20,San Bernardo Mixtepec,123,,,2017-04-24,2017-04-25,01:00:00,01:00:00,16:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0234,Oaxaca,20,Santa María Zacatepec,447,,,2017-05-05,2017-05-06,01:00:00,01:00:00,28:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0252,Oaxaca,20,Santa María Huatulco,413,,,2017-05-20,2017-05-20,00:10:00,00:20:00,01:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0253,Oaxaca,20,Zapotitlán Palmas,568,,,2017-05-20,2017-05-20,00:10:00,00:10:00,01:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0258,Oaxaca,20,Santa María Quiegolani,428,,,2017-05-23,2017-05-27,01:00:00,01:00:00,96:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0260,Oaxaca,20,San Juan Cotzocón,190,,,2017-05-21,2017-05-21,01:00:00,01:10:00,02:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0261,Oaxaca,20,Mazatlán Villa De Flores,058,,,2017-06-18,2017-06-20,00:10:00,24:00:00,63:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0262,Oaxaca,20,Santa María Chimalapa,407,,,2017-07-13,2017-07-15,00:10:00,10:00:00,43:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0264,Oaxaca,20,San Pablo Huixtepec,295,,,2017-11-17,2017-11-17,02:00:00,01:00:00,09:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0265,Oaxaca,20,Oaxaca De Juárez,067,,,2017-11-21,2017-11-21,00:10:00,01:20:00,04:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0267,Oaxaca,20,Tlalixtac De Cabrera,553,,,2017-12-19,2017-12-19,00:30:00,01:00:00,05:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2017,17-20-0268,Oaxaca,20,Oaxaca De Juárez,067,,,2017-12-30,2017-12-30,00:10:00,00:10:00,02:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2018,18-03-0003,Baja California Sur,03,Mulegé,002,,,2018-09-20,2018-09-20,00:05:00,00:10:00,06:45:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2018,18-20-0170,Oaxaca,20,Santa Catarina Juquila,364,,,2018-09-09,2018-09-10,00:40:00,00:00:00,13:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2018,18-20-0171,Oaxaca,20,San Pablo Villa De Mitla,298,,,2018-11-22,2018-11-22,00:10:00,02:20:00,07:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2018,18-20-0175,Oaxaca,20,San Bartolomé Yucuañe,119,,,2018-12-27,2018-12-28,14:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2018,18-28-0014,Tamaulipas,28,Palmillas,031,,,2018-04-14,2018-04-16,00:30:00,00:55:00,48:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2018,18-30-0144,Veracruz,30,Perote,128,19.55627777777778,-19.22458333333333,2018-12-31,2018-12-31,00:30:00,00:10:00,08:30:00,coord_fuera_bbox
+estadisticasIncendiosForestales2015-2024,2018,18-31-0054,Yucatán,31,Motul,052,,,2018-03-26,2018-03-26,13:00:00,13:25:00,78:15:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0007,Oaxaca,20,San Pablo Etla,293,,,2019-01-20,2019-01-20,00:10:00,00:15:00,02:40:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0010,Oaxaca,20,Santa Catarina Quioquitani,074,,,2019-01-28,2019-02-01,01:00:00,12:00:00,96:06:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0013,Oaxaca,20,Santa Catarina Juquila,364,,,2019-02-03,2019-02-05,00:15:00,00:00:00,42:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0014,Oaxaca,20,Chalcatongo De Hidalgo,026,,,2019-02-06,2019-02-06,00:10:00,00:40:00,04:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0016,Oaxaca,20,San Pablo Cuatro Venados,292,,,2019-02-08,2019-02-08,00:05:00,00:30:00,03:51:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0017,Oaxaca,20,Villa Sola De Vega,277,,,2019-02-09,2019-02-14,01:00:00,01:30:00,121:50:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0019,Oaxaca,20,Santa Catalina Quierí,361,,,2019-02-10,2019-02-21,00:30:00,03:00:00,264:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0039,Oaxaca,20,San Miguel Quetzaltepec,275,,,2019-03-03,2019-03-08,02:00:00,03:00:00,115:05:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0044,Oaxaca,20,San Carlos Yautepec,125,,,2019-03-05,2019-03-07,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0047,Oaxaca,20,Santa María Tlahuitoltepec,437,,,2019-03-06,2019-03-07,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0061,Oaxaca,20,San Jerónimo Sosola,161,,,2019-03-11,2019-03-11,00:15:00,02:30:00,07:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0083,Oaxaca,20,Santiago Chazumba,459,,,2019-03-23,2019-03-23,00:10:00,00:30:00,03:30:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0089,Oaxaca,20,San Antonio De La Cal,107,,,2019-03-26,2019-03-26,00:10:00,00:30:00,03:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0093,Oaxaca,20,San Jerónimo Coatlán,159,,,2019-03-27,2019-03-29,08:00:00,00:30:00,63:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0094,Oaxaca,20,Villa Sola De Vega,277,,,2019-03-27,2019-04-03,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0096,Oaxaca,20,San Mateo Yucutindoo,566,,,2019-03-27,2019-04-04,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0097,Oaxaca,20,Santiago Astata,453,,,2019-03-27,2019-03-29,00:30:00,01:00:00,39:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0100,Oaxaca,20,Santo Domingo Tehuantepec,515,,,2019-03-28,2019-03-28,00:10:00,00:10:00,06:10:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0112,Oaxaca,20,Santiago Juxtlahuaca,469,,,2019-04-02,2019-04-04,00:10:00,03:00:00,35:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0118,Oaxaca,20,San Martín Tilcajete,243,,,2019-04-07,2019-04-07,00:15:00,00:45:00,04:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0123,Oaxaca,20,Santiago Juxtlahuaca,469,,,2019-04-08,2019-04-08,00:00:00,00:00:00,00:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0124,Oaxaca,20,San Andrés Cabecera Nueva,088,,,2019-04-09,2019-04-11,00:15:00,00:45:00,55:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0138,Oaxaca,20,San Pablo Villa De Mitla,298,,,2019-04-13,2019-04-14,00:30:00,01:00:00,30:20:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0171,Oaxaca,20,San Pedro Teutila,330,,,2019-04-21,2019-04-24,03:00:00,01:00:00,72:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0200,Oaxaca,20,San Baltazar Chichicápam,112,,,2019-05-02,2019-05-02,00:30:00,00:30:00,08:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2019,19-20-0301,Oaxaca,20,Tepelmeme Villa De Morelos,548,,,2019-08-12,2019-08-13,01:00:00,04:00:00,27:00:00,coord_faltante
+estadisticasIncendiosForestales2015-2024,2021,21-15-0001,México,15,Amecameca,009,19.11200833333333,-98.64048055555556,2020-12-31,2021-01-01,00:05:00,00:30:00,34:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2022,22-21-0001,Puebla,21,Tlachichuca,179,19.06925,-97.28069444444444,2021-12-31,2022-01-01,00:10:00,01:15:00,19:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2022,22-21-0002,Puebla,21,Ahuacatlán,006,20.02175,-97.84477777777778,2021-12-31,2022-01-03,00:20:00,01:00:00,75:00:00,anio_fecha_inicio_diferente
+estadisticasIncendiosForestales2015-2024,2024,24-20-0001,Oaxaca,20,San Pedro Tapanatepec,327,16.2517167,-94.0491222,2023-12-31,2024-01-07,15:55:00,00:00:00,167:55:00,anio_fecha_inicio_diferente
+2025_Incendios_forestales,2025,25-08-0001,Chihuahua,08,Guadalupe Y Calvo,029,26.016111111111112,-107.01388888888889,2024-12-20,2025-01-04,193:00:00,337:30:00,369:00:00,anio_fecha_inicio_diferente
+2025_Incendios_forestales,2025,25-08-0002,Chihuahua,08,Guachochi,027,27.07111111111111,-107.40555555555557,2024-12-30,2025-01-04,01:00:00,09:00:00,129:00:00,anio_fecha_inicio_diferente
+2025_Incendios_forestales,2025,25-08-0007,Chihuahua,08,Guadalupe Y Calvo,029,26.198611111111113,-106.62638888888888,2024-12-30,2025-01-02,01:00:00,02:30:00,74:00:00,anio_fecha_inicio_diferente

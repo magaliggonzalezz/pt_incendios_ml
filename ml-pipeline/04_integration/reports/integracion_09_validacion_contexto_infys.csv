@@ -1,0 +1,69 @@
+﻿archivo,indicador,valor,estatus,observacion
+GLOBAL,municipio_contexto_registros,2478,ok,Registros generados en integracion_infys_municipio_contexto.csv.
+GLOBAL,municipio_contexto_cvegeo_duplicado,0,ok,Duplicados por cvegeo en contexto municipal INFyS.
+GLOBAL,entidad_contexto_registros,32,ok,Registros generados en integracion_infys_entidad_contexto.csv.
+GLOBAL,entidad_contexto_cve_ent_duplicado,0,ok,Duplicados por cve_ent en contexto estatal INFyS.
+infys_superficie_base_limpio.csv,registros_leidos,1677,ok,Registros leídos desde dataset INFyS limpio.
+infys_superficie_base_limpio.csv,registros_sin_cve_ent,0,ok,Registros sin entidad asignada en integración INFyS.
+infys_superficie_base_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_superficie_2015_2020_estatal_limpio.csv,registros_leidos,32,ok,Registros leídos desde dataset INFyS limpio.
+infys_superficie_2015_2020_estatal_limpio.csv,registros_sin_cve_ent,0,ok,Registros sin entidad asignada en integración INFyS.
+infys_superficie_2015_2020_estatal_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_superficie_2015_2020_detalle_limpio.csv,registros_leidos,1906,ok,Registros leídos desde dataset INFyS limpio.
+infys_superficie_2015_2020_detalle_limpio.csv,registros_sin_cve_ent,0,ok,Registros sin entidad asignada en integración INFyS.
+infys_superficie_2015_2020_detalle_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_secciones_conglomerados_2004_2009_limpio.csv,registros_leidos,24630,ok,Registros leídos desde dataset INFyS limpio.
+infys_secciones_conglomerados_2004_2009_limpio.csv,registros_sin_cvegeo,1252,warning,Registros sin municipio asignado por clave o nombre.
+infys_secciones_conglomerados_2004_2009_limpio.csv,municipios_con_contexto,1744,ok,Municipios con resumen estructural INFyS.
+infys_secciones_conglomerados_2004_2009_limpio.csv,entidades_derivadas_con_contexto,31,ok,Entidades con resumen derivado desde registros municipales.
+infys_secciones_sitios_2004_2009_limpio.csv,registros_leidos,81665,ok,Registros leídos desde dataset INFyS limpio.
+infys_secciones_sitios_2004_2009_limpio.csv,registros_sin_cvegeo,3993,warning,Registros sin municipio asignado por clave o nombre.
+infys_secciones_sitios_2004_2009_limpio.csv,municipios_con_contexto,1727,ok,Municipios con resumen estructural INFyS.
+infys_secciones_sitios_2004_2009_limpio.csv,entidades_derivadas_con_contexto,31,ok,Entidades con resumen derivado desde registros municipales.
+infys_secciones_conglomerados_2009_2014_limpio.csv,registros_leidos,24889,ok,Registros leídos desde dataset INFyS limpio.
+infys_secciones_conglomerados_2009_2014_limpio.csv,registros_sin_cvegeo,1453,warning,Registros sin municipio asignado por clave o nombre.
+infys_secciones_conglomerados_2009_2014_limpio.csv,municipios_con_contexto,1760,ok,Municipios con resumen estructural INFyS.
+infys_secciones_conglomerados_2009_2014_limpio.csv,entidades_derivadas_con_contexto,31,ok,Entidades con resumen derivado desde registros municipales.
+infys_secciones_sitios_2009_2014_limpio.csv,registros_leidos,88393,ok,Registros leídos desde dataset INFyS limpio.
+infys_secciones_sitios_2009_2014_limpio.csv,registros_sin_cvegeo,5300,warning,Registros sin municipio asignado por clave o nombre.
+infys_secciones_sitios_2009_2014_limpio.csv,municipios_con_contexto,1748,ok,Municipios con resumen estructural INFyS.
+infys_secciones_sitios_2009_2014_limpio.csv,entidades_derivadas_con_contexto,31,ok,Entidades con resumen derivado desde registros municipales.
+infys_secciones_conglomerados_2015_2020_limpio.csv,registros_leidos,26220,ok,Registros leídos desde dataset INFyS limpio.
+infys_secciones_conglomerados_2015_2020_limpio.csv,registros_sin_cvegeo,7,warning,Registros sin municipio asignado por clave o nombre.
+infys_secciones_conglomerados_2015_2020_limpio.csv,municipios_con_contexto,1975,ok,Municipios con resumen estructural INFyS.
+infys_secciones_conglomerados_2015_2020_limpio.csv,entidades_derivadas_con_contexto,32,ok,Entidades con resumen derivado desde registros municipales.
+infys_secciones_sitios_2015_2020_limpio.csv,recomendacion_corregida_integracion,municipio_contexto_y_entidad_contexto_derivado -> agregar_espacialmente_antes_de_integrar,ok,"Corrección metodológica: el dataset no tiene municipio útil, pero sí coordenadas; se integra por spatial join."
+infys_secciones_sitios_2015_2020_limpio.csv,registros_leidos,43828,ok,Registros leídos desde dataset INFyS limpio.
+infys_secciones_sitios_2015_2020_limpio.csv,registros_sin_cvegeo_spatial,1116,warning,Registros georreferenciados sin municipio asignado por spatial join.
+infys_secciones_sitios_2015_2020_limpio.csv,municipios_con_contexto_spatial,1597,ok,Municipios con resumen estructural INFyS derivado de puntos.
+infys_secciones_sitios_2015_2020_limpio.csv,entidades_derivadas_con_contexto_spatial,32,ok,Entidades con resumen derivado desde puntos INFyS.
+infys_deforestacion_superficie_nacional_limpio.csv,integracion,omitido,ok,Dataset nacional o no compatible con flujos diarios; no se integra.
+infys_deforestacion_incertidumbre_nacional_limpio.csv,integracion,omitido,ok,Dataset nacional o no compatible con flujos diarios; no se integra.
+infys_suelos_agregados_base_limpio.csv,integracion,revision_manual,warning,Dataset requiere revisión manual; no se integra automáticamente.
+infys_suelos_2015_2020_base_limpio.csv,registros_leidos,10855,ok,Registros leídos desde dataset INFyS limpio.
+infys_suelos_2015_2020_base_limpio.csv,registros_sin_cve_ent,0,ok,Registros sin entidad asignada en integración INFyS.
+infys_suelos_2015_2020_base_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_suelos_2015_2020_agregados_limpio.csv,integracion,revision_manual,warning,Dataset requiere revisión manual; no se integra automáticamente.
+infys_indicadores_dasometricos_limpio.csv,integracion,revision_manual,warning,Dataset requiere revisión manual; no se integra automáticamente.
+infys_indicadores_estructura_limpio.csv,registros_leidos,1320,ok,Registros leídos desde dataset INFyS limpio.
+infys_indicadores_estructura_limpio.csv,registros_sin_cve_ent,434,warning,Registros sin entidad asignada en integración INFyS.
+infys_indicadores_estructura_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_indicadores_salud_forestal_limpio.csv,registros_leidos,762270,ok,Registros leídos desde dataset INFyS limpio.
+infys_indicadores_salud_forestal_limpio.csv,registros_sin_cvegeo_spatial,14833,warning,Registros georreferenciados sin municipio asignado por spatial join.
+infys_indicadores_salud_forestal_limpio.csv,municipios_con_contexto_spatial,1496,ok,Municipios con resumen estructural INFyS derivado de puntos.
+infys_indicadores_salud_forestal_limpio.csv,entidades_derivadas_con_contexto_spatial,32,ok,Entidades con resumen derivado desde puntos INFyS.
+infys_indicadores_composicion_limpio.csv,registros_leidos,178502,ok,Registros leídos desde dataset INFyS limpio.
+infys_indicadores_composicion_limpio.csv,registros_sin_cvegeo_spatial,17065,warning,Registros georreferenciados sin municipio asignado por spatial join.
+infys_indicadores_composicion_limpio.csv,municipios_con_contexto_spatial,1561,ok,Municipios con resumen estructural INFyS derivado de puntos.
+infys_indicadores_composicion_limpio.csv,entidades_derivadas_con_contexto_spatial,32,ok,Entidades con resumen derivado desde puntos INFyS.
+infys_indicadores_ivi_ivf_limpio.csv,registros_leidos,81758,ok,Registros leídos desde dataset INFyS limpio.
+infys_indicadores_ivi_ivf_limpio.csv,registros_sin_cve_ent,28000,warning,Registros sin entidad asignada en integración INFyS.
+infys_indicadores_ivi_ivf_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_indicadores_distribucion_at_dn_limpio.csv,registros_leidos,733628,ok,Registros leídos desde dataset INFyS limpio.
+infys_indicadores_distribucion_at_dn_limpio.csv,registros_sin_cve_ent,26,warning,Registros sin entidad asignada en integración INFyS.
+infys_indicadores_distribucion_at_dn_limpio.csv,entidades_con_contexto,32,ok,Entidades con resumen estructural INFyS.
+infys_indicadores_existencias_limpio.csv,integracion,revision_manual,warning,Dataset requiere revisión manual; no se integra automáticamente.
+infys_indicadores_incremento_medio_anual_limpio.csv,registros_leidos,10409,ok,Registros leídos desde dataset INFyS limpio.
+infys_indicadores_incremento_medio_anual_limpio.csv,registros_sin_cve_ent,63,warning,Registros sin entidad asignada en integración INFyS.
+infys_indicadores_incremento_medio_anual_limpio.csv,entidades_con_contexto,28,ok,Entidades con resumen estructural INFyS.
+infys_indicadores_tipo_propiedad_limpio.csv,integracion,revision_manual,warning,Dataset requiere revisión manual; no se integra automáticamente.

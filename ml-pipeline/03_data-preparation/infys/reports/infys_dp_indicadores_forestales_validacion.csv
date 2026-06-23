@@ -1,0 +1,10 @@
+﻿familia_indicador,ruta_salida,archivos_procesados,hojas_procesadas,hojas_omitidas,filas_leidas,columnas_leidas_max,filas_finales,columnas_finales,duplicados_exactos_finales,columnas_numericas,registros_con_coordenadas,latitud_fuera_mexico,longitud_fuera_mexico,tablas_distintas,archivos_origen_distintos,estado_validacion,observaciones,detalle_errores
+dasometricos,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_dasometricos_limpio.csv,2,17,1,1189,13,1148,62,0,33,0,0,0,17,2,ok,,
+estructura,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_estructura_limpio.csv,2,7,1,1333,15,1320,62,0,32,0,0,0,7,2,ok,,
+salud_forestal,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_salud_forestal_limpio.csv,2,9,1,762289,25,762270,91,0,17,747437,0,0,8,2,ok,,
+composicion,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_composicion_limpio.csv,1,9,1,178521,33,178502,80,0,15,161437,0,0,9,1,ok,,
+ivi_ivf,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_ivi_ivf_limpio.csv,1,6,1,81772,43,81758,75,0,20,0,0,0,6,1,ok,,
+distribucion_at_dn,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_distribucion_at_dn_limpio.csv,1,3,1,733635,23,733628,55,0,4,0,0,0,3,1,ok,,
+existencias,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_existencias_limpio.csv,1,2,1,52,6,48,19,0,4,0,0,0,2,1,ok,,
+incremento_medio_anual,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_incremento_medio_anual_limpio.csv,1,4,1,10417,12,10409,45,0,7,0,0,0,4,1,ok,,
+tipo_propiedad,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\03_data-preparation\infys\datasets\infys_indicadores_tipo_propiedad_limpio.csv,1,2,2,2322,11,2318,26,0,1,0,0,0,2,1,ok,,

@@ -1,0 +1,13 @@
+﻿validacion,estado,detalle
+existe_base_modeling,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\municipio_dia\modeling_municipio_dia_base.csv
+existe_ids_modeling,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\municipio_dia\modeling_municipio_dia_ids.csv
+existe_clusters_modeling,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_observation_clusters.csv
+existe_catalogo_clusters,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_cluster_catalog.csv
+columnas_ids_detectadas,OK,"4 columnas: ['fecha', 'cve_ent', 'cve_mun', 'cvegeo']"
+columnas_base_detectadas,OK,"4 columnas: ['has_firms', 'has_conafor', 'has_smn', 'firms_count']"
+columna_cluster_detectada,OK,cluster_kmeans
+dataset_app_generado,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_municipio_dia.csv
+sample_app_generado,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_municipio_dia_sample.csv
+filas_dataset_app,OK,Filas generadas: 11154221
+clusters_dataset_app,OK,"Clusters detectados en dataset app: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
+sin_cluster_nulo,OK,cluster_id se convirtió a entero durante el procesamiento

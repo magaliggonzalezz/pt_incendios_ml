@@ -1,0 +1,4 @@
+﻿dataset,archivo_origen,hoja_origen,filas_leidas,columnas_leidas,filas_finales,columnas_finales,filas_eliminadas,duplicados_exactos_finales,cve_ent_nulos,nom_ent_nulos,cve_ent_distintas,claves_fuera_catalogo,superficie_nula,superficie_menor_igual_cero,superficie_total_ha,duplicados_por_clave,estado_validacion,observaciones
+infys_superficie_base_limpio,1_Superficie.xlsx,Superficie,1677,10,1677,14,0,0,0,0,32,0,0,0,195661124.30993387,0.0,ok,
+infys_superficie_2015_2020_estatal_limpio,Superficie_forestal_INFyS-2015-2020_Tablas_v4_27042023.xlsx,Sup-ftal_estatal,36,18,32,7,4,0,0,0,32,0,0,0,138695229.78601277,0.0,ok,
+infys_superficie_2015_2020_detalle_limpio,Superficie_forestal_INFyS-2015-2020_Tablas_v4_27042023.xlsx,BaseDatos_Superficie-SVII-MGM21,1906,10,1906,10,0,0,0,0,32,0,0,0,196292662.69768637,,ok,

@@ -1,0 +1,22 @@
+﻿metrica,valor,detalle
+root_dir,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\01_raw-data\infys,
+out_dir,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\02_data-understanding\infys\reports,
+total_archivos_detectados,20,
+archivos_por_grupo_formato,,"{""tabular"": 20}"
+archivos_por_extension,,"{"".xlsx"": 20}"
+archivos_por_producto_detectado,,"{""composicion_estructura"": 4, ""dasometricos"": 2, ""deforestacion"": 1, ""distribucion_arbolado"": 1, ""existencias"": 1, ""incremento_medio_anual"": 1, ""sanidad_forestal"": 2, ""secciones"": 3, ""suelos"": 2, ""superficie_forestal"": 2, ""tipo_propiedad"": 1}"
+archivos_por_ciclo_detectado,,"{""2001-2024"": 1, ""2004-2009"": 1, ""2009-2014"": 6, ""2015-2020"": 12}"
+decisiones_preliminares_archivo,,"{""conservar_para_du"": 20}"
+shapefiles_detectados,0,
+workbooks_excel_analizados,20,
+hojas_excel_perfiladas,144,
+clasificacion_hojas_excel,,"{""catalogo_o_diccionario"": 11, ""desconocido"": 5, ""detalle_dasometrico"": 19, ""detalle_geografico"": 6, ""detalle_muestreo"": 62, ""indicador_agregado"": 39, ""posible_indicador_agregado"": 2}"
+niveles_agregacion_excel,,"{""desconocido"": 83, ""detalle_geografico"": 1, ""estado"": 1, ""estado_ecosistema_formacion"": 8, ""estado_municipio"": 36, ""serie_anual"": 4, ""sitio_conglomerado"": 11}"
+workbooks_prioritarios_analizados,6,
+hojas_prioritarias_perfiladas,61,
+niveles_agregacion_prioritarios,,"{""desconocido"": 12, ""estado_ecosistema_formacion"": 4, ""estado_municipio"": 36, ""sitio_conglomerado"": 9}"
+decisiones_preliminares_prioritarias,,"{""conservar_para_du"": 61}"
+archivos_en_revisar,0,
+filas_excel_en_revisar,0,
+filas_prioritarias_en_revisar,0,
+estado_du_infys,cerrable_con_reports_actuales,No hay archivos con decisión preliminar revisar en el inventario general.

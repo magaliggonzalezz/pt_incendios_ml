@@ -76,11 +76,11 @@ export class IncendiosController {
   }
 
   async obtenerParaMapa(req, res) {
-    try {
-      const incendios = await incendiosService.obtenerIncendiosParaMapa();
-      res.status(200).json(incendios);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+  try {
+    const data = await incendiosService.obtenerParaMapa(req.query);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
+}
 }

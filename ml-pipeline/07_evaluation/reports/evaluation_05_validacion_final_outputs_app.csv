@@ -1,0 +1,37 @@
+﻿flujo,validacion,estado,detalle
+municipio_dia,existe_carpeta_datasets,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia
+municipio_dia,existe_carpeta_reports,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia
+municipio_dia,existe_dataset_app_cluster_catalog.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_cluster_catalog.csv
+municipio_dia,existe_dataset_app_municipio_dia.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_municipio_dia.csv
+municipio_dia,existe_dataset_app_municipio_dia_sample.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_municipio_dia_sample.csv
+municipio_dia,existe_dataset_app_resumen_cluster.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_resumen_cluster.csv
+municipio_dia,existe_dataset_app_resumen_mes.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_resumen_mes.csv
+municipio_dia,existe_dataset_app_resumen_entidad.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_resumen_entidad.csv
+municipio_dia,existe_dataset_app_resumen_municipio.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_resumen_municipio.csv
+municipio_dia,existe_dataset_app_resumen_entidad_cluster.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_resumen_entidad_cluster.csv
+municipio_dia,existe_dataset_app_resumen_municipio_cluster.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\municipio_dia\app_resumen_municipio_cluster.csv
+municipio_dia,existe_report_evaluation_01_diagnostico_modelo_final.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia\evaluation_01_diagnostico_modelo_final.csv
+municipio_dia,existe_report_evaluation_01_resumen_catalogo_clusters.json,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia\evaluation_01_resumen_catalogo_clusters.json
+municipio_dia,existe_report_evaluation_02_diagnostico_dataset_app.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia\evaluation_02_diagnostico_dataset_app.csv
+municipio_dia,existe_report_evaluation_02_resumen_dataset_app.json,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia\evaluation_02_resumen_dataset_app.json
+municipio_dia,existe_report_evaluation_03_diagnostico_resumenes_app.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia\evaluation_03_diagnostico_resumenes_app.csv
+municipio_dia,existe_report_evaluation_03_resumen_resumenes_app.json,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\municipio_dia\evaluation_03_resumen_resumenes_app.json
+municipio_dia,conteo_filas_dataset_principal,OK,"Filas detectadas: 11,154,221; esperadas: 11,154,221"
+municipio_dia,clusters_dataset_principal,OK,Clusters detectados: 11; esperados: 11
+municipio_dia,clusters_catalogo,OK,Clusters catálogo: 11; esperados: 11
+municipio_dia,sample_con_filas,OK,"Filas sample: 12,812"
+entidad_dia,existe_carpeta_datasets,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia
+entidad_dia,existe_carpeta_reports,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\entidad_dia
+entidad_dia,existe_dataset_app_cluster_catalog.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_cluster_catalog.csv
+entidad_dia,existe_dataset_app_entidad_dia.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_entidad_dia.csv
+entidad_dia,existe_dataset_app_entidad_dia_sample.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_entidad_dia_sample.csv
+entidad_dia,existe_dataset_app_resumen_cluster.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_cluster.csv
+entidad_dia,existe_dataset_app_resumen_mes.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_mes.csv
+entidad_dia,existe_dataset_app_resumen_entidad.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_entidad.csv
+entidad_dia,existe_dataset_app_resumen_entidad_cluster.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_entidad_cluster.csv
+entidad_dia,existe_report_evaluation_04_diagnostico_outputs_entidad_dia.csv,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\entidad_dia\evaluation_04_diagnostico_outputs_entidad_dia.csv
+entidad_dia,existe_report_evaluation_04_resumen_outputs_entidad_dia.json,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\reports\entidad_dia\evaluation_04_resumen_outputs_entidad_dia.json
+entidad_dia,conteo_filas_dataset_principal,OK,"Filas detectadas: 292,146; esperadas: 292,146"
+entidad_dia,clusters_dataset_principal,OK,Clusters detectados: 9; esperados: 9
+entidad_dia,clusters_catalogo,OK,Clusters catálogo: 9; esperados: 9
+entidad_dia,sample_con_filas,OK,"Filas sample: 19,976"

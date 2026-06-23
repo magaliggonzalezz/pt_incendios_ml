@@ -1,0 +1,25 @@
+﻿metrica,valor
+fuente,SMN-CONAGUA
+producto,diario
+periodo_objetivo,2001-01-01 a 2025-12-31
+archivos_diarios_esperados_du,5512
+archivos_diarios_procesados,5512
+archivos_con_error_bloqueante,0
+estaciones_du_con_registros_en_periodo,3495
+estaciones_finales_dp,3488
+registros_du_en_periodo,22944827
+registros_leidos_en_periodo,22944827
+registros_fuera_periodo,48125960
+fechas_invalidas,0
+filas_4_variables_faltantes_eliminadas,84188
+filas_inconsistencias_eliminadas,11
+filas_coord_fuera_rango_eliminadas,0
+duplicados_fecha_detectados_pre_dedupe,0
+registros_finales,22860628
+fecha_min_final,2001-01-01
+fecha_max_final,2025-12-31
+faltantes_precipitacion_mm_final,239078
+faltantes_evaporacion_mm_final,11082805
+faltantes_tmax_c_final,1210222
+faltantes_tmin_c_final,1210222
+duplicados_eliminados_final,0

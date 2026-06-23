@@ -1,0 +1,114 @@
+﻿bloque,archivo,indicador,valor,estatus,observacion
+datasets_integracion,catalogo_entidades,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_catalogo_entidades.csv,ok,Archivo esperado encontrado.
+datasets_integracion,catalogo_municipios,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_catalogo_municipios.csv,ok,Archivo esperado encontrado.
+datasets_integracion,conafor_eventos_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_conafor_eventos_contexto.csv,ok,Archivo esperado encontrado.
+datasets_integracion,conafor_municipio_dia,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_conafor_municipio_dia.csv,ok,Archivo esperado encontrado.
+datasets_integracion,firms_puntos_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_firms_puntos_contexto.csv,ok,Archivo esperado encontrado.
+datasets_integracion,firms_municipio_dia,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_firms_municipio_dia.csv,ok,Archivo esperado encontrado.
+datasets_integracion,smn_estaciones_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_smn_estaciones_contexto.csv,ok,Archivo esperado encontrado.
+datasets_integracion,smn_municipio_dia,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_smn_municipio_dia.csv,ok,Archivo esperado encontrado.
+datasets_integracion,municipio_dia_base,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_municipio_dia_base.csv,ok,Archivo esperado encontrado.
+datasets_integracion,entidad_dia_base,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_entidad_dia_base.csv,ok,Archivo esperado encontrado.
+datasets_integracion,inegi_municipio_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_inegi_municipio_contexto.csv,ok,Archivo esperado encontrado.
+datasets_integracion,inegi_entidad_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_inegi_entidad_contexto.csv,ok,Archivo esperado encontrado.
+datasets_integracion,infys_municipio_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_infys_municipio_contexto.csv,ok,Archivo esperado encontrado.
+datasets_integracion,infys_entidad_contexto,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\datasets\integracion_infys_entidad_contexto.csv,ok,Archivo esperado encontrado.
+catalogos,integracion_catalogo_entidades.csv,registros,32,ok,Número de entidades en catálogo.
+catalogos,integracion_catalogo_entidades.csv,duplicados_llave_cve_ent,0,ok,Duplicados usando llave: cve_ent.
+catalogos,integracion_catalogo_entidades.csv,registros_con_llave_nula_cve_ent,0,ok,Registros con algún valor nulo en llave: cve_ent.
+catalogos,integracion_catalogo_municipios.csv,registros,2478,ok,Número de municipios en catálogo.
+catalogos,integracion_catalogo_municipios.csv,duplicados_llave_cvegeo,0,ok,Duplicados usando llave: cvegeo.
+catalogos,integracion_catalogo_municipios.csv,registros_con_llave_nula_cvegeo,0,ok,Registros con algún valor nulo en llave: cvegeo.
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,registros,105606,ok,Registros disponibles en fuente dinámica integrada.
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,columnas_requeridas,ok,ok,Validación de columnas mínimas requeridas.
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,duplicados_llave_cvegeo_fecha,0,ok,"Duplicados usando llave: cvegeo, fecha."
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,registros_con_llave_nula_cvegeo_fecha,0,ok,"Registros con algún valor nulo en llave: cvegeo, fecha."
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,fechas_invalidas,0,ok,Fechas no convertibles a datetime.
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,fecha_min,2005-01-01,ok,Fecha mínima detectada.
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,fecha_max,2025-12-31,ok,Fecha máxima detectada.
+fuentes_dinamicas,integracion_conafor_municipio_dia.csv,registros_fuera_periodo_2001_2025,0,ok,Registros fuera del periodo general del proyecto.
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,registros,1417289,ok,Registros disponibles en fuente dinámica integrada.
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,columnas_requeridas,ok,ok,Validación de columnas mínimas requeridas.
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,duplicados_llave_cvegeo_fecha,0,ok,"Duplicados usando llave: cvegeo, fecha."
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,registros_con_llave_nula_cvegeo_fecha,0,ok,"Registros con algún valor nulo en llave: cvegeo, fecha."
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,fechas_invalidas,0,ok,Fechas no convertibles a datetime.
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,fecha_min,2001-01-01,ok,Fecha mínima detectada.
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,fecha_max,2025-12-31,ok,Fecha máxima detectada.
+fuentes_dinamicas,integracion_firms_municipio_dia.csv,registros_fuera_periodo_2001_2025,0,ok,Registros fuera del periodo general del proyecto.
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,registros,10676715,ok,Registros disponibles en fuente dinámica integrada.
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,columnas_requeridas,ok,ok,Validación de columnas mínimas requeridas.
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,duplicados_llave_cvegeo_fecha,0,ok,"Duplicados usando llave: cvegeo, fecha."
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,registros_con_llave_nula_cvegeo_fecha,0,ok,"Registros con algún valor nulo en llave: cvegeo, fecha."
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,fechas_invalidas,0,ok,Fechas no convertibles a datetime.
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,fecha_min,2001-01-01,ok,Fecha mínima detectada.
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,fecha_max,2025-12-31,ok,Fecha máxima detectada.
+fuentes_dinamicas,integracion_smn_municipio_dia.csv,registros_fuera_periodo_2001_2025,0,ok,Registros fuera del periodo general del proyecto.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,registros,11154221,ok,Base dinámica principal municipio-día.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,municipios_unicos,2450,ok,Municipios únicos presentes en base principal.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,columnas_requeridas,ok,ok,Validación de columnas mínimas requeridas.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,duplicados_llave_cvegeo_fecha,0,ok,"Duplicados usando llave: cvegeo, fecha."
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,registros_con_llave_nula_cvegeo_fecha,0,ok,"Registros con algún valor nulo en llave: cvegeo, fecha."
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,fechas_invalidas,0,ok,Fechas no convertibles a datetime.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,fecha_min,2001-01-01,ok,Fecha mínima detectada.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,fecha_max,2025-12-31,ok,Fecha máxima detectada.
+flujo_principal_municipio_dia,integracion_municipio_dia_base.csv,registros_fuera_periodo_2001_2025,0,ok,Registros fuera del periodo general del proyecto.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,registros,292146,ok,Base dinámica complementaria entidad-día.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,entidades_unicas,32,ok,Entidades únicas presentes en base complementaria.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,columnas_requeridas,ok,ok,Validación de columnas mínimas requeridas.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,duplicados_llave_cve_ent_fecha,0,ok,"Duplicados usando llave: cve_ent, fecha."
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,registros_con_llave_nula_cve_ent_fecha,0,ok,"Registros con algún valor nulo en llave: cve_ent, fecha."
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,fechas_invalidas,0,ok,Fechas no convertibles a datetime.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,fecha_min,2001-01-01,ok,Fecha mínima detectada.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,fecha_max,2025-12-31,ok,Fecha máxima detectada.
+flujo_complementario_entidad_dia,integracion_entidad_dia_base.csv,registros_fuera_periodo_2001_2025,0,ok,Registros fuera del periodo general del proyecto.
+contexto_inegi_municipal,integracion_inegi_municipio_contexto.csv,registros,2478,ok,Registros esperados: 2478.
+contexto_inegi_municipal,integracion_inegi_municipio_contexto.csv,columnas,26,ok,Número de columnas disponibles en contexto estructural.
+contexto_inegi_municipal,integracion_inegi_municipio_contexto.csv,duplicados_llave_cvegeo,0,ok,Duplicados usando llave: cvegeo.
+contexto_inegi_municipal,integracion_inegi_municipio_contexto.csv,registros_con_llave_nula_cvegeo,0,ok,Registros con algún valor nulo en llave: cvegeo.
+contexto_inegi_estatal,integracion_inegi_entidad_contexto.csv,registros,32,ok,Registros esperados: 32.
+contexto_inegi_estatal,integracion_inegi_entidad_contexto.csv,columnas,17,ok,Número de columnas disponibles en contexto estructural.
+contexto_inegi_estatal,integracion_inegi_entidad_contexto.csv,duplicados_llave_cve_ent,0,ok,Duplicados usando llave: cve_ent.
+contexto_inegi_estatal,integracion_inegi_entidad_contexto.csv,registros_con_llave_nula_cve_ent,0,ok,Registros con algún valor nulo en llave: cve_ent.
+contexto_infys_municipal,integracion_infys_municipio_contexto.csv,registros,2478,ok,Registros esperados: 2478.
+contexto_infys_municipal,integracion_infys_municipio_contexto.csv,columnas,201,ok,Número de columnas disponibles en contexto estructural.
+contexto_infys_municipal,integracion_infys_municipio_contexto.csv,duplicados_llave_cvegeo,0,ok,Duplicados usando llave: cvegeo.
+contexto_infys_municipal,integracion_infys_municipio_contexto.csv,registros_con_llave_nula_cvegeo,0,ok,Registros con algún valor nulo en llave: cvegeo.
+contexto_infys_estatal,integracion_infys_entidad_contexto.csv,registros,32,ok,Registros esperados: 32.
+contexto_infys_estatal,integracion_infys_entidad_contexto.csv,columnas,300,ok,Número de columnas disponibles en contexto estructural.
+contexto_infys_estatal,integracion_infys_entidad_contexto.csv,duplicados_llave_cve_ent,0,ok,Duplicados usando llave: cve_ent.
+contexto_infys_estatal,integracion_infys_entidad_contexto.csv,registros_con_llave_nula_cve_ent,0,ok,Registros con algún valor nulo en llave: cve_ent.
+reportes_previos,validacion_01_geo_catalogs,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_01_validacion_geo_catalogos.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_01_geo_catalogs,registros_reporte,2,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_02_conafor,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_02_validacion_conafor_contexto.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_02_conafor,registros_reporte,11,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_02_conafor,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_02_conafor,warnings_reportados,1,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+reportes_previos,validacion_03_firms,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_03_validacion_firms_contexto.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_03_firms,registros_reporte,10,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_03_firms,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_03_firms,warnings_reportados,1,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+reportes_previos,validacion_04_smn,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_04_validacion_smn_contexto.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_04_smn,registros_reporte,13,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_04_smn,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_04_smn,warnings_reportados,0,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+reportes_previos,validacion_05_municipio_dia,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_05_validacion_municipio_dia_base.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_05_municipio_dia,registros_reporte,14,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_05_municipio_dia,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_05_municipio_dia,warnings_reportados,0,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+reportes_previos,validacion_06_entidad_dia,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_06_validacion_entidad_dia_base.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_06_entidad_dia,registros_reporte,14,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_06_entidad_dia,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_06_entidad_dia,warnings_reportados,0,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+reportes_previos,validacion_07_inegi,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_07_validacion_contexto_geografico_inegi.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_07_inegi,registros_reporte,17,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_07_inegi,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_07_inegi,warnings_reportados,0,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+reportes_previos,diagnostico_08_infys,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_08_diagnostico_contexto_infys.csv,ok,Archivo esperado encontrado.
+reportes_previos,diagnostico_08_infys,registros_reporte,23,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_09_infys,archivo_existe,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\04_integration\reports\integracion_09_validacion_contexto_infys.csv,ok,Archivo esperado encontrado.
+reportes_previos,validacion_09_infys,registros_reporte,68,ok,Registros dentro del reporte de validación previo.
+reportes_previos,validacion_09_infys,errores_reportados,0,ok,Errores reportados por script previo.
+reportes_previos,validacion_09_infys,warnings_reportados,17,ok,Warnings reportados por script previo. Algunos son metodológicos no bloqueantes.
+cierre_integration,flujo_principal,municipio_dia_disponible,True,ok,Disponibilidad del flujo principal: municipio-día + contexto INEGI + contexto INFyS.
+cierre_integration,flujo_complementario,entidad_dia_disponible,True,ok,Disponibilidad del flujo complementario: entidad-día + contexto INEGI + contexto INFyS.
+cierre_integration,estado_fase,integration_lista_para_feature_engineering,True,ok,"La fase Integration queda lista para pasar posteriormente a Feature Engineering, no a Modeling directo."

@@ -1,0 +1,18 @@
+{
+  "flujo": "municipio_dia",
+  "modelo_candidato_principal": "PCA + SOM + KMeans",
+  "modelo_contraste": "PCA + SOM + HDBSCAN",
+  "pca_components": 28,
+  "pca_cumulative_variance_pct": 90.51190936560928,
+  "som_config": "som_50x50_sigma3_sample",
+  "som_x": 50,
+  "som_y": 50,
+  "som_sigma": 3.0,
+  "som_learning_rate": 0.5,
+  "som_train_sample_rows_actual": 380000,
+  "som_n_iterations": 750000,
+  "kmeans_k": 11,
+  "hdbscan_n_clusters": 2,
+  "hdbscan_noise_pct": 0.17251496092824412,
+  "decision": "Se selecciona PCA + SOM + KMeans como modelo candidato principal para municipio-día por su mayor utilidad interpretativa, balance de clusters y asignación completa de observaciones. HDBSCAN se conserva como contraste."
+}

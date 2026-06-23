@@ -1,0 +1,15 @@
+﻿validacion,estado,detalle
+existe_base,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\entidad_dia\modeling_entidad_dia_base.csv
+existe_ids,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\entidad_dia\modeling_entidad_dia_ids.csv
+existe_clusters,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\entidad_dia\som_kmeans\som_kmeans_observation_clusters.csv
+existe_cluster_profile,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\entidad_dia\som_kmeans\som_kmeans_cluster_profile.csv
+catalogo_entidad_dia_generado,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_cluster_catalog.csv
+clusters_catalogo_entidad_dia,OK,Clusters detectados: 9; esperado entidad-día: 9
+dataset_entidad_dia_generado,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_entidad_dia.csv
+sample_entidad_dia_generado,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_entidad_dia_sample.csv
+filas_dataset_entidad_dia,OK,292146
+clusters_dataset_entidad_dia,OK,"[1, 2, 3, 4, 5, 6, 7, 8, 9]"
+generado_app_resumen_cluster,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_cluster.csv | filas=9
+generado_app_resumen_mes,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_mes.csv | filas=300
+generado_app_resumen_entidad,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_entidad.csv | filas=32
+generado_app_resumen_entidad_cluster,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\entidad_dia\app_resumen_entidad_cluster.csv | filas=53

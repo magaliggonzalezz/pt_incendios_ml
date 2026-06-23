@@ -1,0 +1,84 @@
+{
+  "fase_crisp_dm": "Evaluation",
+  "objetivo": "Generar JSON ligeros para consumo de API/frontend",
+  "nota": "No se convierte el dataset completo grande a JSON; solo catálogos, resúmenes y samples.",
+  "flujos": {
+    "municipio_dia": {
+      "input_dir": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\municipio_dia",
+      "output_dir": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia",
+      "archivos_generados": {
+        "clusters": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_cluster_catalog.json",
+          "registros": 11
+        },
+        "sample": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_municipio_dia_sample.json",
+          "registros": 12812
+        },
+        "resumen_cluster": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_cluster.json",
+          "registros": 11
+        },
+        "resumen_mes": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_mes.json",
+          "registros": 300
+        },
+        "resumen_entidad": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_entidad.json",
+          "registros": 32
+        },
+        "resumen_municipio": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_municipio.json",
+          "registros": 2450
+        },
+        "resumen_entidad_cluster": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_entidad_cluster.json",
+          "registros": 282
+        },
+        "resumen_municipio_cluster": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\app_resumen_municipio_cluster.json",
+          "registros": 8526
+        }
+      },
+      "index": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\municipio_dia\\index.json"
+    },
+    "entidad_dia": {
+      "input_dir": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia",
+      "output_dir": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia",
+      "archivos_generados": {
+        "clusters": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_cluster_catalog.json",
+          "registros": 9
+        },
+        "sample": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_entidad_dia_sample.json",
+          "registros": 19976
+        },
+        "resumen_cluster": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_cluster.json",
+          "registros": 9
+        },
+        "resumen_mes": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_mes.json",
+          "registros": 300
+        },
+        "resumen_entidad": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_entidad.json",
+          "registros": 32
+        },
+        "resumen_entidad_cluster": {
+          "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_entidad_cluster.json",
+          "registros": 53
+        }
+      },
+      "index": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\index.json"
+    }
+  },
+  "resultado_general": {
+    "validaciones_totales": 16,
+    "ok": 16,
+    "warnings": 0,
+    "errores": 0
+  },
+  "archivo_diagnostico": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\reports\\evaluation_06_diagnostico_json_app.csv"
+}

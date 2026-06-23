@@ -1,0 +1,10 @@
+﻿validacion,estado,detalle
+existe_cluster_profile,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_cluster_profile.csv
+existe_feature_profile,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_feature_profile.csv
+existe_entity_distribution,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_cluster_entity_distribution.csv
+existe_month_distribution,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_cluster_month_distribution.csv
+existe_decision_modelo,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_10_decision_modelo_candidato_municipio_dia.json
+clusters_detectados,OK,Clusters detectados: 11; esperados: 11
+catalogo_generado,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_cluster_catalog.csv
+catalogo_sin_cluster_nulo,OK,cluster_id sin nulos
+catalogo_sin_nombre_nulo,OK,cluster_name sin nulos

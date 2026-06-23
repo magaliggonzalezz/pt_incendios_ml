@@ -1,0 +1,9 @@
+﻿validacion,estado,detalle
+existe_dataset_app,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_municipio_dia.csv
+columna_requerida_cluster_id,OK,cluster_id
+generado_app_resumen_cluster,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_resumen_cluster.csv | filas=11 | OK
+generado_app_resumen_mes,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_resumen_mes.csv | filas=300 | OK
+generado_app_resumen_entidad,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_resumen_entidad.csv | filas=32 | OK
+generado_app_resumen_municipio,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_resumen_municipio.csv | filas=2450 | OK
+generado_app_resumen_entidad_cluster,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_resumen_entidad_cluster.csv | filas=282 | OK
+generado_app_resumen_municipio_cluster,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\07_evaluation\datasets\app_resumen_municipio_cluster.csv | filas=8526 | OK

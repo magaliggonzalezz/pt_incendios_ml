@@ -1,0 +1,12 @@
+﻿indicador,valor,estatus,observacion
+eventos_conafor_leidos,130834,ok,Total de eventos CONAFOR leídos desde DP.
+fecha_min,2005-01-01,ok,Fecha mínima detectada en eventos CONAFOR.
+fecha_max,2025-12-31,ok,Fecha máxima detectada en eventos CONAFOR.
+eventos_fecha_nula,0,ok,Eventos sin fecha válida para agregación municipio-día.
+eventos_cvegeo_nula,0,ok,Eventos sin cvegeo integrado.
+eventos_sin_catalogo_municipal,0,ok,Eventos cuyo cvegeo integrado no encontró correspondencia en catálogo municipal.
+conflictos_cvegeo_original_vs_spatial,13660,warning,Eventos donde el cvegeo original difiere del cvegeo asignado por join espacial.
+eventos_con_coordenada_invalida,0,ok,Eventos sin coordenadas válidas para join espacial.
+municipio_dia_registros,105606,ok,Registros generados en integration_conafor_municipio_dia.csv.
+municipio_dia_duplicados_cvegeo_fecha,0,ok,Duplicados por clave cvegeo + fecha en agregación municipio-día.
+eventos_fuera_periodo_proyecto_2001_2025,0,ok,Eventos fuera del periodo general del proyecto.

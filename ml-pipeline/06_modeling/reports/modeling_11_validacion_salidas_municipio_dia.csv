@@ -1,0 +1,69 @@
+﻿validacion,estado,detalle
+existe_diagnostico,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_01_diagnostico_municipio_dia.csv
+existe_base,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\municipio_dia\modeling_municipio_dia_base.csv
+existe_ids,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\municipio_dia\modeling_municipio_dia_ids.csv
+existe_scaled,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\municipio_dia\modeling_municipio_dia_scaled.csv
+existe_imputacion,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_03_imputacion_municipio_dia.csv
+existe_features,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_03_features_municipio_dia.csv
+existe_pca_variance,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\pca\pca_explained_variance.csv
+existe_pca_loadings,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\pca\pca_loadings.csv
+existe_pca_contrib,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\pca\pca_feature_contributions.csv
+existe_pca_model,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\models\municipio_dia\pca\pca_model.joblib
+existe_pca_view,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\datasets\municipio_dia\modeling_municipio_dia_pca_clustering_view.csv
+existe_pca_selected,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_05_componentes_pca_seleccionados_municipio_dia.csv
+existe_som_metrics,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_50x50_sigma3_sample\som_metrics.json
+existe_som_weights,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_50x50_sigma3_sample\som_weights.csv
+existe_som_activation,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_50x50_sigma3_sample\som_activation_map.csv
+existe_som_bmu,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_50x50_sigma3_sample\som_bmu_assignments.csv
+existe_som_umatrix,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_50x50_sigma3_sample\som_u_matrix.csv
+existe_som_model,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\models\municipio_dia\som_50x50_sigma3_sample\som_model.joblib
+existe_som_scaler,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\models\municipio_dia\som_50x50_sigma3_sample\som_minmax_scaler.joblib
+existe_kmeans_comparison,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_comparison.csv
+existe_kmeans_nodes,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_node_clusters.csv
+existe_kmeans_obs,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_observation_clusters.csv
+existe_kmeans_selected,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_selected_metrics.json
+existe_kmeans_model,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\models\municipio_dia\som_kmeans\som_kmeans_model.joblib
+existe_kmeans_profile,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_cluster_profile.csv
+existe_kmeans_feature_profile,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_feature_profile.csv
+existe_kmeans_entity_dist,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_cluster_entity_distribution.csv
+existe_kmeans_month_dist,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_kmeans\som_kmeans_cluster_month_distribution.csv
+existe_kmeans_summary,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_08_resumen_perfil_clusters_municipio_dia.csv
+existe_hdbscan_comparison,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_hdbscan\som_hdbscan_comparison.csv
+existe_hdbscan_nodes,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_hdbscan\som_hdbscan_node_clusters.csv
+existe_hdbscan_obs,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_hdbscan\som_hdbscan_observation_clusters.csv
+existe_hdbscan_selected,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\results\municipio_dia\som_hdbscan\som_hdbscan_selected_metrics.json
+existe_hdbscan_model,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\models\municipio_dia\som_hdbscan\som_hdbscan_model.joblib
+existe_comparison_10,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_10_comparacion_configuraciones_municipio_dia.csv
+existe_decision_10,OK,C:\Users\Hp\OneDrive\Documentos\PT_Analisis\06_modeling\reports\modeling_10_decision_modelo_candidato_municipio_dia.json
+diagnostico_candidatas,OK,"candidatas=65, esperado=65"
+diagnostico_perfilado,OK,"perfilado=6, esperado=6"
+diagnostico_sin_revisar,OK,columnas revisar=0
+base_rows,OK,"filas=11,154,221, esperado=11,154,221"
+ids_rows,OK,"filas=11,154,221, esperado=11,154,221"
+scaled_rows,OK,"filas=11,154,221, esperado=11,154,221"
+pca_view_rows,OK,"filas=11,154,221, esperado=11,154,221"
+scaled_features,OK,"features_scaled=65, esperado=65"
+pca_view_componentes,OK,"PCs en vista=28, esperado=28"
+scaled_sin_nulos,OK,nulos en scaled=0
+pca_28_varianza,OK,varianza acumulada PC28=90.5119%
+som_x,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_y,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_total_nodes,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_sigma,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_rows_total,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_occupied_nodes_alto,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_quantization_error_valido,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_topographic_error_valido,OK,"{'flujo': 'municipio_dia', 'som_config': 'som_50x50_sigma3_sample', 'som_x': 50, 'som_y': 50, 'total_nodes': 2500, 'occupied_nodes': 2496, 'empty_nodes': 4, 'occupied_nodes_pct': 0.9984, 'n_rows_total': 11154221, 'train_sample_size': 'sample_controlled', 'train_sample_rows_actual': 380000, 'metrics_sample_size': 100000, 'n_iterations': 750000, 'sigma': 3.0, 'learning_rate': 0.5, 'quantization_error': 0.08147303840662422, 'topographic_error': 0.11858, 'random_state': 42, 'sample_per_chunk': 10000}"
+som_bmu_rows,OK,"filas BMU=11,154,221"
+kmeans_obs_rows,OK,"filas KMeans obs=11,154,221"
+kmeans_selected_k,OK,"k=11, esperado=11"
+kmeans_clusters_summary,OK,clusters resumen=11
+kmeans_summary_has_conafor_rate,OK,columna has_conafor_rate presente=True
+kmeans_summary_has_firms_rate,OK,columna has_firms_rate presente=True
+kmeans_summary_has_smn_rate,OK,columna has_smn_rate presente=True
+hdbscan_obs_rows,OK,"filas HDBSCAN obs=11,154,221"
+hdbscan_contraste_clusters,OK,clusters HDBSCAN=2
+hdbscan_ruido_registrado,OK,noise_pct=0.17251496092824412
+decision_modelo_principal,OK,modelo=PCA + SOM + KMeans
+decision_kmeans_k,OK,kmeans_k=11
+comparison_10_modelos,OK,filas comparación=2

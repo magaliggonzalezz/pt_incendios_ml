@@ -1,0 +1,283 @@
+﻿cve_ent,cluster_id,n_observaciones,dias_con_firms,dias_con_conafor,dias_con_smn,firms_total,cluster_label,cluster_name,nivel_actividad_firms,nivel_confirmacion_conafor,nivel_cobertura_smn,color_sugerido,orden_visualizacion
+1,7,4,4,0,4,464.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+2,7,12278,4187,51,12260,44011.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+3,7,8924,415,2,8924,655.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+4,7,44334,19621,247,44221,607590.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+5,7,77362,7816,686,76509,33688.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+6,7,12,12,5,12,992.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+7,7,21585,6505,689,19468,135434.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+8,7,101285,21071,4043,93665,257164.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+10,7,92435,16084,3191,91665,287774.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+11,7,2434,184,30,2428,3598.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+12,7,4941,3642,449,4454,318844.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+13,7,4,4,0,0,374.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+14,7,9885,4054,701,9107,150794.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+15,7,42,42,15,38,3901.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+16,7,5946,3093,176,4698,96879.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+17,7,4,4,2,0,354.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+18,7,14020,3711,436,13768,127135.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+19,7,16122,1389,48,16070,9771.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+20,7,3127,2985,180,661,72314.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+21,7,14,14,2,7,1427.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+22,7,8,8,2,7,581.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+23,7,23868,7660,490,23836,104853.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+24,7,5554,264,41,5539,11133.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+25,7,36361,11320,351,35633,141216.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+26,7,58327,8617,337,54834,91376.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+27,7,43740,16510,398,42755,168799.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+28,7,23556,8583,34,23039,54315.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+29,7,1,1,1,1,114.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+30,7,17313,7091,15,12760,55853.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+31,7,20792,3111,74,20191,35061.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+32,7,24407,1505,59,24354,20213.0,Cluster 7,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Baja,#B91C1C,1
+2,10,24066,7052,1306,24040,40693.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+3,10,27393,4368,178,27392,10178.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+4,10,9135,2788,75,9132,40378.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+5,10,9241,2761,93,9197,13194.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+7,10,9115,3274,193,9114,63424.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+8,10,9883,3644,755,7391,62540.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+10,10,26,26,11,26,2485.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+23,10,9117,2154,104,9117,23113.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+26,10,10124,4781,12,9946,23618.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+28,10,22,4,0,22,10.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+32,10,23,0,0,23,0.0,Cluster 10,Alta actividad térmica con mayor asociación a incendios registrados,Alta,Alta,Alta,#B91C1C,1
+1,5,22336,2046,384,22280,6745.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+2,5,8211,2500,578,7553,9470.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+3,5,1,0,0,1,0.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+4,5,290,149,2,290,1728.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+5,5,80437,5123,141,80121,9768.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+6,5,41928,9077,480,41844,31588.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+7,5,17099,8566,456,12860,57360.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+8,5,66993,5840,76,64880,19832.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+10,5,39105,1231,31,38930,3950.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+11,5,26455,3141,111,26413,11080.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+12,5,5108,1451,21,5108,10375.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+13,5,71801,2949,356,71102,4985.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+14,5,139557,25901,3202,130069,112415.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+15,5,6473,678,422,6296,3089.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+16,5,103019,22224,2524,98067,98275.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+17,5,14684,1998,141,14595,4213.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+18,5,93942,19886,875,90569,111132.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+19,5,89748,10691,93,86017,29484.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+20,5,67100,19498,110,57687,94462.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+21,5,15476,1062,140,15032,4196.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+22,5,30610,2354,164,30347,4508.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+23,5,2,1,0,2,1.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+24,5,69428,9644,308,69153,29857.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+25,5,73494,22087,201,70694,108233.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+26,5,123854,17352,282,117795,71837.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+27,5,25883,3961,53,25864,23484.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+28,5,75717,12070,100,73305,38096.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+30,5,35449,6800,265,33005,24092.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+31,5,15,5,0,15,14.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+32,5,65958,3979,256,65669,11660.0,Cluster 5,Alta actividad térmica con baja confirmación histórica,Alta,Media,Media,#EA580C,2
+1,8,2,0,0,2,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+4,8,1,0,0,1,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+7,8,28067,3952,15,26221,13119.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+8,8,256,2,1,256,5.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+10,8,12,0,0,12,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+12,8,43027,6087,37,41727,30517.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+13,8,12863,646,3,12567,1237.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+14,8,8776,2798,106,6393,7320.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+15,8,10603,1169,648,9247,3473.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+16,8,2967,184,123,2899,394.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+17,8,26070,1885,201,26062,4488.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+19,8,338,31,0,338,125.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+20,8,23639,2123,58,21716,5718.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+21,8,46897,1892,263,46605,4593.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+24,8,2,0,0,2,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+25,8,2,0,0,2,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+26,8,1799,1422,0,380,4650.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+27,8,19638,11456,52,19528,125899.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+28,8,9129,2211,2,9129,7074.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+29,8,1,0,0,1,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+30,8,92445,12445,443,87566,30443.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+31,8,465,163,0,335,309.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+32,8,8,0,0,8,0.0,Cluster 8,Alta actividad térmica con baja confirmación histórica,Alta,Baja,Baja,#EA580C,2
+1,1,18546,744,81,18522,2108.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+2,1,4051,472,399,4051,1956.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+3,1,61,1,0,61,2.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+4,1,5614,1232,5,5608,8539.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+5,1,13338,810,73,13005,1703.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+6,1,14710,1817,182,14681,5966.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+7,1,138653,25409,1773,131765,127143.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+8,1,25528,4351,253,22418,19442.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+9,1,3252,338,607,3250,1473.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+10,1,56310,2267,82,56146,5409.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+11,1,98924,12301,276,97989,47038.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+12,1,194216,29494,1476,189641,187405.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+13,1,110536,8846,422,106853,22710.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+14,1,206570,31434,3742,192845,133610.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+15,1,141055,8571,4882,139106,23409.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+16,1,162650,29127,3759,148635,118520.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+17,1,63256,5322,651,61899,10543.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+18,1,15533,2105,93,15391,7300.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+19,1,59720,6621,105,58287,26464.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+20,1,133314,23804,761,115780,89709.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+21,1,145365,10621,1270,142256,21924.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+22,1,30117,1421,161,29891,2893.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+23,1,1028,131,13,988,855.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+24,1,133599,8165,357,132464,19852.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+25,1,25466,4048,222,25339,20997.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+26,1,74975,2693,94,74212,9546.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+27,1,1569,150,1,1569,499.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+28,1,60073,9387,105,58767,29904.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+29,1,3521,154,33,3438,379.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+30,1,124641,23086,480,113050,73071.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+31,1,25993,2709,29,25722,12988.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+32,1,123074,3366,437,122534,11131.0,Cluster 1,Actividad térmica media con incendios registrados relevantes,Media,Alta,Media,#D97706,3
+1,3,7114,229,21,7104,770.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+2,3,68,1,0,68,3.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+3,3,185,0,0,185,0.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+4,3,24433,6733,78,24371,88392.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+5,3,855,4,12,855,4.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+7,3,127284,21837,251,116714,155720.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+8,3,24395,3218,590,22420,14874.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+9,3,41564,1234,1270,40575,2090.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+10,3,18342,1737,179,18137,11429.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+11,3,24200,6876,20,19378,23113.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+12,3,45580,8007,244,42011,41427.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+13,3,41582,1522,269,40698,4441.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+14,3,38454,3987,214,36968,8857.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+15,3,244129,11528,3787,240020,21464.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+16,3,43557,7431,617,39858,28466.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+17,3,21931,1775,31,21584,3951.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+18,3,12,0,0,12,0.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+19,3,18642,4138,24,18568,23263.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+20,3,144396,18953,698,127539,60587.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+21,3,93568,4468,859,91245,9080.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+22,3,5609,465,16,5513,837.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+23,3,53339,6459,545,53281,57037.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+24,3,26044,1623,22,25975,3396.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+25,3,6837,372,10,6835,770.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+26,3,33954,551,71,33893,1937.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+27,3,48858,16618,24,47191,146790.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+28,3,17030,6041,27,11145,25550.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+29,3,152887,5971,2819,147009,10214.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+30,3,214657,41659,1388,188228,119734.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+31,3,245069,45439,341,223275,216037.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+32,3,14873,151,28,14843,393.0,Cluster 3,Actividad térmica intermedia,Media,Media,Baja,#D97706,3
+7,11,8507,1626,28,8341,11726.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+11,11,8799,541,1,8741,858.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+14,11,8360,1251,95,8115,4698.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+16,11,14624,2961,191,13684,24484.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+19,11,6584,234,2,6426,450.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+20,11,783,754,67,0,3908.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+21,11,36,31,11,0,82.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+26,11,9030,861,0,9021,2267.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+29,11,8820,47,28,8820,107.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+30,11,6594,436,12,6178,1548.0,Cluster 11,Actividad térmica intermedia,Media,Baja,Media,#D97706,3
+1,2,27615,1140,140,27575,2772.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+2,2,5181,684,149,5181,2154.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+3,2,17,0,0,17,0.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+4,2,9188,1866,7,9172,13205.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+5,2,14294,595,46,14005,1031.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+6,2,13052,1555,132,13031,4502.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+7,2,121748,20966,1222,115160,97483.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+8,2,31171,4851,498,27810,25576.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+9,2,2233,155,316,2215,646.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+10,2,50368,1540,45,50236,5148.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+11,2,98618,11416,238,97506,37460.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+12,2,194207,28270,1345,190345,206966.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+13,2,97910,9497,383,93072,27895.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+14,2,199615,28720,3722,187009,126486.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+15,2,123422,6806,3926,121877,19005.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+16,2,135481,26258,3241,122236,120354.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+17,2,62686,5538,315,61255,10539.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+18,2,23076,3802,177,22766,23451.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+19,2,58436,3884,118,56789,10049.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+20,2,134553,25313,683,116655,93727.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+21,2,121474,10517,818,118048,22431.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+22,2,29012,1625,173,28696,3345.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+23,2,603,185,10,513,1008.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+24,2,127224,7491,321,125991,18253.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+25,2,22034,3327,175,21923,18068.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+26,2,89472,2934,159,88563,11793.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+27,2,504,19,0,504,45.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+28,2,75696,11920,123,73571,36153.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+29,2,3981,140,44,3897,305.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+30,2,115279,22073,435,105820,81289.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+31,2,31938,3094,36,31698,12172.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+32,2,122988,3247,336,122400,10467.0,Cluster 2,Baja actividad térmica,Baja,Media,Baja,#2563EB,4
+1,4,23375,808,99,23333,1509.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+2,4,13,2,0,13,2.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+3,4,1,1,0,1,1.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+4,4,7475,753,1,7456,3424.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+5,4,1316,131,1,1190,259.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+6,4,8748,999,10,8694,2423.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+7,4,72474,6695,326,69871,22808.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+8,4,8101,1387,387,7585,10244.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+9,4,9340,266,136,9337,525.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+10,4,23558,167,2,23550,283.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+11,4,84596,8159,57,83362,20152.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+12,4,66772,7577,284,63867,32462.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+13,4,101437,5384,388,97474,12954.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+14,4,83710,12335,421,78519,39708.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+15,4,109530,7685,2347,106249,19242.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+16,4,64418,9512,1453,56718,34433.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+17,4,87798,4205,891,87152,9877.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+18,4,1189,143,12,1186,882.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+19,4,13606,686,8,13584,2946.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+20,4,222724,13825,569,212023,40539.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+21,4,169616,12917,1839,161390,25094.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+22,4,27873,1395,387,27749,3310.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+23,4,740,55,9,740,152.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+24,4,13837,725,5,13485,1375.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+25,4,936,68,1,936,169.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+26,4,8209,149,9,8127,486.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+27,4,9,1,0,9,1.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+28,4,22148,1334,8,22050,4956.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+29,4,19607,536,455,19197,1488.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+30,4,88784,7393,550,85548,22803.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+31,4,112063,18504,132,105621,61021.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+32,4,60201,806,83,60031,2092.0,Cluster 4,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+1,6,1,0,0,1,0.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+2,6,2925,170,159,2925,659.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+3,6,9070,233,48,9070,492.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+4,6,9854,4837,19,8334,39472.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+5,6,3935,152,69,3880,517.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+6,6,11503,1885,108,11502,5754.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+7,6,93612,17092,248,87914,78739.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+8,6,9411,935,62,8767,5730.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+9,6,16387,596,1739,16329,1698.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+10,6,11641,2040,161,10658,18012.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+11,6,11501,154,9,11465,327.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+12,6,28251,1264,84,28131,3690.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+13,6,14425,1642,105,14359,3584.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+14,6,37197,2469,941,35991,7747.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+15,6,61325,4081,1451,59860,12870.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+16,6,21087,3653,612,19984,12414.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+17,6,47,20,12,20,28.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+18,6,373,34,0,356,71.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+19,6,52642,2348,264,52262,7322.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+20,6,65897,8836,500,61643,44261.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+21,6,31566,1649,411,30795,5328.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+22,6,1502,18,9,1490,32.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+23,6,342,163,18,181,627.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+24,6,26781,1000,144,26680,3069.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+25,6,325,107,0,325,225.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+26,6,60760,1254,42,60000,6593.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+27,6,5528,1129,15,4800,3016.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+28,6,13058,570,45,12682,2330.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+29,6,24876,618,677,24697,1867.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+30,6,48682,10416,100,46474,45912.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+31,6,9157,1233,19,8603,4693.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+32,6,8169,586,125,8169,5164.0,Cluster 6,Baja actividad térmica con alta cobertura meteorológica,Baja,Alta,Alta,#2563EB,4
+5,9,57507,8020,93,56565,77178.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+6,9,28,6,0,28,29.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+7,9,18,12,3,18,74.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+8,9,9,0,0,9,0.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+10,9,35766,975,19,35753,1697.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+11,9,4,0,0,4,0.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+12,9,2,0,0,2,0.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+13,9,18063,148,43,18061,203.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+18,9,68,43,1,68,331.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+19,9,28821,1075,38,28529,2650.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+21,9,9150,238,16,9123,395.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+22,9,16725,645,12,16722,1316.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+24,9,39749,656,45,39738,1611.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+25,9,2,0,0,2,0.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+26,9,65,10,3,58,84.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+28,9,20,8,0,18,116.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+30,9,3,0,0,3,0.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4
+32,9,18258,383,14,18229,742.0,Cluster 9,Baja actividad térmica con alta cobertura meteorológica,Baja,Baja,Alta,#2563EB,4

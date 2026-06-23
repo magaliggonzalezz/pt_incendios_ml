@@ -1,0 +1,67 @@
+{
+  "fase_crisp_dm": "Evaluation",
+  "flujo": "entidad_dia",
+  "modelo_final": "PCA + SOM + KMeans",
+  "filas_generadas": 292146,
+  "clusters_detectados": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "conteo_por_cluster": {
+    "1": 72744,
+    "2": 63694,
+    "3": 37005,
+    "4": 27406,
+    "5": 27393,
+    "6": 18261,
+    "7": 18261,
+    "8": 18251,
+    "9": 9131
+  },
+  "archivos": {
+    "catalogo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_cluster_catalog.csv",
+    "dataset": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_entidad_dia.csv",
+    "sample": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_entidad_dia_sample.csv",
+    "resumen_cluster": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_resumen_cluster.csv",
+    "resumen_mes": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_resumen_mes.csv",
+    "resumen_entidad": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_resumen_entidad.csv",
+    "resumen_entidad_cluster": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\datasets\\entidad_dia\\app_resumen_entidad_cluster.csv",
+    "diagnostico": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\reports\\entidad_dia\\evaluation_04_diagnostico_outputs_entidad_dia.csv"
+  },
+  "decision_modeling": {
+    "flujo": "entidad_dia",
+    "modelo_candidato_principal": "PCA_18PCs__SOM_30x30_sigma2_full__KMeans_k9",
+    "pca": {
+      "componentes_seleccionados": 18,
+      "varianza_acumulada_pct": 90.36405809019448
+    },
+    "som": {
+      "configuracion": "som_sigma2_full",
+      "grid": "30x30",
+      "sigma": 2.0,
+      "entrenamiento": "dataset_completo_entidad_dia",
+      "motivo": "mejor equilibrio entre estabilidad topologica, ocupacion de nodos y defensa metodologica"
+    },
+    "clustering_principal": {
+      "algoritmo": "KMeans sobre nodos SOM ocupados",
+      "k": 9,
+      "motivo": "mejor silhouette entre k probados y segmentacion interpretable sin ruido"
+    },
+    "clustering_comparativo": {
+      "algoritmo": "HDBSCAN sobre nodos SOM ocupados",
+      "estatus": "comparativo_exploratorio",
+      "motivo": "mejores metricas internas pero demasiados clusters para interpretacion y aplicacion web"
+    },
+    "nota_crisp_dm": "Estas metricas corresponden a comparacion interna dentro de Modeling; no constituyen Evaluation formal."
+  },
+  "validaciones_ok": 14,
+  "warnings": 0,
+  "errores": 0
+}

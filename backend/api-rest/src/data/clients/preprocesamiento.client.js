@@ -1,74 +1,37 @@
-export async function procesarDatasetEnMicroservicio(payload) {
-  return {
-    total: payload.registros.length,
-    registros: payload.registros.map((registro) => {
-      if (
-        registro.superficie !== undefined &&
-        registro.causa &&
-        registro.region
-      ) {
-        return {
-          tipo: "incendio",
-          procesado: {
-            fecha: new Date(registro.fecha),
-            ubicacion: {
-              type: "Point",
-              coordinates: [Number(registro.longitud), Number(registro.latitud)]
-            },
-            superficie: Number(registro.superficie),
-            causa: registro.causa,
-            region: registro.region,
-            estado: registro.estado,
-            municipio: registro.municipio,
-            fuente: registro.fuente
-          }
-        };
-      }
+import { env } from "../../config/env.js";
 
-      if (
-        registro.intensidad !== undefined &&
-        registro.latitud !== undefined &&
-        registro.longitud !== undefined
-      ) {
-        return {
-          tipo: "hotspot",
-          procesado: {
-            fecha: new Date(registro.fecha),
-            ubicacion: {
-              type: "Point",
-              coordinates: [Number(registro.longitud), Number(registro.latitud)]
-            },
-            intensidad: Number(registro.intensidad),
-            fuente: registro.fuente,
-            region: registro.region,
-            estado: registro.estado
-          }
-        };
-      }
+export async function obtenerFuentesPreprocesamiento() {
+  const response = await fetch(
+    `${env.msPreprocesamientoUrl}/api/preprocesamiento/fuentes`
+  );
 
-      if (
-        registro.variable &&
-        registro.valor !== undefined &&
-        registro.unidad
-      ) {
-        return {
-          tipo: "condicion_meteorologica",
-          procesado: {
-            fecha: new Date(registro.fecha),
-            variable: registro.variable,
-            valor: Number(registro.valor),
-            unidad: registro.unidad,
-            fuente: registro.fuente,
-            region: registro.region,
-            estado: registro.estado
-          }
-        };
-      }
+  if (!response.ok) {
+    throw new Error("Error al consultar ms-preprocesamiento");
+  }
 
-      return {
-        tipo: "desconocido",
-        procesado: null
-      };
-    })
-  };
+  return await response.json();
+}
+
+export async function obtenerReportesPreprocesamiento(fuente) {
+  const response = await fetch(
+    `${env.msPreprocesamientoUrl}/api/preprocesamiento/${fuente}/reportes`
+  );
+
+  if (!response.ok) {
+    throw new Error("Error al consultar reportes de preprocesamiento");
+  }
+
+  return await response.json();
+}
+
+export async function obtenerScriptsPreprocesamiento(fuente) {
+  const response = await fetch(
+    `${env.msPreprocesamientoUrl}/api/preprocesamiento/${fuente}/scripts`
+  );
+
+  if (!response.ok) {
+    throw new Error("Error al consultar scripts de preprocesamiento");
+  }
+
+  return await response.json();
 }

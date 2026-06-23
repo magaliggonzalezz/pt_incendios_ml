@@ -1,0 +1,30 @@
+{
+  "flujo": "entidad_dia",
+  "descripcion": "entidad-día complementario",
+  "archivos": {
+    "clusters": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_cluster_catalog.json",
+      "registros": 9
+    },
+    "sample": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_entidad_dia_sample.json",
+      "registros": 19976
+    },
+    "resumen_cluster": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_cluster.json",
+      "registros": 9
+    },
+    "resumen_mes": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_mes.json",
+      "registros": 300
+    },
+    "resumen_entidad": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_entidad.json",
+      "registros": 32
+    },
+    "resumen_entidad_cluster": {
+      "archivo": "C:\\Users\\Hp\\OneDrive\\Documentos\\PT_Analisis\\07_evaluation\\app_ready\\entidad_dia\\app_resumen_entidad_cluster.json",
+      "registros": 53
+    }
+  }
+}
