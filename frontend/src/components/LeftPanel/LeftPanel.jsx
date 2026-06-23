@@ -233,7 +233,6 @@ export default function LeftPanel({
             >
               <option value="anio">Año</option>
               <option value="anio_mes">Año y mes</option>
-              <option value="rango">Rango de fechas</option>
               <option value="rango_anios">Rango de años</option>
             </select>
           </div>
