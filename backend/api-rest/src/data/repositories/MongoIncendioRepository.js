@@ -2,9 +2,9 @@ import { IncendioModel } from "../models/IncendioModel.js";
 
 export class MongoIncendioRepository {
   async obtenerTodos() {
-    return await IncendioModel.find().sort({ fecha: -1 });
+    return await IncendioModel.find().limit(1000);
   }
-
+  
   async obtenerPorId(id) {
     return await IncendioModel.findById(id);
   }
@@ -38,19 +38,42 @@ export class MongoIncendioRepository {
     return await IncendioModel.find(query).sort({ fecha: -1 });
   }
 
-   async obtenerParaMapa() {
-    return await IncendioModel.find(
-      {},
-      {
-        fecha: 1,
-        ubicacion: 1,
-        superficie: 1,
-        causa: 1,
-        region: 1,
-        estado: 1,
-        municipio: 1,
-        fuente: 1
-      }
-    ).sort({ fecha: -1 });
+   async obtenerParaMapa(filtros = {}) {
+  const query = {};
+
+  if (filtros.estado) {
+    query.estado = { $regex: filtros.estado, $options: "i" };
   }
+
+  if (filtros.municipio) {
+    query.municipio = { $regex: filtros.municipio, $options: "i" };
+  }
+
+  if (filtros.anio) {
+    query.anio = Number(filtros.anio);
+  }
+
+  if (filtros.fechaInicio) {
+    query.fechaInicio = {
+      $gte: new Date(filtros.fechaInicio)
+    };
+  }
+
+  return await IncendioModel.find(query)
+    .select(
+      "claveIncendio anio estado municipio latitud longitud ubicacion causa superficie fechaInicio fuente"
+    )
+    .limit(5000);
+}
+  
+ async crearMuchos(registros) {
+    return await IncendioModel.insertMany(registros, {
+      ordered: false
+    });
+  }
+
+  async eliminarPorFuente(fuente) {
+    return await IncendioModel.deleteMany({ fuente });
+  }
+
 }

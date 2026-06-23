@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+/*import { apiFetch } from "./api";
 
 export async function obtenerIncendios() {
   const response = await fetch("http://localhost:3000/api/incendios");
@@ -8,22 +8,23 @@ export async function obtenerIncendios() {
   return response.json();
 }
 
-/*export function obtenerIncendioPorId(id) {
-  return apiFetch(`/api/incendios/${id}`);
-}
-
-export function crearIncendio(data) {
-  return apiFetch("/api/incendios", {
-    method: "POST",
-    body: JSON.stringify(data)
-  });
-}
-
-export function buscarIncendiosConFiltros(params) {
-  const query = new URLSearchParams(params).toString();
-  return apiFetch(`/api/incendios/filtros/busqueda?${query}`);
-}
-
-export function obtenerIncendiosParaMapa() {
-  return apiFetch("/api/incendios/visualizacion/mapa");
+export function obtenerIncendiosMapa(filtros = {}) {
+  const query = new URLSearchParams(filtros).toString();
+  return apiFetch(`/api/incendios/mapa?${query}`);
 }*/
+
+import { apiFetch } from "./api";
+
+export function obtenerIncendiosMapa(filtros = {}) {
+  const params = new URLSearchParams();
+
+  Object.entries(filtros).forEach(([key, value]) => {
+    if (value && value !== "" && typeof value !== "object") {
+      params.append(key, value);
+    }
+  });
+
+  const query = params.toString();
+
+  return apiFetch(`/api/incendios/mapa${query ? `?${query}` : ""}`);
+}

@@ -9,6 +9,8 @@ import "./DashboardPage.css";
 export default function DashboardPage() {
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
+  const [mapFilters, setMapFilters] = useState({});
+
 
     return (
         <div className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
@@ -17,7 +19,14 @@ export default function DashboardPage() {
           <Header />
           <Footer />
 
-          <LeftPanel open={leftOpen} onToggle={() => setLeftOpen((v) => !v)} />
+          <LeftPanel
+          open={leftOpen}
+          onToggle={() => setLeftOpen(!leftOpen)}
+          onApplyFilters={(filters) => setMapFilters(filters)}
+          onClearFilters={() => setMapFilters({})}
+          />
+
+          <MapView filtros={mapFilters} />
           <RightPanel open={rightOpen} onToggle={() => setRightOpen((v) => !v)} />
         </div>
     );
