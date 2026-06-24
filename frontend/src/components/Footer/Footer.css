@@ -8,8 +8,8 @@
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
-    padding: 24px;;
-    background: rgba(4, 48, 45, .98);
+    padding: 12px clamp(16px, 2.5vw, 24px);
+    background: var(--bg);
     color: white;
     z-index: 30;
 }
@@ -41,4 +41,15 @@
 
 .footerBtn:hover{
     background: rgba(255,255,255,.14);
+}
+
+.footerBtn:focus-visible{
+    outline: 3px solid rgba(255,255,255,.35);
+    outline-offset: 2px;
+}
+
+@media (max-width: 1180px){
+    .footerBtnText {
+        font-size: 13px;
+    }
 }

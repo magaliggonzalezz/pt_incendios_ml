@@ -1,301 +1,498 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { LAYER_GROUPS, INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
 import "./LeftPanel.css";
 
 const ESTADOS = [
-    "Todos los estados",
-    "Aguascalientes",
-    "Baja California",
-    "Baja California Sur",
-    "Campeche",
-    "Chiapas",
-    "Chihuahua",
-    "Ciudad de México",
-    "Coahuila",
-    "Colima",
-    "Durango",
-    "Estado de México",
-    "Guanajuato",
-    "Guerrero",
-    "Hidalgo",
-    "Jalisco",
-    "Michoacán",
-    "Morelos",
-    "Nayarit",
-    "Nuevo León",
-    "Oaxaca",
-    "Puebla",
-    "Querétaro",
-    "Quintana Roo",
-    "San Luis Potosí",
-    "Sinaloa",
-    "Sonora",
-    "Tabasco",
-    "Tamaulipas",
-    "Tlaxcala",
-    "Veracruz",
-    "Yucatán",
-    "Zacatecas",
-    ];
+  "Aguascalientes",
+  "Baja California",
+  "Baja California Sur",
+  "Campeche",
+  "Chiapas",
+  "Chihuahua",
+  "Ciudad de México",
+  "Coahuila",
+  "Colima",
+  "Durango",
+  "Estado de México",
+  "Guanajuato",
+  "Guerrero",
+  "Hidalgo",
+  "Jalisco",
+  "Michoacán",
+  "Morelos",
+  "Nayarit",
+  "Nuevo León",
+  "Oaxaca",
+  "Puebla",
+  "Querétaro",
+  "Quintana Roo",
+  "San Luis Potosí",
+  "Sinaloa",
+  "Sonora",
+  "Tabasco",
+  "Tamaulipas",
+  "Tlaxcala",
+  "Veracruz",
+  "Yucatán",
+  "Zacatecas",
+];
 
-const CENTROS_ESTADO = {
-  "Aguascalientes": { center: [21.8853, -102.2916], zoom: 9 },
-  "Baja California": { center: [30.8406, -115.2838], zoom: 7 },
-  "Baja California Sur": { center: [26.0444, -111.6661], zoom: 7 },
-  "Campeche": { center: [19.8301, -90.5349], zoom: 8 },
-  "Chiapas": { center: [16.7569, -93.1292], zoom: 8 },
-  "Chihuahua": { center: [28.6329, -106.0691], zoom: 7 },
-  "Ciudad de México": { center: [19.4326, -99.1332], zoom: 10 },
-  "Coahuila": { center: [27.0587, -101.7068], zoom: 7 },
-  "Colima": { center: [19.2452, -103.7241], zoom: 9 },
-  "Durango": { center: [24.0277, -104.6532], zoom: 7 },
-  "Estado de México": { center: [19.4969, -99.7233], zoom: 8 },
-  "Guanajuato": { center: [21.019, -101.2574], zoom: 8 },
-  "Guerrero": { center: [17.4392, -99.5451], zoom: 8 },
-  "Hidalgo": { center: [20.0911, -98.7624], zoom: 8 },
-  "Jalisco": { center: [20.6597, -103.3496], zoom: 8 },
-  "Michoacán": { center: [19.5665, -101.7068], zoom: 8 },
-  "Morelos": { center: [18.6813, -99.1013], zoom: 9 },
-  "Nayarit": { center: [21.7514, -104.8455], zoom: 8 },
-  "Nuevo León": { center: [25.6866, -100.3161], zoom: 8 },
-  "Oaxaca": { center: [17.0732, -96.7266], zoom: 8 },
-  "Puebla": { center: [19.0414, -98.2063], zoom: 8 },
-  "Querétaro": { center: [20.5888, -100.3899], zoom: 9 },
-  "Quintana Roo": { center: [19.1817, -88.4791], zoom: 8 },
-  "San Luis Potosí": { center: [22.1565, -100.9855], zoom: 8 },
-  "Sinaloa": { center: [25.1721, -107.4795], zoom: 8 },
-  "Sonora": { center: [29.2972, -110.3309], zoom: 7 },
-  "Tabasco": { center: [17.8409, -92.6189], zoom: 8 },
-  "Tamaulipas": { center: [24.2669, -98.8363], zoom: 7 },
-  "Tlaxcala": { center: [19.3182, -98.2375], zoom: 9 },
-  "Veracruz": { center: [19.1738, -96.1342], zoom: 7 },
-  "Yucatán": { center: [20.7099, -89.0943], zoom: 8 },
-  "Zacatecas": { center: [22.7709, -102.5832], zoom: 8 },
+const MUNICIPIOS_POR_ESTADO = {
+  Aguascalientes: ["Aguascalientes", "Jesús María", "Calvillo"],
+  Jalisco: ["Guadalajara", "Zapopan", "Tlaquepaque"],
+  "Estado de México": ["Toluca", "Naucalpan de Juárez", "Ecatepec"],
 };
 
-    // Demo: municipios
-    const MUNICIPIOS_POR_ESTADO = {
-    Aguascalientes: ["Aguascalientes", "Jesús María", "Calvillo"],
-    Jalisco: ["Guadalajara", "Zapopan", "Tlaquepaque"],
-    "Estado de México": ["Toluca", "Naucalpan de Juárez", "Ecatepec"],
-    };
+const MESES = [
+  { value: "", label: "Todos los meses" },
+  { value: "01", label: "Enero" },
+  { value: "02", label: "Febrero" },
+  { value: "03", label: "Marzo" },
+  { value: "04", label: "Abril" },
+  { value: "05", label: "Mayo" },
+  { value: "06", label: "Junio" },
+  { value: "07", label: "Julio" },
+  { value: "08", label: "Agosto" },
+  { value: "09", label: "Septiembre" },
+  { value: "10", label: "Octubre" },
+  { value: "11", label: "Noviembre" },
+  { value: "12", label: "Diciembre" },
+];
 
-    export default function LeftPanel({ open, onToggle, onApplyFilters, onClearFilters }) {
-        const [layers, setLayers] = useState({
-            hotspots: false,
-            veg: false,
-            ndvi: false,
-    });
+const MIN_YEAR = 2001;
+const MAX_YEAR = 2025;
+const MIN_DATE = "2001-01-01";
+const MAX_DATE = "2025-12-31";
 
-    const [filters, setFilters] = useState({
-        year: "",
-        startDate: "",
-        state: "Todos los estados",
-        municipality: "Todos los municipios",
-    });
+const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, index) =>
+  String(MIN_YEAR + index)
+).reverse();
 
-    const municipalityEnabled = filters.state !== "Todos los estados";
-
-    const municipios = useMemo(() => {
-        if (!municipalityEnabled) return ["Todos los municipios"];
-        const list = MUNICIPIOS_POR_ESTADO[filters.state] ?? [];
-        return ["Todos los municipios", ...list];
-    }, [filters.state, municipalityEnabled]);
-
-    const isDirty = useMemo(() => {
-        const defaultLayers = { hotspots: false, veg: false, ndvi: false };
-        const defaultFilters = {
-            year: "",
-            startDate: "",
-            state: "Todos los estados",
-            municipality: "Todos los municipios",
-        };
-
-        const layersChanged =
-        layers.hotspots !== defaultLayers.hotspots ||
-        layers.veg !== defaultLayers.veg ||
-        layers.ndvi !== defaultLayers.ndvi;
-
-        const filtersChanged =
-        filters.year !== defaultFilters.year ||
-        filters.startDate !== defaultFilters.startDate ||
-        filters.state !== defaultFilters.state ||
-        filters.municipality !== defaultFilters.municipality;
-
-        return layersChanged || filtersChanged;
-    }, [layers, filters]);
-
-    const onChangeState = (value) => {
-        setFilters((prev) => ({
-            ...prev,
-            state: value,
-            // al cambiar estado, resetea municipio (y además se deshabilita si vuelve a "Todos")
-            municipality: "Todos los municipios",
-        }));
-    };
-
-   const cleanFilters = () => {
-  const cleanLayers = { hotspots: false, veg: false, ndvi: false };
-  const cleanFilters = {
-    year: "",
-    endDate: "",
-    state: "Todos los estados",
-    municipality: "Todos los municipios",
-  };
-
-  setLayers(cleanLayers);
-  setFilters(cleanFilters);
-
-  onClearFilters?.();
+const clampDate = (value) => {
+  if (!value) return "";
+  if (value < MIN_DATE) return MIN_DATE;
+  if (value > MAX_DATE) return MAX_DATE;
+  return value;
 };
 
-    const consultar = () => {
-    const vista = CENTROS_ESTADO[filters.state];
-
-  onApplyFilters?.({
-    anio: filters.year,
-    fechaInicio: filters.startDate,
-    estado: filters.state === "Todos los estados" ? "" : filters.state,
-    municipio:
-      filters.municipality === "Todos los municipios"
-        ? ""
-        : filters.municipality,
-        vista: vista || null,
-    capas: layers
-  });
+const getLayerDisabled = (layer, nivelAgregacion) => {
+  if (!layer.nivel) return false;
+  return layer.nivel !== nivelAgregacion;
 };
 
-const clearAll = () => {
-  const cleanLayers = {
-    hotspots: false,
-    veg: false,
-    ndvi: false,
-  };
+const SMN_FILTERS = [
+  { id: "operando", label: "Operando" },
+  { id: "suspendida", label: "Suspendida" },
+];
 
-  const cleanFilters = {
-    year: "",
-    startDate: "",
-    state: "Todos los estados",
-    municipality: "Todos los municipios",
-  };
+const SMN_SCOPE_OPTIONS = [
+  { value: "todas", label: "Todas las estaciones" },
+  { value: "periodo", label: "Con datos del período" },
+];
 
-  setLayers(cleanLayers);
-  setFilters(cleanFilters);
+export default function LeftPanel({
+  open,
+  onToggle,
+  consultaActiva,
+  consultaEjecutada = false,
+  onConsultaChange,
+  onConsultar,
+  onResetConsulta,
+}) {
+  const selectedState = consultaActiva?.estado || "";
+  const selectedMunicipality = consultaActiva?.municipio || "";
+  const showMunicipality = consultaActiva?.nivelAgregacion === "municipio";
+  const municipalityEnabled = showMunicipality && selectedState !== "";
+  const tipoPeriodo = consultaActiva?.tipoPeriodo || "anio";
 
-  onClearFilters?.();
-};
+  const municipios = useMemo(() => {
+    if (!selectedState) return [];
+    return MUNICIPIOS_POR_ESTADO[selectedState] ?? [];
+  }, [selectedState]);
 
-    return (
-        <aside className={`leftPanel ${open ? "open" : "closed"}`}>
-            <button className="toggleBtn" onClick={onToggle} aria-label="Toggle left panel">
-                {open ? "⟨" : "⟩"}
-            </button>
-
-            <div className="panelCard">
-                <div className="panelTitle">Capas temáticas</div>
-                <label className="row">
-                    <input
-                    id="layer-hotspots"
-                    name="layerHotspots"
-                    type="checkbox"
-                    checked={layers.hotspots}
-                    onChange={(e) => setLayers((p) => ({ ...p, hotspots: e.target.checked }))}
-                    />
-                    Puntos de calor
-                </label>
-
-                <label className="row">
-                    <input
-                    id="layer-veg"
-                    name="layerVeg" 
-                    type="checkbox"
-                    checked={layers.veg}
-                    onChange={(e) => setLayers((p) => ({ ...p, veg: e.target.checked }))}
-                    />
-                    Vegetación
-                </label>
-
-                <label className="row">
-                    <input
-                    id="layer-ndvi"
-                    name="layerNdvi"
-                    type="checkbox"
-                    checked={layers.ndvi}
-                    onChange={(e) => setLayers((p) => ({ ...p, ndvi: e.target.checked }))}
-                    />
-                    NDVI
-                </label>
-            </div>
-
-            <div className="panelCard">
-                <div className="panelTitle">Filtros</div>
-                <div className="field">
-                    <span>Año</span>
-                    <input
-                    id="year"
-                    name="year" 
-                    type="number"
-                    value={filters.year}
-                    onChange={(e) => setFilters((p) => ({ ...p, year: e.target.value }))}
-                    placeholder="Ej. 2025"
-                    />
-                </div>
-
-                <div className="field">
-                    <span>Fecha Inicio</span>
-                    <input
-                    id="startDate"
-                    name="startDate" 
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => setFilters((p) => ({ ...p, startDate: e.target.value }))}
-                    />
-                </div>
-
-                <div className="field">
-                    <span>Estado</span>
-                    <select
-                    id="stateSelect"
-                    name="state" 
-                    className="selectInput"
-                    value={filters.state}
-                    onChange={(e) => onChangeState(e.target.value)}
-                    >
-                        {ESTADOS.map((st) => (
-                            <option key={st} value={st}>
-                                {st}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="field">
-                    <span>Municipio</span>
-                    <select
-                    id="municipalitySelect" 
-                    name="municipality"    
-                    className="selectInput"
-                    value={filters.municipality}
-                    onChange={(e) => setFilters((p) => ({ ...p, municipality: e.target.value }))}
-                    disabled={!municipalityEnabled}
-                    >
-                        {municipios.map((m) => (
-                            <option key={m} value={m}>
-                                {m}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/*
-                    {!municipalityEnabled && (
-                        <small className="helperText">Selecciona un estado primero</small>
-                    )}*/}
-                </div>
-
-                <button className="primaryBtn" onClick={consultar}>
-                Consultar
-                </button>
-                <button className="ghostBtn" disabled={!isDirty} onClick={clearAll}>Limpiar filtros</button>
-            </div>
-        </aside>
+  const isDirty = useMemo(() => {
+    const currentLayers = consultaActiva?.capasActivas ?? {};
+    const layersChanged = Object.entries(INITIAL_ACTIVE_LAYERS).some(
+      ([key, value]) => currentLayers[key] !== value
     );
+    const currentSmnFilters = consultaActiva?.filtrosSmn ?? {};
+    const smnFiltersChanged = Object.entries(INITIAL_SMN_FILTERS).some(
+      ([key, value]) => currentSmnFilters[key] !== value
+    );
+
+    const consultaChanged =
+      consultaActiva?.nivelAgregacion !== "entidad" ||
+      consultaActiva?.tipoPeriodo !== "anio" ||
+      consultaActiva?.anio !== "2025" ||
+      consultaActiva?.mes !== "" ||
+      consultaActiva?.anioInicio !== "" ||
+      consultaActiva?.anioFin !== "" ||
+      consultaActiva?.fechaInicio !== "" ||
+      consultaActiva?.fechaFin !== "" ||
+      consultaActiva?.estado !== "" ||
+      consultaActiva?.municipio !== "" ||
+      consultaActiva?.cveEnt !== "" ||
+      consultaActiva?.cveMun !== "" ||
+      consultaActiva?.cvegeo !== "";
+
+    return layersChanged || smnFiltersChanged || consultaChanged;
+  }, [consultaActiva]);
+
+  const onChangeYear = (value) => onConsultaChange?.("anio", value);
+
+  const onChangeAnioInicio = (value) => {
+    const nextStart = value;
+    onConsultaChange?.("anioInicio", nextStart);
+    if (consultaActiva?.anioFin && nextStart && Number(nextStart) > Number(consultaActiva.anioFin)) {
+      onConsultaChange?.("anioFin", nextStart);
+    }
+  };
+
+  const onChangeAnioFin = (value) => {
+    const nextEnd = value;
+    onConsultaChange?.("anioFin", nextEnd);
+    if (consultaActiva?.anioInicio && nextEnd && Number(nextEnd) < Number(consultaActiva.anioInicio)) {
+      onConsultaChange?.("anioInicio", nextEnd);
+    }
+  };
+
+  const onChangeFechaInicio = (value) => {
+    const nextStart = clampDate(value);
+    onConsultaChange?.("fechaInicio", nextStart);
+    if (consultaActiva?.fechaFin && nextStart && nextStart > consultaActiva.fechaFin) {
+      onConsultaChange?.("fechaFin", nextStart);
+    }
+  };
+
+  const onChangeFechaFin = (value) => {
+    const nextEnd = clampDate(value);
+    onConsultaChange?.("fechaFin", nextEnd);
+    if (consultaActiva?.fechaInicio && nextEnd && nextEnd < consultaActiva.fechaInicio) {
+      onConsultaChange?.("fechaInicio", nextEnd);
+    }
+  };
+
+  const onChangeState = (value) => {
+    onConsultaChange?.("estado", value);
+    onConsultaChange?.("municipio", "");
+    onConsultaChange?.("cveMun", "");
+    onConsultaChange?.("cvegeo", "");
+  };
+
+  const onChangeNivelAgregacion = (value) => {
+    onConsultaChange?.("nivelAgregacion", value);
+    onConsultaChange?.("municipio", "");
+    onConsultaChange?.("cveMun", "");
+    onConsultaChange?.("cvegeo", "");
+  };
+
+  const onChangeMunicipio = (value) => {
+    onConsultaChange?.("municipio", value);
+    onConsultaChange?.("cveMun", "");
+    onConsultaChange?.("cvegeo", "");
+  };
+
+  return (
+    <aside className={`leftPanel ${open ? "open" : "closed"}`} aria-label="Panel de filtros de consulta">
+      <button
+        className="toggleBtn"
+        type="button"
+        onClick={onToggle}
+        aria-label={open ? "Ocultar panel de filtros" : "Mostrar panel de filtros"}
+        aria-expanded={open}
+      >
+        {open ? "⟨" : "⟩"}
+      </button>
+
+      <div className="panelContent">
+        <div className="panelCard">
+          <div className="panelTitle">Consulta</div>
+
+          <div className="field">
+            <label htmlFor="aggregationLevel">Nivel de análisis</label>
+            <select
+              id="aggregationLevel"
+              name="nivelAgregacion"
+              className="selectInput"
+              value={consultaActiva?.nivelAgregacion ?? "entidad"}
+              onChange={(e) => onChangeNivelAgregacion(e.target.value)}
+            >
+              <option value="entidad">Estatal</option>
+              <option value="municipio">Municipal</option>
+            </select>
+          </div>
+
+          <div className="field">
+            <label htmlFor="periodType">Tipo de período</label>
+            <select
+              id="periodType"
+              name="tipoPeriodo"
+              className="selectInput"
+              value={tipoPeriodo}
+              onChange={(e) => onConsultaChange?.("tipoPeriodo", e.target.value)}
+            >
+              <option value="anio">Año</option>
+              <option value="anio_mes">Año y mes</option>
+              <option value="rango_anios">Rango de años</option>
+            </select>
+          </div>
+
+          {(tipoPeriodo === "anio" || tipoPeriodo === "anio_mes") && (
+            <div className="field">
+              <label htmlFor="yearInput">Año</label>
+              <select
+                id="yearInput"
+                name="anio"
+                className="selectInput"
+                value={consultaActiva?.anio ?? "2025"}
+                onChange={(e) => onChangeYear(e.target.value)}
+              >
+                {YEAR_OPTIONS.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {tipoPeriodo === "anio_mes" && (
+            <div className="field">
+              <label htmlFor="monthSelect">Mes</label>
+              <select
+                id="monthSelect"
+                name="mes"
+                className="selectInput"
+                value={consultaActiva?.mes ?? ""}
+                onChange={(e) => onConsultaChange?.("mes", e.target.value)}
+              >
+                {MESES.map((month) => (
+                  <option key={month.value || "all"} value={month.value}>
+                    {month.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {tipoPeriodo === "rango" && (
+            <>
+              <div className="field">
+                <label htmlFor="startDate">Fecha inicio</label>
+                <input
+                  id="startDate"
+                  name="startDate"
+                  type="date"
+                  min={MIN_DATE}
+                  max={MAX_DATE}
+                  value={consultaActiva?.fechaInicio ?? ""}
+                  onChange={(e) => onChangeFechaInicio(e.target.value)}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="endDate">Fecha fin</label>
+                <input
+                  id="endDate"
+                  name="endDate"
+                  type="date"
+                  min={MIN_DATE}
+                  max={MAX_DATE}
+                  value={consultaActiva?.fechaFin ?? ""}
+                  onChange={(e) => onChangeFechaFin(e.target.value)}
+                />
+              </div>
+            </>
+          )}
+
+          {tipoPeriodo === "rango_anios" && (
+            <>
+              <div className="field">
+                <label htmlFor="startYearInput">Año inicio</label>
+                <select
+                  id="startYearInput"
+                  name="anioInicio"
+                  className="selectInput"
+                  value={consultaActiva?.anioInicio ?? ""}
+                  onChange={(e) => onChangeAnioInicio(e.target.value)}
+                >
+                  <option value="">Selecciona ano inicio</option>
+                  {YEAR_OPTIONS.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="field">
+                <label htmlFor="endYearInput">Año fin</label>
+                <select
+                  id="endYearInput"
+                  name="anioFin"
+                  className="selectInput"
+                  value={consultaActiva?.anioFin ?? ""}
+                  onChange={(e) => onChangeAnioFin(e.target.value)}
+                >
+                  <option value="">Selecciona ano fin</option>
+                  {YEAR_OPTIONS.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
+
+          <div className="field">
+            <label htmlFor="stateSelect">Estado</label>
+            <select
+              id="stateSelect"
+              name="state"
+              className="selectInput"
+              value={selectedState}
+              onChange={(e) => onChangeState(e.target.value)}
+            >
+              <option value="">{showMunicipality ? "Selecciona un estado" : "Todos los estados"}</option>
+              {ESTADOS.map((st) => (
+                <option key={st} value={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {showMunicipality && (
+            <div className="field">
+              <label htmlFor="municipalitySelect">Municipio</label>
+              <select
+                id="municipalitySelect"
+                name="municipality"
+                className="selectInput"
+                value={selectedMunicipality}
+                onChange={(e) => onChangeMunicipio(e.target.value)}
+                disabled={!municipalityEnabled}
+              >
+                {!selectedState ? (
+                  <option value="">Selecciona un estado primero</option>
+                ) : (
+                  <option value="">Todos los municipios</option>
+                )}
+                {municipios.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="primaryBtn"
+            onClick={() => onConsultar?.()}
+            disabled={showMunicipality && !selectedState}
+          >
+            Consultar
+          </button>
+          <button
+            type="button"
+            className="ghostBtn"
+            disabled={!consultaEjecutada && !isDirty}
+            onClick={onResetConsulta}
+          >
+            Limpiar filtros
+          </button>
+        </div>
+
+        <div className="panelCard layersCard">
+          <div className="panelTitle">Capas disponibles</div>
+          <div className="layerGroups">
+            {LAYER_GROUPS.map((group) => (
+              <section className="layerGroup" key={group.id} aria-label={group.title}>
+                <div className="layerGroupTitle">{group.title}</div>
+                {group.layers.map((layer) => {
+                  const disabled = getLayerDisabled(layer, consultaActiva?.nivelAgregacion);
+                  return (
+                    <label className={`row layerRow ${disabled ? "isDisabled" : ""}`} key={layer.id}>
+                      <input
+                        id={`layer-${layer.id}`}
+                        name={`layer-${layer.id}`}
+                        type="checkbox"
+                        aria-label={layer.label}
+                        checked={consultaActiva?.capasActivas?.[layer.id] ?? false}
+                        disabled={disabled}
+                        onChange={(e) =>
+                          onConsultaChange?.("capasActivas", {
+                            capa: layer.id,
+                            activo: e.target.checked,
+                          })
+                        }
+                      />
+                      <span>
+                        {layer.label}
+                        {layer.helper && <small>{layer.helper}</small>}
+                      </span>
+                    </label>
+                  );
+                })}
+                {group.id === "smn" && (
+                  <div
+                    className={`smnFilters ${consultaActiva?.capasActivas?.estacionesSmn ? "" : "isDisabled"}`}
+                    aria-label="Filtros de estaciones SMN-CONAGUA"
+                  >
+                    <div className="smnFilterBlock" role="radiogroup" aria-label="Alcance de estaciones SMN-CONAGUA">
+                      <div className="smnFiltersTitle">Alcance</div>
+                      {SMN_SCOPE_OPTIONS.map((option) => (
+                        <label className="row smnFilterRow" key={option.value}>
+                          <input
+                            id={`smn-scope-${option.value}`}
+                            name="smn-scope"
+                            type="radio"
+                            value={option.value}
+                            aria-label={option.label}
+                            checked={(consultaActiva?.filtrosSmn?.alcance ?? "todas") === option.value}
+                            disabled={!consultaActiva?.capasActivas?.estacionesSmn}
+                            onChange={(e) =>
+                              onConsultaChange?.("filtrosSmn", {
+                                alcance: e.target.value,
+                              })
+                            }
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <div className="smnFilterBlock" aria-label="Situación operativa de estaciones SMN-CONAGUA">
+                      <div className="smnFiltersTitle">Situación operativa</div>
+                    {SMN_FILTERS.map((filter) => (
+                      <label className="row smnFilterRow" key={filter.id}>
+                        <input
+                          id={`smn-filter-${filter.id}`}
+                          name={`smn-filter-${filter.id}`}
+                          type="checkbox"
+                          aria-label={filter.label}
+                          checked={consultaActiva?.filtrosSmn?.[filter.id] ?? false}
+                          disabled={!consultaActiva?.capasActivas?.estacionesSmn}
+                          onChange={(e) =>
+                            onConsultaChange?.("filtrosSmn", {
+                              [filter.id]: e.target.checked,
+                            })
+                          }
+                        />
+                        <span>{filter.label}</span>
+                      </label>
+                    ))}
+                    </div>
+                  </div>
+                )}
+              </section>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
 }

@@ -5,12 +5,14 @@
     display: grid;
     place-items: center;
     z-index: 9999;
-    padding: 24px;
+    padding: clamp(12px, 3vh, 24px);
+    overflow: auto;
 }
 
 .ms-dialog{
+    width: min(100%, calc(100vw - 48px));
     max-width: 100%;
-    max-height: 612px;
+    max-height: calc(100dvh - 48px);
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 12px 28px rgba(0,0,0,0.25);
@@ -49,14 +51,50 @@
 
 .ms-close:hover{ background: rgba(0,0,0,0.04); }
 
+.ms-close:focus-visible{
+    outline: 3px solid rgba(0,120,111,.26);
+    outline-offset: 2px;
+}
+
 .ms-close:active{ transform: translateY(0.5px); }
 
 .ms-body{
     padding: 0 18px 18px 18px;
     overflow: auto;
+    min-height: 0;
 }
 
 .ms-footer{
     padding: 12px 16px;
     border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+@media (min-width: 1920px){
+    .ms-dialog{
+        max-height: min(820px, calc(100dvh - 64px));
+    }
+}
+
+@media (max-width: 1180px){
+    .ms-dialog{
+        width: min(100%, calc(100vw - 32px)) !important;
+    }
+
+    .ms-header{
+        padding: 14px 16px 0 16px;
+    }
+
+    .ms-body{
+        padding: 0 16px 16px 16px;
+    }
+}
+
+@media (max-height: 720px){
+    .ms-dialog{
+        max-height: calc(100dvh - 24px);
+    }
+
+    .ms-header{
+        padding-top: 12px;
+    }
 }

@@ -6,7 +6,18 @@
     overflow: hidden;
     
     --gap: 8px;
+    --left-panel-x: 16px;
+    --left-panel-w: 260px;
+    --left-panel-gap: 72px;
     --right-panel-w: 290px;
+}
+
+.dash.left-open{
+  --left-safe: calc(var(--left-panel-x) + var(--left-panel-w) + var(--left-panel-gap));
+}
+
+.dash.left-closed{
+  --left-safe: 64px;
 }
 
 /* el mapa siempre al fondo */

@@ -1,99 +1,37 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ModalShell from "../Modals/ModalShell";
 import "./ExportModal.css";
 import { Eye, Download, FileText, Braces } from "lucide-react";
-
-import { obtenerAnalisisML } from "../../services/analisisML.service";
-import { exportarCSV, exportarJSON } from "../../services/exportacion.service";
 
 export default function ExportModal({
   open,
   onClose,
   totalRecords = 0,
-  onPreview,
-  onDownload,
+  consultaActiva = null,
+  resumenConsulta = null,
+  onPreviewExport,
+  onDownloadExport,
+  selectedMlCluster = null,
 }) {
   const [selected, setSelected] = useState(null);
-  const [analisisML, setAnalisisML] = useState([]);
-  const [mensaje, setMensaje] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function cargarDatos() {
-      try {
-        const data = await obtenerAnalisisML();
-        setAnalisisML(data || []);
-      } catch (err) {
-        setError("Error al cargar resultados ML");
-      }
-    }
-
-    if (open) {
-      cargarDatos();
-    }
-  }, [open]);
-
-  const totalExportar = analisisML.length || totalRecords;
 
   const footer = useMemo(
     () => (
       <div className="emFooter">
-        Total de registros a exportar: <b>{totalExportar}</b>
+        Total de registros a exportar: <b>{totalRecords}</b>
+        {selectedMlCluster ? <span> · Cluster {selectedMlCluster}</span> : null}
       </div>
     ),
-    [totalExportar]
+    [totalRecords, selectedMlCluster]
   );
 
-  async function handlePreview(format) {
-    const datos = analisisML;
-
-    console.log("Vista previa:", {
-      formato: format,
-      total: datos.length,
-      datos,
-    });
-
-    onPreview?.({ format, datos });
-  }
-
-  async function handleDownload(format) {
-    try {
-      setMensaje("");
-      setError("");
-
-      const payload = {
-        nombre: "resultados_analisis_ml",
-        datos: analisisML,
-      };
-
-      const respuesta =
-        format === "csv"
-          ? await exportarCSV(payload)
-          : await exportarJSON(payload);
-
-      setMensaje(respuesta.mensaje || "Exportación generada correctamente");
-
-      onDownload?.({ format, respuesta });
-    } catch (err) {
-      setError(err.message || "Error al exportar datos");
-    }
-  }
+  const buildPayload = (format) => ({ format, consultaActiva, resumenConsulta });
 
   return (
-    <ModalShell
-      open={open}
-      onClose={onClose}
-      title="Exportar datos"
-      width={448}
-      footer={footer}
-      allowOverlayClose={true}
-    >
+    <ModalShell open={open} onClose={onClose} title="Exportar datos" width={448} footer={footer} allowOverlayClose={true}>
       <p className="emSubtitle">
-        Seleccione el formato de exportación para descargar los resultados del análisis ML.
+        Selecciona el formato para exportar resultados de FIRMS, CONAFOR, SMN-CONAGUA y agrupamiento ML.
       </p>
-
-      {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div className="emList">
         <ExportOption
@@ -105,8 +43,8 @@ export default function ExportModal({
           actions={
             <OptionActions
               enabled={selected === "csv"}
-              onPreview={() => handlePreview("csv")}
-              onDownload={() => handleDownload("csv")}
+              onPreview={() => onPreviewExport?.(buildPayload("csv"))}
+              onDownload={() => onDownloadExport?.(buildPayload("csv"))}
             />
           }
         />
@@ -114,14 +52,14 @@ export default function ExportModal({
         <ExportOption
           active={selected === "json"}
           title="Exportar JSON"
-          desc="Resultados estructurados para desarrollo web o APIs"
+          desc="Datos estructurados para desarrollo web o APIs"
           leftIcon={<Braces size={20} />}
           onSelect={() => setSelected("json")}
           actions={
             <OptionActions
               enabled={selected === "json"}
-              onPreview={() => handlePreview("json")}
-              onDownload={() => handleDownload("json")}
+              onPreview={() => onPreviewExport?.(buildPayload("json"))}
+              onDownload={() => onDownloadExport?.(buildPayload("json"))}
             />
           }
         />
@@ -145,9 +83,7 @@ function ExportOption({ active, title, desc, leftIcon, onSelect, actions }) {
       }}
     >
       <div className="emCardLeft">
-        <div className={`emLeftIcon ${active ? "isActive" : ""}`}>
-          {leftIcon}
-        </div>
+        <div className={`emLeftIcon ${active ? "isActive" : ""}`}>{leftIcon}</div>
 
         <div className="emText">
           <div className="emTitle">{title}</div>
