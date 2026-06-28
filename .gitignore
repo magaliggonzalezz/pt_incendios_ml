@@ -10,6 +10,7 @@ data/
 # Archivos FIRMS
 firms_original/
 firms_reducido/
+inegi/
 
 
 # Variables de entorno
@@ -63,3 +64,4 @@ coverage/
 
 .git_backup/
 backend/ms_exportacion_datos/exports/
+

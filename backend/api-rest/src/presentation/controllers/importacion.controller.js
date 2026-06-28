@@ -22,4 +22,13 @@ export class ImportacionController {
     });
   }
 }
+
+async importarHotspotsFirms(req, res) {
+  try {
+    const data = await service.importarHotspotsFirmsAgregado();
+    res.status(201).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 }

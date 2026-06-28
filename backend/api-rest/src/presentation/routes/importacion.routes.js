@@ -14,4 +14,8 @@ router.post(
   controller.importarIncendiosConafor.bind(controller)
 );
 
+router.post(
+  "/hotspots-firms",
+  controller.importarHotspotsFirms.bind(controller)
+);
 export default router;

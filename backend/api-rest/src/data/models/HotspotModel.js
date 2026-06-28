@@ -2,40 +2,49 @@ import mongoose from "mongoose";
 
 const HotspotSchema = new mongoose.Schema(
   {
-    fecha: {
-      type: Date,
-      required: true
-    },
+    anio: Number,
+    estado: String,
+    municipio: String,
+
+    totalHotspots: Number,
+    confidencePromedio: Number,
+    confidenceCategoriaDominante: String,
+
+    frpPromedio: Number,
+    frpMaximo: Number,
+
+    brightnessPromedio: Number,
+    brightnessMaximo: Number,
+
+    latitudPromedio: Number,
+    longitudPromedio: Number,
+
     ubicacion: {
       type: {
         type: String,
         enum: ["Point"],
-        required: true
+        default: "Point",
       },
       coordinates: {
         type: [Number],
-        required: true
-      }
+        required: true,
+      },
     },
-    temperatura: {
-      type: Number,
-      required: true
-    },
+
     fuente: {
       type: String,
-      required:true
-    }
+      default: "FIRMS",
+    },
   },
   {
     versionKey: false,
-    collection: "hotspots"
+    collection: "hotspots",
   }
 );
 
 HotspotSchema.index({ ubicacion: "2dsphere" });
-HotspotSchema.index({ fecha: 1 });
-HotspotSchema.index({ temperatura: 1 });
-HotspotSchema.index({ fuente: 1 });
-
+HotspotSchema.index({ anio: 1 });
+HotspotSchema.index({ estado: 1 });
+HotspotSchema.index({ municipio: 1 });
 
 export const HotspotModel = mongoose.model("Hotspot", HotspotSchema);

@@ -4,9 +4,11 @@ import fs from "fs";
 import path from "path";
 import { parse } from "csv-parse";
 import { MongoIncendioRepository } from "../../data/repositories/MongoIncendioRepository.js";
+import { MongoHotspotRepository } from "../../data/repositories/MongoHotspotRepository.js";
 
 const analisisMLRepository = new MongoAnalisisMLRepository();
 const incendioRepository = new MongoIncendioRepository();
+const hotspotRepository = new MongoHotspotRepository();
 
 // AQUÍ VAN LAS FUNCIONES AUXILIARES
 function limpiarValor(valor) {
@@ -197,6 +199,71 @@ export class ImportacionService {
     detalleArchivos: archivosProcesados,
     totalProcesados,
     totalGuardados
+  };
+}
+
+async importarHotspotsFirmsAgregado() {
+  const rutaCSV = path.resolve(
+    process.cwd(),
+    "../../data-import/firms_reducido/firms_agregado.csv"
+  );
+
+  const registros = [];
+
+  await hotspotRepository.eliminarPorFuente("FIRMS");
+
+  await new Promise((resolve, reject) => {
+    fs.createReadStream(rutaCSV)
+      .pipe(
+        parse({
+          columns: true,
+          skip_empty_lines: true,
+          trim: true,
+          relax_column_count: true,
+        })
+      )
+      .on("data", (row) => {
+        const latitud = Number(row.latitudPromedio);
+        const longitud = Number(row.longitudPromedio);
+
+        if (!latitud || !longitud) return;
+
+        registros.push({
+          anio: Number(row.anio),
+          estado: row.estado,
+          municipio: row.municipio,
+
+          totalHotspots: Number(row.totalHotspots),
+          confidencePromedio: Number(row.confidencePromedio),
+          confidenceCategoriaDominante: row.confidenceCategoriaDominante,
+
+          frpPromedio: Number(row.frpPromedio),
+          frpMaximo: Number(row.frpMaximo),
+
+          brightnessPromedio: Number(row.brightnessPromedio),
+          brightnessMaximo: Number(row.brightnessMaximo),
+
+          latitudPromedio: latitud,
+          longitudPromedio: longitud,
+
+          ubicacion: {
+            type: "Point",
+            coordinates: [longitud, latitud],
+          },
+
+          fuente: "FIRMS",
+        });
+      })
+      .on("end", resolve)
+      .on("error", reject);
+  });
+
+  const guardados = await hotspotRepository.crearMuchos(registros);
+
+  return {
+    mensaje: "Hotspots FIRMS agregados importados correctamente",
+    totalProcesados: registros.length,
+    totalGuardados: guardados.length,
   };
 }
 }

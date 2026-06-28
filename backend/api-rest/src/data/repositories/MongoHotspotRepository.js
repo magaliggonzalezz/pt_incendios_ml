@@ -1,39 +1,39 @@
 import { HotspotModel } from "../models/HotspotModel.js";
 
 export class MongoHotspotRepository {
-  async obtenerTodos() {
-    return await HotspotModel.find().sort({ fecha: -1 });
+  async crearMuchos(registros) {
+    return await HotspotModel.insertMany(registros, {
+      ordered: false,
+    });
   }
 
-  async obtenerPorId(id) {
-    return await HotspotModel.findById(id);
+  async eliminarPorFuente(fuente) {
+    return await HotspotModel.deleteMany({ fuente });
   }
 
-  async crear(datos) {
-    return await HotspotModel.create(datos);
-  }
-
-  async actualizar(id, datos) {
-    return await HotspotModel.findByIdAndUpdate(id, datos, { new: true });
-  }
-
-  async eliminar(id) {
-    return await HotspotModel.findByIdAndDelete(id);
-  }
-
-  async buscarConFiltros(filtros) {
+  async obtenerParaMapa(filtros = {}) {
     const query = {};
 
-    if (filtros.ubicacion) query.ubicacion = filtros.ubicacion;
-    if (filtros.temperatura) query.temperatura = filtros.temperatura;
-  
-
-    if (filtros.fechaDesde || filtros.fechaHasta) {
-      query.fecha = {};
-      if (filtros.fechaDesde) query.fecha.$gte = new Date(filtros.fechaDesde);
-      if (filtros.fechaHasta) query.fecha.$lte = new Date(filtros.fechaHasta);
+    if (filtros.estado) {
+      query.estado = { $regex: filtros.estado, $options: "i" };
     }
 
-    return await HotspotModel.find(query).sort({ fecha: -1 });
+    if (filtros.municipio) {
+      query.municipio = { $regex: filtros.municipio, $options: "i" };
+    }
+
+    if (filtros.anio) {
+      query.anio = Number(filtros.anio);
+    }
+
+    if (filtros.confidence) {
+      query.confidence = { $regex: filtros.confidence, $options: "i" };
+    }
+
+    return await HotspotModel.find(query)
+      .select(
+        "anio estado municipio confidence totalHotspots frpPromedio brightnessPromedio latitudPromedio longitudPromedio ubicacion fuente"
+      )
+      .limit(5000);
   }
 }
