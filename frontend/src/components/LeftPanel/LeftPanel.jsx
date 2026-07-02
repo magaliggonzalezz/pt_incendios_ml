@@ -103,7 +103,15 @@ export default function LeftPanel({
   const selectedMunicipality = consultaActiva?.municipio || "";
   const showMunicipality = consultaActiva?.nivelAgregacion === "municipio";
   const municipalityEnabled = showMunicipality && selectedState !== "";
-  const tipoPeriodo = consultaActiva?.tipoPeriodo || "anio";
+  const tipoPeriodo = consultaActiva?.tipoPeriodo || "";
+  const consultaCompleta =
+    Boolean(consultaActiva?.nivelAgregacion) &&
+    Boolean(tipoPeriodo) &&
+    (!showMunicipality || Boolean(selectedState)) &&
+    ((tipoPeriodo === "anio" && Boolean(consultaActiva?.anio)) ||
+      (tipoPeriodo === "anio_mes" && Boolean(consultaActiva?.anio) && Boolean(consultaActiva?.mes)) ||
+      (tipoPeriodo === "rango_anios" && Boolean(consultaActiva?.anioInicio) && Boolean(consultaActiva?.anioFin)) ||
+      (tipoPeriodo === "rango" && Boolean(consultaActiva?.fechaInicio) && Boolean(consultaActiva?.fechaFin)));
 
   const municipios = useMemo(() => {
     if (!selectedState) return [];
@@ -121,9 +129,9 @@ export default function LeftPanel({
     );
 
     const consultaChanged =
-      consultaActiva?.nivelAgregacion !== "entidad" ||
-      consultaActiva?.tipoPeriodo !== "anio" ||
-      consultaActiva?.anio !== "2025" ||
+      consultaActiva?.nivelAgregacion !== "" ||
+      consultaActiva?.tipoPeriodo !== "" ||
+      consultaActiva?.anio !== "" ||
       consultaActiva?.mes !== "" ||
       consultaActiva?.anioInicio !== "" ||
       consultaActiva?.anioFin !== "" ||
@@ -214,9 +222,10 @@ export default function LeftPanel({
               id="aggregationLevel"
               name="nivelAgregacion"
               className="selectInput"
-              value={consultaActiva?.nivelAgregacion ?? "entidad"}
+              value={consultaActiva?.nivelAgregacion ?? ""}
               onChange={(e) => onChangeNivelAgregacion(e.target.value)}
             >
+              <option value="">Selecciona nivel de análisis</option>
               <option value="entidad">Estatal</option>
               <option value="municipio">Municipal</option>
             </select>
@@ -231,22 +240,24 @@ export default function LeftPanel({
               value={tipoPeriodo}
               onChange={(e) => onConsultaChange?.("tipoPeriodo", e.target.value)}
             >
+              <option value="">Selecciona tipo de período</option>
               <option value="anio">Año</option>
               <option value="anio_mes">Año y mes</option>
               <option value="rango_anios">Rango de años</option>
             </select>
           </div>
 
-          {(tipoPeriodo === "anio" || tipoPeriodo === "anio_mes") && (
+          {(!tipoPeriodo || tipoPeriodo === "anio" || tipoPeriodo === "anio_mes") && (
             <div className="field">
               <label htmlFor="yearInput">Año</label>
               <select
                 id="yearInput"
                 name="anio"
                 className="selectInput"
-                value={consultaActiva?.anio ?? "2025"}
+                value={consultaActiva?.anio ?? ""}
                 onChange={(e) => onChangeYear(e.target.value)}
               >
+                <option value="">Selecciona año</option>
                 {YEAR_OPTIONS.map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -354,7 +365,7 @@ export default function LeftPanel({
               value={selectedState}
               onChange={(e) => onChangeState(e.target.value)}
             >
-              <option value="">{showMunicipality ? "Selecciona un estado" : "Todos los estados"}</option>
+              <option value="">Selecciona estado</option>
               {ESTADOS.map((st) => (
                 <option key={st} value={st}>
                   {st}
@@ -375,7 +386,7 @@ export default function LeftPanel({
                 disabled={!municipalityEnabled}
               >
                 {!selectedState ? (
-                  <option value="">Selecciona un estado primero</option>
+                  <option value="">Selecciona estado primero</option>
                 ) : (
                   <option value="">Todos los municipios</option>
                 )}
@@ -392,7 +403,7 @@ export default function LeftPanel({
             type="button"
             className="primaryBtn"
             onClick={() => onConsultar?.()}
-            disabled={showMunicipality && !selectedState}
+            disabled={!consultaCompleta}
           >
             Consultar
           </button>

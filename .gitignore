@@ -12,14 +12,17 @@ firms_original/
 firms_reducido/
 inegi/
 
-
 # Variables de entorno
 .env.local
-
 
 # Python
 __pycache__/
 *.pyc
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
 
 # Logs
 logs
@@ -51,6 +54,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+backend/api-rest/.env
 
 # Vite / tooling cache
 .vite/
@@ -65,3 +69,8 @@ coverage/
 .git_backup/
 backend/ms_exportacion_datos/exports/
 
+# Pipeline PT Analisis copiado localmente
+ms01_recoleccion/
+ms02_procesamiento/
+ms03_ml/
+ms04_evaluation/

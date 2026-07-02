@@ -8,14 +8,13 @@ import {
   INITIAL_ACTIVE_LAYERS,
   INITIAL_SMN_FILTERS,
   buildMockDashboardResults,
-  getMlLayerId,
 } from "../data/dashboardMock";
 import "./DashboardPage.css";
 
 const CONSULTA_INICIAL = {
-  nivelAgregacion: "entidad",
-  tipoPeriodo: "anio",
-  anio: "2025",
+  nivelAgregacion: "",
+  tipoPeriodo: "",
+  anio: "",
   mes: "",
   anioInicio: "",
   anioFin: "",
@@ -31,6 +30,16 @@ const CONSULTA_INICIAL = {
   filtrosSmn: INITIAL_SMN_FILTERS,
 };
 
+
+function isConsultaCompleta(consulta) {
+  if (!consulta?.nivelAgregacion || !consulta?.tipoPeriodo) return false;
+  if (consulta.nivelAgregacion === "municipio" && !consulta.estado) return false;
+  if ((consulta.tipoPeriodo === "anio" || consulta.tipoPeriodo === "anio_mes") && !consulta.anio) return false;
+  if (consulta.tipoPeriodo === "anio_mes" && !consulta.mes) return false;
+  if (consulta.tipoPeriodo === "rango_anios" && (!consulta.anioInicio || !consulta.anioFin)) return false;
+  if (consulta.tipoPeriodo === "rango" && (!consulta.fechaInicio || !consulta.fechaFin)) return false;
+  return true;
+}
 const getConsultaInicial = () => ({
   ...CONSULTA_INICIAL,
   capasActivas: { ...CONSULTA_INICIAL.capasActivas },
@@ -70,16 +79,14 @@ export default function DashboardPage() {
       }
 
       if (campo === "nivelAgregacion") {
-        const nextMlLayer = getMlLayerId(valor);
-
         return {
           ...prev,
           nivelAgregacion: valor,
-          capasActivas: {
-            ...prev.capasActivas,
-            resultadoMlEntidadDia: nextMlLayer === "resultadoMlEntidadDia",
-            resultadoMlMunicipioDia: nextMlLayer === "resultadoMlMunicipioDia",
-          },
+          estado: "",
+          municipio: "",
+          cveEnt: "",
+          cveMun: "",
+          cvegeo: "",
         };
       }
 
@@ -99,6 +106,7 @@ export default function DashboardPage() {
 
   const handleConsultar = (consultaOverride = null) => {
     const consulta = consultaOverride ?? consultaActiva;
+    if (!isConsultaCompleta(consulta)) return;
     setResumenConsulta(buildMockDashboardResults(consulta));
     setConsultaEjecutada(true);
     setSelectedMlCluster(null);

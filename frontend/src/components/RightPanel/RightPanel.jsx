@@ -10,26 +10,41 @@ import {
 } from "lucide-react";
 import ExportModal from "../Modals/ExportModal";
 import ChartsModal from "../Modals/ChartsModal";
-import { PENDING_INTERPRETATION, getNivelUiLabel } from "../../data/dashboardMock";
+import { getNivelUiLabel } from "../../data/dashboardMock";
 
 const fallbackResumen = {
-  territorio: "México",
   periodo: "",
   nivelAgregacion: "",
-  nivelAnalisisMl: "",
   observaciones: 0,
-  firmsTotal: 0,
-  diasConFirms: 0,
-  diasConConafor: 0,
-  diasConSmn: 0,
-  clusterAsignado: "",
-  clusterName: "",
-  patronIdentificado: "",
-  modelo: "SOM + K-Means",
-  activeVisualContext: [],
 };
 
 const formatNumber = (value) => Number(value || 0).toLocaleString("es-MX");
+
+const pickMlSource = (resumen) => {
+  if (!resumen) return {};
+
+  return (
+    resumen.resultadoMl ||
+    resumen.resultadoML ||
+    resumen.resultado_ml ||
+    resumen.resultadoModelo ||
+    resumen.resultadoConsulta ||
+    resumen.selectedFeature?.properties ||
+    resumen
+  );
+};
+
+const normalizeMlResult = (resumen) => {
+  const result = pickMlSource(resumen);
+
+  return {
+    estado_app: result.estado_app || "Sin clasificaci\u00f3n disponible",
+    etiqueta_final: result.etiqueta_final || "Sin etiqueta disponible",
+    descripcion_app: result.descripcion_app || "Sin descripci\u00f3n disponible",
+    explicacion_app: result.explicacion_app || "",
+    color_sugerido_app: result.color_sugerido_app || null,
+  };
+};
 
 export default function RightPanel({
   open,
@@ -50,9 +65,8 @@ export default function RightPanel({
   const [openCharts, setOpenCharts] = useState(false);
   const hasResults = Boolean(consultaEjecutada && resumenConsulta);
   const resumen = resumenConsulta ?? fallbackResumen;
-  const territorio = resumenConsulta?.territorio || consultaActiva?.municipio || consultaActiva?.estado || "México";
-  const interpretation = resumen.descripcionCorta || resumen.interpretacionTecnica || resumen.patronIdentificado || PENDING_INTERPRETATION;
-  const activeVisualContext = resumen.activeVisualContext ?? [];
+  const territorio = resumenConsulta?.territorio || consultaActiva?.municipio || consultaActiva?.estado || "M\u00e9xico";
+  const mlResult = normalizeMlResult(resumenConsulta);
 
   return (
     <>
@@ -64,7 +78,7 @@ export default function RightPanel({
           aria-label={open ? "Ocultar panel de resultados" : "Mostrar panel de resultados"}
           aria-expanded={open}
         >
-          {open ? "⟩" : "⟨"}
+          {open ? "\u27e9" : "\u27e8"}
         </button>
 
         <div className="kpiCard">
@@ -88,8 +102,8 @@ export default function RightPanel({
                       <CalendarDays size={15} />
                     </span>
                     <div>
-                      <span>Período</span>
-                      <strong>{resumen.periodo || "Sin período"}</strong>
+                      <span>Per&iacute;odo</span>
+                      <strong>{resumen.periodo || "Sin per\u00edodo"}</strong>
                     </div>
                   </div>
 
@@ -98,7 +112,7 @@ export default function RightPanel({
                       <Layers3 size={15} />
                     </span>
                     <div>
-                      <span>Nivel de análisis</span>
+                      <span>Nivel de an&aacute;lisis</span>
                       <strong>{getNivelUiLabel(resumen.nivelAgregacion)}</strong>
                     </div>
                   </div>
@@ -114,80 +128,26 @@ export default function RightPanel({
                   <div className="kpiValue">{formatNumber(resumen.observaciones)}</div>
                 </div>
 
-                <div className="kpiBox">
-                  <div className="kpiTopRow">
-                    <span className="kpiIcon" aria-hidden="true">
-                      <Activity size={16} />
-                    </span>
-                    <div className="kpiLabel">Hotspots acumulados</div>
-                  </div>
-                  <div className="kpiValue">{formatNumber(resumen.firmsTotal)}</div>
-                </div>
-
-                <div className="kpiBox">
-                  <div className="kpiTopRow">
-                    <span className="kpiIcon" aria-hidden="true">
-                      <Activity size={16} />
-                    </span>
-                    <div className="kpiLabel">Días con cobertura meteorológica</div>
-                  </div>
-                  <div className="kpiValue">{formatNumber(resumen.diasConSmn)}</div>
-                </div>
-
-                <div className="miniGrid">
-                  <div className="miniMetric">
-                    <span>Días con hotspots</span>
-                    <strong>{formatNumber(resumen.diasConFirms)}</strong>
-                  </div>
-                  <div className="miniMetric">
-                    <span>Días con registro histórico</span>
-                    <strong>{formatNumber(resumen.diasConConafor)}</strong>
-                  </div>
-                  <div className="miniMetric">
-                    <span>Patrón</span>
-                    <strong>{resumen.clusterAsignado || "Sin datos"}</strong>
-                  </div>
-                </div>
-
-                <div className="mlBox">
+                <div
+                  className={`mlBox ${mlResult.color_sugerido_app ? "hasMlColor" : ""}`}
+                  style={mlResult.color_sugerido_app ? { borderLeftColor: mlResult.color_sugerido_app } : undefined}
+                >
                   <div className="mlTitle">Resultado ML</div>
-                  <div className="mlCluster">
-                    <span>Modelo</span>
-                    <strong>{resumen.modelo}</strong>
+                  <div className="mlField">
+                    <span>Patr&oacute;n seleccionado</span>
+                    <strong>{mlResult.estado_app}</strong>
                   </div>
-                  <div className="mlCluster">
-                    <span>Nivel</span>
-                    <strong>{resumen.nivelAnalisisMl}</strong>
+                  <div className="mlField">
+                    <span>Nombre del patr&oacute;n</span>
+                    <strong>{mlResult.etiqueta_final}</strong>
                   </div>
-                  <div className="mlCluster">
-                    <span>Patrón seleccionado</span>
-                    <strong>{resumen.clusterAsignado || "Sin datos"}</strong>
-                  </div>
-                  <div className="mlCluster">
-                    <span>Nombre del patrón</span>
-                    <strong>{resumen.clusterName || "Sin datos"}</strong>
-                  </div>
-                  <p>{interpretation}</p>
-                </div>
-
-                <div className="visualContextBox">
-                  <div className="visualContextTitle">Contexto visual activo</div>
-                  {activeVisualContext.length === 0 ? (
-                    <p className="visualContextEmpty">No hay capas visibles adicionales para esta consulta.</p>
-                  ) : (
-                    <ul className="visualContextList">
-                      {activeVisualContext.slice(0, 5).map((layer) => (
-                        <li key={layer.id}>
-                          <strong>{layer.label}</strong>
-                          <span>{getTemporalLabel(layer.temporal)} · {layer.mapType}</span>
-                          {layer.detail && <em>{layer.detail}</em>}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {activeVisualContext.length > 5 && (
-                    <p className="visualContextMore">+{activeVisualContext.length - 5} capas visibles más</p>
-                  )}
+                  <p className="mlDescription">{mlResult.descripcion_app}</p>
+                  {mlResult.explicacion_app ? (
+                    <details className="mlDetail">
+                      <summary>Ver detalle</summary>
+                      <p>{mlResult.explicacion_app}</p>
+                    </details>
+                  ) : null}
                 </div>
               </>
             )}
@@ -231,10 +191,4 @@ export default function RightPanel({
       />
     </>
   );
-}
-
-function getTemporalLabel(temporal) {
-  if (temporal === true) return "Filtrada por consulta";
-  if (temporal === false) return "No temporal";
-  return "Depende del alcance";
 }

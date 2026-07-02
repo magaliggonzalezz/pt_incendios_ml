@@ -1,3 +1,12 @@
+.ms-dialog{
+    height: min(88vh, 820px);
+}
+
+.ms-body{
+    display: flex;
+    flex-direction: column;
+}
+
 .cmSub{
     margin: 6px 0 14px 0;
     font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -47,6 +56,8 @@
     border: 1px solid rgba(0,0,0,0.08);
     background: #fff;
     padding: 14px;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .cmSummaryGrid,
@@ -185,6 +196,8 @@
 .cmChartsStack{
     display: grid;
     gap: 12px;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .cmChartsHeader{
@@ -204,10 +217,68 @@
     cursor: pointer;
 }
 
+.cmInnerSelector{
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-radius: 999px;
+    background: #F2F4F7;
+    padding: 5px;
+    min-width: 0;
+}
+
+.cmInnerSelector button{
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #344054;
+    cursor: pointer;
+    padding: 7px 10px;
+    font: 700 12px/14px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    white-space: nowrap;
+}
+
+.cmInnerSelector button.isActive{
+    background: #fff;
+    color: #0B4F4A;
+    box-shadow: 0 1px 2px rgba(16,24,40,.08);
+}
+
+.cmInnerSelector button:focus-visible{
+    outline: 3px solid rgba(11,79,74,.24);
+    outline-offset: 2px;
+}
+
+.cmGraphSelector{
+    justify-content: flex-end;
+}
+
+.cmMetricSelector,
+.cmScatterSelector{
+    margin: 0 0 8px;
+}
+
+.cmChartEmpty{
+    min-height: 260px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius);
+    border: 1px dashed rgba(0,0,0,.16);
+    background: #F8FAFC;
+    color: #667085;
+    padding: 18px;
+    text-align: center;
+    font: 700 13px/18px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
 .cmClusterCards{
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+}
+
+.cmClusterCards.isSummary{
+    margin-top: 12px;
 }
 
 .cmClusterCard{
@@ -238,7 +309,8 @@
 }
 
 .cmClusterCard strong,
-.cmClusterCard span{
+.cmClusterCard span,
+.cmClusterCard em{
     display: block;
 }
 
@@ -255,28 +327,46 @@
     line-height: 16px;
 }
 
-.cmBadges{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
+.cmClusterTag{
+    color: #0B4F4A;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
-.cmBadge{
-    border-radius: 999px;
-    padding: 4px 7px;
-    font-size: 11px;
-    line-height: 13px;
+.cmClusterCard em{
+    color: #4A5565;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 7px;
+}
+
+.cmClusterCard details{
+    margin-top: 8px;
+    color: #344054;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmClusterCard summary{
+    cursor: pointer;
     font-weight: 700;
+}
+
+.cmClusterCard p{
+    margin: 6px 0 0;
 }
 
 .cmDominant{
     margin-top: 12px;
     border: 1px solid rgba(0,0,0,0.08);
-    border-left: 5px solid #0F766E;
     border-radius: 8px;
     padding: 12px;
     background: #fff;
+}
+
+.cmDominant.hasMlColor{
+    border-left: 5px solid #0F766E;
 }
 
 .cmDominant strong{
@@ -296,18 +386,6 @@
 .cmDominant summary{
     cursor: pointer;
     font-weight: 700;
-}
-
-.cmFixedFooter{
-    position: sticky;
-    bottom: -14px;
-    margin: 12px -14px -14px;
-    padding: 10px 14px;
-    border-top: 1px solid rgba(0,0,0,0.08);
-    background: rgba(255,255,255,.96);
-    color: #667085;
-    font-size: 12px;
-    line-height: 16px;
 }
 
 .cmUnavailableText{
@@ -475,7 +553,7 @@
 
 .cmChartTitle{
     font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
     color: #101828;
     margin: 0 0 8px 0;
@@ -483,10 +561,19 @@
 }
 
 .cmChartSubtitle{
-    margin: -2px 0 10px 0;
+    margin: -2px 0 6px 0;
     color: #667085;
     font-size: 12px;
     line-height: 16px;
+    text-align: center;
+}
+
+.cmChartCaption{
+    margin: -2px 0 8px 0;
+    color: #344054;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
     text-align: center;
 }
 
@@ -551,12 +638,44 @@
 }
 
 .cmChartCanvas{
-    height: clamp(220px, 32vh, 300px);
+    height: clamp(300px, 42vh, 400px);
     min-width: 0;
 }
 
+.cmChartLegend{
+    margin-top: 8px;
+}
+
+.cmLegendItems{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 12px;
+}
+
+.cmLegendItems span{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #344054;
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 700;
+}
+
+.cmLegendItems i{
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    flex: 0 0 auto;
+}
+
+.cmChartControlBelow{
+    margin-top: 10px;
+}
+
 .cmTemporalRange{
-    padding: 9px 10px;
+    padding: 10px 12px;
     border-radius: 8px;
     background: #F8FAFC;
     border: 1px solid rgba(0,0,0,0.06);
@@ -749,6 +868,8 @@
 .cmDataPanel{
     display: grid;
     gap: 12px;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .cmDataSubtitle{
@@ -822,6 +943,10 @@
         flex: 1 1 calc(50% - 8px);
     }
 
+    .cmGraphSelector{
+        justify-content: flex-start;
+    }
+
     .cmSummaryGrid,
     .cmModelGrid,
     .cmChartsGrid,
@@ -856,7 +981,7 @@
 
 @media (max-height: 720px){
     .cmChartCanvas{
-        height: 220px;
+        height: 260px;
     }
 
     .cmTableWrap{
