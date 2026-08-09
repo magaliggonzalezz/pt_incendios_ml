@@ -2,6 +2,7 @@
 data-import/
 datasets/
 data/
+data_v2_generada/
 
 # Archivos CONAFOR
 *.csv
