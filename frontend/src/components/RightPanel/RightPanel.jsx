@@ -9,7 +9,7 @@ import {
   Download,
 } from "lucide-react";
 import ExportModal from "../Modals/ExportModal";
-import ChartsModal from "../Modals/ChartsModal";
+import RealResultsModal from "../Modals/RealResultsModal";
 import { getNivelUiLabel } from "../../data/dashboardMock";
 
 const fallbackResumen = {
@@ -38,9 +38,9 @@ const normalizeMlResult = (resumen) => {
   const result = pickMlSource(resumen);
 
   return {
-    estado_app: result.estado_app || "Sin clasificaci\u00f3n disponible",
+    estado_app: result.estado_app || "Sin clasificación disponible",
     etiqueta_final: result.etiqueta_final || "Sin etiqueta disponible",
-    descripcion_app: result.descripcion_app || "Sin descripci\u00f3n disponible",
+    descripcion_app: result.descripcion_app || "Sin descripción disponible",
     explicacion_app: result.explicacion_app || "",
     color_sugerido_app: result.color_sugerido_app || null,
   };
@@ -59,13 +59,12 @@ export default function RightPanel({
   onPreviewExport,
   onDownloadExport,
   selectedMlCluster = null,
-  onSelectedMlClusterChange,
 }) {
   const [openExport, setOpenExport] = useState(false);
   const [openCharts, setOpenCharts] = useState(false);
   const hasResults = Boolean(consultaEjecutada && resumenConsulta);
   const resumen = resumenConsulta ?? fallbackResumen;
-  const territorio = resumenConsulta?.territorio || consultaActiva?.municipio || consultaActiva?.estado || "M\u00e9xico";
+  const territorio = resumenConsulta?.territorio || consultaActiva?.municipio || consultaActiva?.estado || "México";
   const mlResult = normalizeMlResult(resumenConsulta);
 
   return (
@@ -78,7 +77,7 @@ export default function RightPanel({
           aria-label={open ? "Ocultar panel de resultados" : "Mostrar panel de resultados"}
           aria-expanded={open}
         >
-          {open ? "\u27e9" : "\u27e8"}
+          {open ? "⟩" : "⟨"}
         </button>
 
         <div className="kpiCard">
@@ -102,8 +101,8 @@ export default function RightPanel({
                       <CalendarDays size={15} />
                     </span>
                     <div>
-                      <span>Per&iacute;odo</span>
-                      <strong>{resumen.periodo || "Sin per\u00edodo"}</strong>
+                      <span>Período</span>
+                      <strong>{resumen.periodo || "Sin período"}</strong>
                     </div>
                   </div>
 
@@ -112,7 +111,7 @@ export default function RightPanel({
                       <Layers3 size={15} />
                     </span>
                     <div>
-                      <span>Nivel de an&aacute;lisis</span>
+                      <span>Nivel de análisis</span>
                       <strong>{getNivelUiLabel(resumen.nivelAgregacion)}</strong>
                     </div>
                   </div>
@@ -134,11 +133,11 @@ export default function RightPanel({
                 >
                   <div className="mlTitle">Resultado ML</div>
                   <div className="mlField">
-                    <span>Patr&oacute;n seleccionado</span>
+                    <span>Patrón seleccionado</span>
                     <strong>{mlResult.estado_app}</strong>
                   </div>
                   <div className="mlField">
-                    <span>Nombre del patr&oacute;n</span>
+                    <span>Nombre del patrón</span>
                     <strong>{mlResult.etiqueta_final}</strong>
                   </div>
                   <p className="mlDescription">{mlResult.descripcion_app}</p>
@@ -180,14 +179,10 @@ export default function RightPanel({
         selectedMlCluster={selectedMlCluster}
       />
 
-      <ChartsModal
+      <RealResultsModal
         open={openCharts}
         onClose={() => setOpenCharts(false)}
-        consultaActiva={consultaActiva}
         resumenConsulta={resumenConsulta}
-        selectedMlCluster={selectedMlCluster}
-        onSelectedMlClusterChange={onSelectedMlClusterChange}
-        onDownloadExport={onDownloadExport}
       />
     </>
   );
