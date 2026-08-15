@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { GeoJSON, MapContainer, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
+import L from "leaflet";
+import { GeoJSON, MapContainer, TileLayer, useMap } from "react-leaflet";
 import MapControls from "./MapControls";
 import MapLegend from "./MapLegend";
 import { obtenerGeometriasEstados, obtenerGeometriasMunicipios } from "../../services/geometrias.service";
@@ -73,7 +74,7 @@ function FitGeoJsonBounds({ geojson, enabled }) {
   useEffect(() => {
     if (!enabled || !geojson?.features?.length) return;
 
-    const layer = new window.L.GeoJSON(geojson);
+    const layer = L.geoJSON(geojson);
     const bounds = layer.getBounds();
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [24, 24], maxZoom: 9 });
