@@ -253,7 +253,11 @@ export default function MapView({
       </MapContainer>
 
       {geometryError ? <div className="mapGeometryError">No fue posible cargar la geometría: {geometryError}</div> : null}
-      <MapLegend consultaActiva={mapScope || consultaActiva} rightPanelOpen={rightPanelOpen} />
+      <MapLegend
+        resumenConsulta={resumenConsulta}
+        rightPanelOpen={rightPanelOpen}
+        selectedMlCluster={selectedMlCluster}
+      />
     </div>
   );
 }
