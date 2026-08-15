@@ -2,49 +2,8 @@ import { useMemo } from "react";
 import { LAYER_GROUPS, INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
 import "./LeftPanel.css";
 
-const ESTADOS = [
-  "Aguascalientes",
-  "Baja California",
-  "Baja California Sur",
-  "Campeche",
-  "Chiapas",
-  "Chihuahua",
-  "Ciudad de México",
-  "Coahuila",
-  "Colima",
-  "Durango",
-  "Estado de México",
-  "Guanajuato",
-  "Guerrero",
-  "Hidalgo",
-  "Jalisco",
-  "Michoacán",
-  "Morelos",
-  "Nayarit",
-  "Nuevo León",
-  "Oaxaca",
-  "Puebla",
-  "Querétaro",
-  "Quintana Roo",
-  "San Luis Potosí",
-  "Sinaloa",
-  "Sonora",
-  "Tabasco",
-  "Tamaulipas",
-  "Tlaxcala",
-  "Veracruz",
-  "Yucatán",
-  "Zacatecas",
-];
-
-const MUNICIPIOS_POR_ESTADO = {
-  Aguascalientes: ["Aguascalientes", "Jesús María", "Calvillo"],
-  Jalisco: ["Guadalajara", "Zapopan", "Tlaquepaque"],
-  "Estado de México": ["Toluca", "Naucalpan de Juárez", "Ecatepec"],
-};
-
 const MESES = [
-  { value: "", label: "Todos los meses" },
+  { value: "", label: "Selecciona mes" },
   { value: "01", label: "Enero" },
   { value: "02", label: "Febrero" },
   { value: "03", label: "Marzo" },
@@ -61,19 +20,9 @@ const MESES = [
 
 const MIN_YEAR = 2001;
 const MAX_YEAR = 2025;
-const MIN_DATE = "2001-01-01";
-const MAX_DATE = "2025-12-31";
-
 const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, index) =>
   String(MIN_YEAR + index)
 ).reverse();
-
-const clampDate = (value) => {
-  if (!value) return "";
-  if (value < MIN_DATE) return MIN_DATE;
-  if (value > MAX_DATE) return MAX_DATE;
-  return value;
-};
 
 const getLayerDisabled = (layer, nivelAgregacion) => {
   if (!layer.nivel) return false;
@@ -98,25 +47,22 @@ export default function LeftPanel({
   onConsultaChange,
   onConsultar,
   onResetConsulta,
+  estados = [],
+  municipios = [],
+  isLoading = false,
 }) {
-  const selectedState = consultaActiva?.estado || "";
-  const selectedMunicipality = consultaActiva?.municipio || "";
+  const selectedState = consultaActiva?.cveEnt || "";
+  const selectedMunicipality = consultaActiva?.cvegeo || "";
   const showMunicipality = consultaActiva?.nivelAgregacion === "municipio";
   const municipalityEnabled = showMunicipality && selectedState !== "";
   const tipoPeriodo = consultaActiva?.tipoPeriodo || "";
+
   const consultaCompleta =
     Boolean(consultaActiva?.nivelAgregacion) &&
     Boolean(tipoPeriodo) &&
     (!showMunicipality || Boolean(selectedState)) &&
-    ((tipoPeriodo === "anio" && Boolean(consultaActiva?.anio)) ||
-      (tipoPeriodo === "anio_mes" && Boolean(consultaActiva?.anio) && Boolean(consultaActiva?.mes)) ||
-      (tipoPeriodo === "rango_anios" && Boolean(consultaActiva?.anioInicio) && Boolean(consultaActiva?.anioFin)) ||
-      (tipoPeriodo === "rango" && Boolean(consultaActiva?.fechaInicio) && Boolean(consultaActiva?.fechaFin)));
-
-  const municipios = useMemo(() => {
-    if (!selectedState) return [];
-    return MUNICIPIOS_POR_ESTADO[selectedState] ?? [];
-  }, [selectedState]);
+    Boolean(consultaActiva?.anio) &&
+    (tipoPeriodo !== "anio_mes" || Boolean(consultaActiva?.mes));
 
   const isDirty = useMemo(() => {
     const currentLayers = consultaActiva?.capasActivas ?? {};
@@ -133,10 +79,6 @@ export default function LeftPanel({
       consultaActiva?.tipoPeriodo !== "" ||
       consultaActiva?.anio !== "" ||
       consultaActiva?.mes !== "" ||
-      consultaActiva?.anioInicio !== "" ||
-      consultaActiva?.anioFin !== "" ||
-      consultaActiva?.fechaInicio !== "" ||
-      consultaActiva?.fechaFin !== "" ||
       consultaActiva?.estado !== "" ||
       consultaActiva?.municipio !== "" ||
       consultaActiva?.cveEnt !== "" ||
@@ -146,58 +88,24 @@ export default function LeftPanel({
     return layersChanged || smnFiltersChanged || consultaChanged;
   }, [consultaActiva]);
 
-  const onChangeYear = (value) => onConsultaChange?.("anio", value);
-
-  const onChangeAnioInicio = (value) => {
-    const nextStart = value;
-    onConsultaChange?.("anioInicio", nextStart);
-    if (consultaActiva?.anioFin && nextStart && Number(nextStart) > Number(consultaActiva.anioFin)) {
-      onConsultaChange?.("anioFin", nextStart);
-    }
-  };
-
-  const onChangeAnioFin = (value) => {
-    const nextEnd = value;
-    onConsultaChange?.("anioFin", nextEnd);
-    if (consultaActiva?.anioInicio && nextEnd && Number(nextEnd) < Number(consultaActiva.anioInicio)) {
-      onConsultaChange?.("anioInicio", nextEnd);
-    }
-  };
-
-  const onChangeFechaInicio = (value) => {
-    const nextStart = clampDate(value);
-    onConsultaChange?.("fechaInicio", nextStart);
-    if (consultaActiva?.fechaFin && nextStart && nextStart > consultaActiva.fechaFin) {
-      onConsultaChange?.("fechaFin", nextStart);
-    }
-  };
-
-  const onChangeFechaFin = (value) => {
-    const nextEnd = clampDate(value);
-    onConsultaChange?.("fechaFin", nextEnd);
-    if (consultaActiva?.fechaInicio && nextEnd && nextEnd < consultaActiva.fechaInicio) {
-      onConsultaChange?.("fechaInicio", nextEnd);
-    }
-  };
-
-  const onChangeState = (value) => {
-    onConsultaChange?.("estado", value);
-    onConsultaChange?.("municipio", "");
-    onConsultaChange?.("cveMun", "");
-    onConsultaChange?.("cvegeo", "");
-  };
-
   const onChangeNivelAgregacion = (value) => {
     onConsultaChange?.("nivelAgregacion", value);
+  };
+
+  const onChangeState = (cveEnt) => {
+    const state = estados.find((item) => item.cve_ent === cveEnt);
+    onConsultaChange?.("cveEnt", cveEnt);
+    onConsultaChange?.("estado", state?.nombre || "");
     onConsultaChange?.("municipio", "");
     onConsultaChange?.("cveMun", "");
     onConsultaChange?.("cvegeo", "");
   };
 
-  const onChangeMunicipio = (value) => {
-    onConsultaChange?.("municipio", value);
-    onConsultaChange?.("cveMun", "");
-    onConsultaChange?.("cvegeo", "");
+  const onChangeMunicipio = (cvegeo) => {
+    const municipality = municipios.find((item) => item.cvegeo === cvegeo);
+    onConsultaChange?.("cvegeo", cvegeo);
+    onConsultaChange?.("cveMun", municipality?.cve_mun || "");
+    onConsultaChange?.("municipio", municipality?.nombre || "");
   };
 
   return (
@@ -220,7 +128,6 @@ export default function LeftPanel({
             <label htmlFor="aggregationLevel">Nivel de análisis</label>
             <select
               id="aggregationLevel"
-              name="nivelAgregacion"
               className="selectInput"
               value={consultaActiva?.nivelAgregacion ?? ""}
               onChange={(e) => onChangeNivelAgregacion(e.target.value)}
@@ -235,7 +142,6 @@ export default function LeftPanel({
             <label htmlFor="periodType">Tipo de período</label>
             <select
               id="periodType"
-              name="tipoPeriodo"
               className="selectInput"
               value={tipoPeriodo}
               onChange={(e) => onConsultaChange?.("tipoPeriodo", e.target.value)}
@@ -243,132 +149,54 @@ export default function LeftPanel({
               <option value="">Selecciona tipo de período</option>
               <option value="anio">Año</option>
               <option value="anio_mes">Año y mes</option>
-              <option value="rango_anios">Rango de años</option>
             </select>
           </div>
 
-          {(!tipoPeriodo || tipoPeriodo === "anio" || tipoPeriodo === "anio_mes") && (
-            <div className="field">
-              <label htmlFor="yearInput">Año</label>
-              <select
-                id="yearInput"
-                name="anio"
-                className="selectInput"
-                value={consultaActiva?.anio ?? ""}
-                onChange={(e) => onChangeYear(e.target.value)}
-              >
-                <option value="">Selecciona año</option>
-                {YEAR_OPTIONS.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          <div className="field">
+            <label htmlFor="yearInput">Año</label>
+            <select
+              id="yearInput"
+              className="selectInput"
+              value={consultaActiva?.anio ?? ""}
+              onChange={(e) => onConsultaChange?.("anio", e.target.value)}
+            >
+              <option value="">Selecciona año</option>
+              {YEAR_OPTIONS.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
 
           {tipoPeriodo === "anio_mes" && (
             <div className="field">
               <label htmlFor="monthSelect">Mes</label>
               <select
                 id="monthSelect"
-                name="mes"
                 className="selectInput"
                 value={consultaActiva?.mes ?? ""}
                 onChange={(e) => onConsultaChange?.("mes", e.target.value)}
               >
                 {MESES.map((month) => (
-                  <option key={month.value || "all"} value={month.value}>
-                    {month.label}
-                  </option>
+                  <option key={month.value || "empty"} value={month.value}>{month.label}</option>
                 ))}
               </select>
             </div>
-          )}
-
-          {tipoPeriodo === "rango" && (
-            <>
-              <div className="field">
-                <label htmlFor="startDate">Fecha inicio</label>
-                <input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  min={MIN_DATE}
-                  max={MAX_DATE}
-                  value={consultaActiva?.fechaInicio ?? ""}
-                  onChange={(e) => onChangeFechaInicio(e.target.value)}
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="endDate">Fecha fin</label>
-                <input
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                  min={MIN_DATE}
-                  max={MAX_DATE}
-                  value={consultaActiva?.fechaFin ?? ""}
-                  onChange={(e) => onChangeFechaFin(e.target.value)}
-                />
-              </div>
-            </>
-          )}
-
-          {tipoPeriodo === "rango_anios" && (
-            <>
-              <div className="field">
-                <label htmlFor="startYearInput">Año inicio</label>
-                <select
-                  id="startYearInput"
-                  name="anioInicio"
-                  className="selectInput"
-                  value={consultaActiva?.anioInicio ?? ""}
-                  onChange={(e) => onChangeAnioInicio(e.target.value)}
-                >
-                  <option value="">Selecciona ano inicio</option>
-                  {YEAR_OPTIONS.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="field">
-                <label htmlFor="endYearInput">Año fin</label>
-                <select
-                  id="endYearInput"
-                  name="anioFin"
-                  className="selectInput"
-                  value={consultaActiva?.anioFin ?? ""}
-                  onChange={(e) => onChangeAnioFin(e.target.value)}
-                >
-                  <option value="">Selecciona ano fin</option>
-                  {YEAR_OPTIONS.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </>
           )}
 
           <div className="field">
             <label htmlFor="stateSelect">Estado</label>
             <select
               id="stateSelect"
-              name="state"
               className="selectInput"
               value={selectedState}
               onChange={(e) => onChangeState(e.target.value)}
             >
-              <option value="">Selecciona estado</option>
-              {ESTADOS.map((st) => (
-                <option key={st} value={st}>
-                  {st}
+              <option value="">
+                {showMunicipality ? "Selecciona estado" : "Todos los estados"}
+              </option>
+              {estados.map((state) => (
+                <option key={state.cve_ent} value={state.cve_ent}>
+                  {state.nombre}
                 </option>
               ))}
             </select>
@@ -379,7 +207,6 @@ export default function LeftPanel({
               <label htmlFor="municipalitySelect">Municipio</label>
               <select
                 id="municipalitySelect"
-                name="municipality"
                 className="selectInput"
                 value={selectedMunicipality}
                 onChange={(e) => onChangeMunicipio(e.target.value)}
@@ -390,9 +217,9 @@ export default function LeftPanel({
                 ) : (
                   <option value="">Todos los municipios</option>
                 )}
-                {municipios.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
+                {municipios.map((municipality) => (
+                  <option key={municipality.cvegeo} value={municipality.cvegeo}>
+                    {municipality.nombre}
                   </option>
                 ))}
               </select>
@@ -403,14 +230,14 @@ export default function LeftPanel({
             type="button"
             className="primaryBtn"
             onClick={() => onConsultar?.()}
-            disabled={!consultaCompleta}
+            disabled={!consultaCompleta || isLoading}
           >
-            Consultar
+            {isLoading ? "Consultando..." : "Consultar"}
           </button>
           <button
             type="button"
             className="ghostBtn"
-            disabled={!consultaEjecutada && !isDirty}
+            disabled={isLoading || (!consultaEjecutada && !isDirty)}
             onClick={onResetConsulta}
           >
             Limpiar filtros
@@ -428,8 +255,6 @@ export default function LeftPanel({
                   return (
                     <label className={`row layerRow ${disabled ? "isDisabled" : ""}`} key={layer.id}>
                       <input
-                        id={`layer-${layer.id}`}
-                        name={`layer-${layer.id}`}
                         type="checkbox"
                         aria-label={layer.label}
                         checked={consultaActiva?.capasActivas?.[layer.id] ?? false}
@@ -448,6 +273,7 @@ export default function LeftPanel({
                     </label>
                   );
                 })}
+
                 {group.id === "smn" && (
                   <div
                     className={`smnFilters ${consultaActiva?.capasActivas?.estacionesSmn ? "" : "isDisabled"}`}
@@ -458,18 +284,12 @@ export default function LeftPanel({
                       {SMN_SCOPE_OPTIONS.map((option) => (
                         <label className="row smnFilterRow" key={option.value}>
                           <input
-                            id={`smn-scope-${option.value}`}
                             name="smn-scope"
                             type="radio"
                             value={option.value}
-                            aria-label={option.label}
                             checked={(consultaActiva?.filtrosSmn?.alcance ?? "todas") === option.value}
                             disabled={!consultaActiva?.capasActivas?.estacionesSmn}
-                            onChange={(e) =>
-                              onConsultaChange?.("filtrosSmn", {
-                                alcance: e.target.value,
-                              })
-                            }
+                            onChange={(e) => onConsultaChange?.("filtrosSmn", { alcance: e.target.value })}
                           />
                           <span>{option.label}</span>
                         </label>
@@ -478,24 +298,17 @@ export default function LeftPanel({
 
                     <div className="smnFilterBlock" aria-label="Situación operativa de estaciones SMN-CONAGUA">
                       <div className="smnFiltersTitle">Situación operativa</div>
-                    {SMN_FILTERS.map((filter) => (
-                      <label className="row smnFilterRow" key={filter.id}>
-                        <input
-                          id={`smn-filter-${filter.id}`}
-                          name={`smn-filter-${filter.id}`}
-                          type="checkbox"
-                          aria-label={filter.label}
-                          checked={consultaActiva?.filtrosSmn?.[filter.id] ?? false}
-                          disabled={!consultaActiva?.capasActivas?.estacionesSmn}
-                          onChange={(e) =>
-                            onConsultaChange?.("filtrosSmn", {
-                              [filter.id]: e.target.checked,
-                            })
-                          }
-                        />
-                        <span>{filter.label}</span>
-                      </label>
-                    ))}
+                      {SMN_FILTERS.map((filter) => (
+                        <label className="row smnFilterRow" key={filter.id}>
+                          <input
+                            type="checkbox"
+                            checked={consultaActiva?.filtrosSmn?.[filter.id] ?? false}
+                            disabled={!consultaActiva?.capasActivas?.estacionesSmn}
+                            onChange={(e) => onConsultaChange?.("filtrosSmn", { [filter.id]: e.target.checked })}
+                          />
+                          <span>{filter.label}</span>
+                        </label>
+                      ))}
                     </div>
                   </div>
                 )}
