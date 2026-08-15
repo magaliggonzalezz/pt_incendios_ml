@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
+import { LAYER_GROUPS, INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
 import "./LeftPanel.css";
 
 const MESES = [
@@ -24,29 +24,20 @@ const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, index) 
   String(MIN_YEAR + index)
 ).reverse();
 
-const REAL_LAYER_GROUPS = [
-  {
-    id: "inegi",
-    title: "Geometría administrativa",
-    layers: [
-      { id: "limitesEstatales", label: "Límites estatales", nivel: "entidad" },
-      { id: "limitesMunicipales", label: "Límites municipales", nivel: "municipio" },
-    ],
-  },
-  {
-    id: "ml",
-    title: "Resultados ML",
-    layers: [
-      { id: "resultadoMlEntidadDia", label: "Resultados ML estatales", nivel: "entidad" },
-      { id: "resultadoMlMunicipioDia", label: "Resultados ML municipales", nivel: "municipio" },
-    ],
-  },
-];
-
 const getLayerDisabled = (layer, nivelAgregacion) => {
   if (!layer.nivel) return false;
   return layer.nivel !== nivelAgregacion;
 };
+
+const SMN_FILTERS = [
+  { id: "operando", label: "Operando" },
+  { id: "suspendida", label: "Suspendida" },
+];
+
+const SMN_SCOPE_OPTIONS = [
+  { value: "todas", label: "Todas las estaciones" },
+  { value: "periodo", label: "Con datos del período" },
+];
 
 export default function LeftPanel({
   open,
@@ -255,30 +246,72 @@ export default function LeftPanel({
 
         <div className="panelCard layersCard">
           <div className="panelTitle">Capas disponibles</div>
-          <p className="layerIntro">Se muestran únicamente las capas que ya están conectadas a fuentes reales.</p>
           <div className="layerGroups">
-            {REAL_LAYER_GROUPS.map((group) => (
+            {LAYER_GROUPS.map((group) => (
               <section className="layerGroup" key={group.id} aria-label={group.title}>
                 <div className="layerGroupTitle">{group.title}</div>
                 {group.layers.map((layer) => {
                   const disabled = getLayerDisabled(layer, consultaActiva?.nivelAgregacion);
-                  const activeForLevel = !disabled && Boolean(consultaEjecutada);
                   return (
                     <label className={`row layerRow ${disabled ? "isDisabled" : ""}`} key={layer.id}>
                       <input
                         type="checkbox"
                         aria-label={layer.label}
-                        checked={activeForLevel}
-                        disabled
-                        readOnly
+                        checked={consultaActiva?.capasActivas?.[layer.id] ?? false}
+                        disabled={disabled}
+                        onChange={(e) =>
+                          onConsultaChange?.("capasActivas", {
+                            capa: layer.id,
+                            activo: e.target.checked,
+                          })
+                        }
                       />
                       <span>
                         {layer.label}
-                        <small>{activeForLevel ? "Activa para la última consulta" : "Se activa al ejecutar una consulta compatible"}</small>
+                        {layer.helper && <small>{layer.helper}</small>}
                       </span>
                     </label>
                   );
                 })}
+
+                {group.id === "smn" && (
+                  <div
+                    className={`smnFilters ${consultaActiva?.capasActivas?.estacionesSmn ? "" : "isDisabled"}`}
+                    aria-label="Filtros de estaciones SMN-CONAGUA"
+                  >
+                    <div className="smnFilterBlock" role="radiogroup" aria-label="Alcance de estaciones SMN-CONAGUA">
+                      <div className="smnFiltersTitle">Alcance</div>
+                      {SMN_SCOPE_OPTIONS.map((option) => (
+                        <label className="row smnFilterRow" key={option.value}>
+                          <input
+                            name="smn-scope"
+                            type="radio"
+                            value={option.value}
+                            checked={(consultaActiva?.filtrosSmn?.alcance ?? "todas") === option.value}
+                            disabled={!consultaActiva?.capasActivas?.estacionesSmn}
+                            onChange={(e) => onConsultaChange?.("filtrosSmn", { alcance: e.target.value })}
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <div className="smnFilterBlock" aria-label="Situación operativa de estaciones SMN-CONAGUA">
+                      <div className="smnFiltersTitle">Situación operativa</div>
+                      {SMN_FILTERS.map((filter) => (
+                        <label className="row smnFilterRow" key={filter.id}>
+                          <input
+                            type="checkbox"
+                            checked={consultaActiva?.filtrosSmn?.[filter.id] ?? false}
+                            disabled={!consultaActiva?.capasActivas?.estacionesSmn}
+                            onChange={(e) => onConsultaChange?.("filtrosSmn", { [filter.id]: e.target.checked })}
+                          />
+                          <span>{filter.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </section>
             ))}
           </div>
