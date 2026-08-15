@@ -1,11 +1,16 @@
 import { Router } from "express";
 import { ResultadosEstadoController } from "../controllers/resultadosEstado.controller.js";
+import { ResultadosMunicipioController } from "../controllers/resultadosMunicipio.controller.js";
 
 const router = Router();
-const controller = new ResultadosEstadoController();
+const estadoController = new ResultadosEstadoController();
+const municipioController = new ResultadosMunicipioController();
 
-router.get("/estado/dia", controller.obtenerDia.bind(controller));
-router.get("/estado/mes", controller.obtenerMes.bind(controller));
-router.get("/estado/anio", controller.obtenerAnio.bind(controller));
+router.get("/estado/dia", estadoController.obtenerDia.bind(estadoController));
+router.get("/estado/mes", estadoController.obtenerMes.bind(estadoController));
+router.get("/estado/anio", estadoController.obtenerAnio.bind(estadoController));
+
+router.get("/municipio/mes", municipioController.obtenerMes.bind(municipioController));
+router.get("/municipio/anio", municipioController.obtenerAnio.bind(municipioController));
 
 export default router;
