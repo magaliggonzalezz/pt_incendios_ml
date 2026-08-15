@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { CircleMarker, MapContainer, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { GeoJSON, MapContainer, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
 import MapControls from "./MapControls";
 import MapLegend from "./MapLegend";
-import { getSimulatedMapFeatures } from "../../data/dashboardMock";
+import { obtenerGeometriasEstados, obtenerGeometriasMunicipios } from "../../services/geometrias.service";
 import "leaflet/dist/leaflet.css";
 import "./MapView.css";
 
@@ -48,7 +48,7 @@ function MapResizeInvalidator({ watchKey }) {
   return null;
 }
 
-function MapPopupCloser({ onClose }) {
+function MapPopupCloser() {
   const map = useMap();
 
   useEffect(() => {
@@ -57,20 +57,35 @@ function MapPopupCloser({ onClose }) {
       if (!(target instanceof Element)) return;
       if (target.closest(".leaflet-popup")) return;
       if (target.closest(".leaflet-interactive")) return;
-
       map.closePopup();
-      onClose?.();
     };
 
     document.addEventListener("pointerdown", closePopupFromOutside, true);
     return () => document.removeEventListener("pointerdown", closePopupFromOutside, true);
-  }, [map, onClose]);
+  }, [map]);
+
+  return null;
+}
+
+function FitGeoJsonBounds({ geojson, enabled }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!enabled || !geojson?.features?.length) return;
+
+    const layer = new window.L.GeoJSON(geojson);
+    const bounds = layer.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [24, 24], maxZoom: 9 });
+    }
+  }, [map, geojson, enabled]);
 
   return null;
 }
 
 export default function MapView({
   consultaActiva = null,
+  resumenConsulta = null,
   onConsultaChange,
   onConsultar,
   leftPanelOpen = false,
@@ -78,20 +93,102 @@ export default function MapView({
   selectedMlCluster = null,
 }) {
   const [baseLayerId, setBaseLayerId] = useState("esri");
-  const [selectedFeatureId, setSelectedFeatureId] = useState(null);
+  const [geojson, setGeojson] = useState(null);
+  const [geometryError, setGeometryError] = useState(null);
   const activeLayer = BASE_LAYERS[baseLayerId];
-  const simulatedFeatures = useMemo(
-    () => getSimulatedMapFeatures(consultaActiva, selectedMlCluster),
-    [consultaActiva, selectedMlCluster]
-  );
-  const popupPaddingTopLeft = useMemo(
-    () => [leftPanelOpen ? 440 : 84, 96],
-    [leftPanelOpen]
-  );
-  const popupPaddingBottomRight = useMemo(
-    () => [rightPanelOpen ? 340 : 72, 92],
-    [rightPanelOpen]
-  );
+  const rows = resumenConsulta?.rows ?? [];
+
+  useEffect(() => {
+    let active = true;
+
+    const load = async () => {
+      try {
+        setGeometryError(null);
+
+        if (consultaActiva?.nivelAgregacion === "municipio" && consultaActiva?.cveEnt) {
+          const data = await obtenerGeometriasMunicipios(consultaActiva.cveEnt);
+          if (active) setGeojson(data);
+          return;
+        }
+
+        const data = await obtenerGeometriasEstados();
+        if (active) setGeojson(data);
+      } catch (error) {
+        if (active) {
+          setGeojson(null);
+          setGeometryError(error.message);
+        }
+      }
+    };
+
+    load();
+    return () => {
+      active = false;
+    };
+  }, [consultaActiva?.nivelAgregacion, consultaActiva?.cveEnt]);
+
+  const rowByKey = useMemo(() => {
+    const map = new Map();
+    rows.forEach((row) => {
+      const key = consultaActiva?.nivelAgregacion === "municipio" ? row.cvegeo : row.cve_ent;
+      if (key) map.set(String(key), row);
+    });
+    return map;
+  }, [rows, consultaActiva?.nivelAgregacion]);
+
+  const filteredGeojson = useMemo(() => {
+    if (!geojson?.features) return null;
+
+    if (consultaActiva?.nivelAgregacion === "entidad" && consultaActiva?.cveEnt) {
+      return {
+        ...geojson,
+        features: geojson.features.filter((feature) => String(feature?.properties?.cve_ent || "") === consultaActiva.cveEnt),
+      };
+    }
+
+    if (consultaActiva?.nivelAgregacion === "municipio" && consultaActiva?.cvegeo) {
+      return {
+        ...geojson,
+        features: geojson.features.filter((feature) => String(feature?.properties?.cvegeo || "") === consultaActiva.cvegeo),
+      };
+    }
+
+    return geojson;
+  }, [geojson, consultaActiva?.nivelAgregacion, consultaActiva?.cveEnt, consultaActiva?.cvegeo]);
+
+  const styleFeature = (feature) => {
+    const key = consultaActiva?.nivelAgregacion === "municipio"
+      ? String(feature?.properties?.cvegeo || "")
+      : String(feature?.properties?.cve_ent || "");
+    const row = rowByKey.get(key);
+    const isSelectedCluster = selectedMlCluster === null || selectedMlCluster === "" || Number(row?.cluster) === Number(selectedMlCluster);
+
+    return {
+      color: row ? "#FFFFFF" : "rgba(255,255,255,.65)",
+      weight: row ? 1.6 : 0.8,
+      fillColor: row?.color_sugerido_app || "#64748B",
+      fillOpacity: row ? (isSelectedCluster ? 0.72 : 0.16) : 0.08,
+    };
+  };
+
+  const onEachFeature = (feature, layer) => {
+    const key = consultaActiva?.nivelAgregacion === "municipio"
+      ? String(feature?.properties?.cvegeo || "")
+      : String(feature?.properties?.cve_ent || "");
+    const row = rowByKey.get(key);
+    const name = feature?.properties?.nomgeo || row?.nombre_municipio || row?.nombre_entidad || key;
+
+    layer.bindTooltip(
+      `<strong>${name}</strong>${row ? `<br/>Cluster: ${row.cluster}<br/>Observaciones: ${row.observaciones}` : "<br/>Sin resultado para la consulta"}`,
+      { sticky: true, direction: "top" }
+    );
+
+    if (row) {
+      layer.bindPopup(
+        `<strong>${name}</strong><br/>Clave: ${key}<br/>Cluster: ${row.cluster}<br/>Observaciones: ${row.observaciones}<br/>FIRMS: ${row.firms_detecciones || 0}<br/>CONAFOR: ${row.conafor_eventos || 0}<br/>Hectáreas: ${Number(row.conafor_ha || 0).toLocaleString("es-MX", { maximumFractionDigits: 2 })}`
+      );
+    }
+  };
 
   return (
     <div
@@ -101,7 +198,7 @@ export default function MapView({
       aria-describedby="map-accessible-summary"
     >
       <p id="map-accessible-summary" className="srOnly">
-        Mapa interactivo de México con controles para buscar ubicaciones, acercar, alejar, restablecer la vista y cambiar la capa base. Los resultados numéricos de la consulta también están disponibles en el panel de resultados y en la tabla del modal de resultados.
+        Mapa interactivo de México con límites administrativos de INEGI coloreados según el cluster ML de la consulta activa.
       </p>
       <MapContainer
         center={DEFAULT_VIEW.center}
@@ -112,54 +209,19 @@ export default function MapView({
         keyboard={true}
       >
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
-        {simulatedFeatures.map((feature) => {
-          const isSelected = selectedFeatureId === feature.id;
 
-          return (
-            <CircleMarker
-              key={feature.id}
-              center={feature.position}
-              radius={isSelected ? feature.radius + 2 : feature.radius}
-              pathOptions={{
-                color: isSelected ? "#FFFFFF" : "rgba(255,255,255,.92)",
-                weight: isSelected ? 3 : 1,
-                fillColor: feature.color,
-                fillOpacity: feature.opacity ?? (isSelected ? 0.96 : 0.86),
-              }}
-              eventHandlers={{
-                popupopen: () => setSelectedFeatureId(feature.id),
-                popupclose: () => setSelectedFeatureId((currentId) => (currentId === feature.id ? null : currentId)),
-              }}
-            >
-              {!isSelected && (
-                <Tooltip
-                  className={`mapFeatureTooltip mapFeatureTooltip-${feature.type}`}
-                  direction="top"
-                  offset={[0, -8]}
-                  opacity={1}
-                  sticky
-                >
-                  <MapFeatureDetails feature={feature} compact />
-                </Tooltip>
-              )}
-              <Popup
-                className={`mapFeaturePopup mapFeaturePopup-${feature.type}`}
-                closeButton
-                closeOnClick
-                autoPan
-                autoPanPaddingTopLeft={popupPaddingTopLeft}
-                autoPanPaddingBottomRight={popupPaddingBottomRight}
-                maxWidth={280}
-                minWidth={220}
-                offset={[0, -8]}
-              >
-                <MapFeatureDetails feature={feature} />
-              </Popup>
-            </CircleMarker>
-          );
-        })}
+        {filteredGeojson?.features?.length ? (
+          <GeoJSON
+            key={`${consultaActiva?.nivelAgregacion || "estados"}-${consultaActiva?.cveEnt || "mx"}-${consultaActiva?.cvegeo || "all"}-${resumenConsulta?.periodo || "sin-resultados"}-${selectedMlCluster ?? "all"}`}
+            data={filteredGeojson}
+            style={styleFeature}
+            onEachFeature={onEachFeature}
+          />
+        ) : null}
+
+        <FitGeoJsonBounds geojson={filteredGeojson} enabled={Boolean(consultaActiva?.cveEnt || consultaActiva?.cvegeo)} />
         <MapResizeInvalidator watchKey={`${leftPanelOpen}-${rightPanelOpen}-${baseLayerId}`} />
-        <MapPopupCloser onClose={() => setSelectedFeatureId(null)} />
+        <MapPopupCloser />
         <MapControls
           defaultView={DEFAULT_VIEW}
           baseLayerId={baseLayerId}
@@ -171,28 +233,9 @@ export default function MapView({
           rightPanelOpen={rightPanelOpen}
         />
       </MapContainer>
+
+      {geometryError ? <div className="mapGeometryError">No fue posible cargar la geometría: {geometryError}</div> : null}
       <MapLegend consultaActiva={consultaActiva} rightPanelOpen={rightPanelOpen} />
-    </div>
-  );
-}
-
-function MapFeatureDetails({ feature, compact = false }) {
-  const rows = compact ? feature.rows.slice(0, 7) : feature.rows;
-
-  return (
-    <div className={compact ? "mapFeatureTooltipInner" : "mapFeaturePopupScroll"} tabIndex={compact ? undefined : 0}>
-      <div className="mapFeatureTooltipTitle">
-        <span aria-hidden="true" />
-        {feature.title}
-      </div>
-      <dl>
-        {rows.map(([label, value]) => (
-          <div key={`${feature.id}-${label}`}>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
-          </div>
-        ))}
-      </dl>
     </div>
   );
 }
