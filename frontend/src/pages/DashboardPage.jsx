@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MapView from "../components/Map/MapView";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
 import RightPanel from "../components/RightPanel/RightPanel";
@@ -7,8 +7,15 @@ import Footer from "../components/Footer/Footer";
 import {
   INITIAL_ACTIVE_LAYERS,
   INITIAL_SMN_FILTERS,
-  buildMockDashboardResults,
 } from "../data/dashboardMock";
+import { buildRealDashboardResults } from "../data/dashboardRealData";
+import { obtenerClusters, obtenerEstados, obtenerMunicipios } from "../services/catalogos.service";
+import {
+  obtenerResultadosEstadoAnio,
+  obtenerResultadosEstadoMes,
+  obtenerResultadosMunicipioAnio,
+  obtenerResultadosMunicipioMes,
+} from "../services/resultados.service";
 import "./DashboardPage.css";
 
 const CONSULTA_INICIAL = {
@@ -30,16 +37,14 @@ const CONSULTA_INICIAL = {
   filtrosSmn: INITIAL_SMN_FILTERS,
 };
 
-
 function isConsultaCompleta(consulta) {
   if (!consulta?.nivelAgregacion || !consulta?.tipoPeriodo) return false;
-  if (consulta.nivelAgregacion === "municipio" && !consulta.estado) return false;
+  if (consulta.nivelAgregacion === "municipio" && !consulta.cveEnt) return false;
   if ((consulta.tipoPeriodo === "anio" || consulta.tipoPeriodo === "anio_mes") && !consulta.anio) return false;
   if (consulta.tipoPeriodo === "anio_mes" && !consulta.mes) return false;
-  if (consulta.tipoPeriodo === "rango_anios" && (!consulta.anioInicio || !consulta.anioFin)) return false;
-  if (consulta.tipoPeriodo === "rango" && (!consulta.fechaInicio || !consulta.fechaFin)) return false;
-  return true;
+  return consulta.tipoPeriodo === "anio" || consulta.tipoPeriodo === "anio_mes";
 }
+
 const getConsultaInicial = () => ({
   ...CONSULTA_INICIAL,
   capasActivas: { ...CONSULTA_INICIAL.capasActivas },
@@ -53,28 +58,67 @@ export default function DashboardPage() {
   const [consultaEjecutada, setConsultaEjecutada] = useState(false);
   const [resumenConsulta, setResumenConsulta] = useState(null);
   const [selectedMlCluster, setSelectedMlCluster] = useState(null);
+  const [clusters, setClusters] = useState([]);
+  const [estados, setEstados] = useState([]);
+  const [municipios, setMunicipios] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+
+    Promise.all([obtenerClusters(), obtenerEstados()])
+      .then(([clusterRows, estadoRows]) => {
+        if (!active) return;
+        setClusters(clusterRows);
+        setEstados(estadoRows);
+      })
+      .catch((err) => {
+        if (active) setError(err.message);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!consultaActiva.cveEnt) {
+      setMunicipios([]);
+      return () => {
+        active = false;
+      };
+    }
+
+    obtenerMunicipios(consultaActiva.cveEnt)
+      .then((rows) => {
+        if (active) setMunicipios(rows);
+      })
+      .catch((err) => {
+        if (active) setError(err.message);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [consultaActiva.cveEnt]);
 
   const handleConsultaChange = (campo, valor) => {
     setConsultaActiva((prev) => {
       if (campo === "capasActivas") {
         const { capa, activo } = valor;
-
         return {
           ...prev,
-          capasActivas: {
-            ...prev.capasActivas,
-            [capa]: activo,
-          },
+          capasActivas: { ...prev.capasActivas, [capa]: activo },
         };
       }
 
       if (campo === "filtrosSmn") {
         return {
           ...prev,
-          filtrosSmn: {
-            ...prev.filtrosSmn,
-            ...valor,
-          },
+          filtrosSmn: { ...prev.filtrosSmn, ...valor },
         };
       }
 
@@ -90,10 +134,7 @@ export default function DashboardPage() {
         };
       }
 
-      return {
-        ...prev,
-        [campo]: valor,
-      };
+      return { ...prev, [campo]: valor };
     });
   };
 
@@ -102,14 +143,56 @@ export default function DashboardPage() {
     setConsultaEjecutada(false);
     setResumenConsulta(null);
     setSelectedMlCluster(null);
+    setError(null);
   };
 
-  const handleConsultar = (consultaOverride = null) => {
+  const handleConsultar = async (consultaOverride = null) => {
     const consulta = consultaOverride ?? consultaActiva;
     if (!isConsultaCompleta(consulta)) return;
-    setResumenConsulta(buildMockDashboardResults(consulta));
-    setConsultaEjecutada(true);
-    setSelectedMlCluster(null);
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      let rows;
+
+      if (consulta.nivelAgregacion === "entidad") {
+        rows = consulta.tipoPeriodo === "anio_mes"
+          ? await obtenerResultadosEstadoMes(consulta.anio, Number(consulta.mes))
+          : await obtenerResultadosEstadoAnio(consulta.anio);
+
+        if (consulta.cveEnt) {
+          rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
+        }
+      } else {
+        const params = {
+          anio: consulta.anio,
+          cveEnt: consulta.cveEnt,
+          cvegeo: consulta.cvegeo,
+        };
+        rows = consulta.tipoPeriodo === "anio_mes"
+          ? await obtenerResultadosMunicipioMes({ ...params, mes: Number(consulta.mes) })
+          : await obtenerResultadosMunicipioAnio(params);
+      }
+
+      const resumen = buildRealDashboardResults({
+        consulta,
+        rows,
+        clusters,
+        estados,
+        municipios,
+      });
+
+      setResumenConsulta(resumen);
+      setConsultaEjecutada(true);
+      setSelectedMlCluster(null);
+    } catch (err) {
+      setResumenConsulta(null);
+      setConsultaEjecutada(false);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePreviewExport = ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
@@ -119,7 +202,7 @@ export default function DashboardPage() {
   const handleDownloadExport = ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
     const rows = resumen?.exportRows ?? [];
     const clusterFilteredRows = selectedMlCluster
-      ? rows.filter((row) => Number(row.cluster_id) === Number(selectedMlCluster))
+      ? rows.filter((row) => Number(row.cluster) === Number(selectedMlCluster))
       : rows;
     const columns = resumen?.exportColumns ?? [];
     const payloadRows = columns.length
@@ -171,6 +254,9 @@ export default function DashboardPage() {
         onConsultaChange={handleConsultaChange}
         onConsultar={handleConsultar}
         onResetConsulta={handleResetConsulta}
+        estados={estados}
+        municipios={municipios}
+        isLoading={isLoading}
       />
       <RightPanel
         open={rightOpen}
@@ -181,7 +267,7 @@ export default function DashboardPage() {
         totalRecords={resumenConsulta?.totalRecords ?? 0}
         availableFormats={["csv", "json"]}
         isExporting={false}
-        error={null}
+        error={error}
         onPreviewExport={handlePreviewExport}
         onDownloadExport={handleDownloadExport}
         selectedMlCluster={selectedMlCluster}
