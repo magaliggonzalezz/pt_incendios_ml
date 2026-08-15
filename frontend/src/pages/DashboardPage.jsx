@@ -236,6 +236,7 @@ export default function DashboardPage() {
     <div className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
       <MapView
         consultaActiva={consultaActiva}
+        resumenConsulta={resumenConsulta}
         onConsultaChange={handleConsultaChange}
         onConsultar={handleConsultar}
         selectedMlCluster={selectedMlCluster}
