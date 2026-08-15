@@ -68,7 +68,7 @@ function MapPopupCloser() {
   return null;
 }
 
-function FitGeoJsonBounds({ geojson, enabled }) {
+function FitGeoJsonBounds({ geojson, enabled, fitKey }) {
   const map = useMap();
 
   useEffect(() => {
@@ -79,13 +79,14 @@ function FitGeoJsonBounds({ geojson, enabled }) {
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [24, 24], maxZoom: 9 });
     }
-  }, [map, geojson, enabled]);
+  }, [map, geojson, enabled, fitKey]);
 
   return null;
 }
 
 export default function MapView({
   consultaActiva = null,
+  consultaEjecutada = null,
   resumenConsulta = null,
   onConsultaChange,
   onConsultar,
@@ -98,6 +99,7 @@ export default function MapView({
   const [geometryError, setGeometryError] = useState(null);
   const activeLayer = BASE_LAYERS[baseLayerId];
   const rows = resumenConsulta?.rows ?? [];
+  const mapScope = consultaEjecutada;
 
   useEffect(() => {
     let active = true;
@@ -106,8 +108,14 @@ export default function MapView({
       try {
         setGeometryError(null);
 
-        if (consultaActiva?.nivelAgregacion === "municipio" && consultaActiva?.cveEnt) {
-          const data = await obtenerGeometriasMunicipios(consultaActiva.cveEnt);
+        if (!mapScope) {
+          const data = await obtenerGeometriasEstados();
+          if (active) setGeojson(data);
+          return;
+        }
+
+        if (mapScope.nivelAgregacion === "municipio" && mapScope.cveEnt) {
+          const data = await obtenerGeometriasMunicipios(mapScope.cveEnt);
           if (active) setGeojson(data);
           return;
         }
@@ -126,39 +134,40 @@ export default function MapView({
     return () => {
       active = false;
     };
-  }, [consultaActiva?.nivelAgregacion, consultaActiva?.cveEnt]);
+  }, [mapScope?.nivelAgregacion, mapScope?.cveEnt]);
 
   const rowByKey = useMemo(() => {
     const map = new Map();
     rows.forEach((row) => {
-      const key = consultaActiva?.nivelAgregacion === "municipio" ? row.cvegeo : row.cve_ent;
+      const key = mapScope?.nivelAgregacion === "municipio" ? row.cvegeo : row.cve_ent;
       if (key) map.set(String(key), row);
     });
     return map;
-  }, [rows, consultaActiva?.nivelAgregacion]);
+  }, [rows, mapScope?.nivelAgregacion]);
 
   const filteredGeojson = useMemo(() => {
     if (!geojson?.features) return null;
+    if (!mapScope) return geojson;
 
-    if (consultaActiva?.nivelAgregacion === "entidad" && consultaActiva?.cveEnt) {
+    if (mapScope.nivelAgregacion === "entidad" && mapScope.cveEnt) {
       return {
         ...geojson,
-        features: geojson.features.filter((feature) => String(feature?.properties?.cve_ent || "") === consultaActiva.cveEnt),
+        features: geojson.features.filter((feature) => String(feature?.properties?.cve_ent || "") === mapScope.cveEnt),
       };
     }
 
-    if (consultaActiva?.nivelAgregacion === "municipio" && consultaActiva?.cvegeo) {
+    if (mapScope.nivelAgregacion === "municipio" && mapScope.cvegeo) {
       return {
         ...geojson,
-        features: geojson.features.filter((feature) => String(feature?.properties?.cvegeo || "") === consultaActiva.cvegeo),
+        features: geojson.features.filter((feature) => String(feature?.properties?.cvegeo || "") === mapScope.cvegeo),
       };
     }
 
     return geojson;
-  }, [geojson, consultaActiva?.nivelAgregacion, consultaActiva?.cveEnt, consultaActiva?.cvegeo]);
+  }, [geojson, mapScope]);
 
   const styleFeature = (feature) => {
-    const key = consultaActiva?.nivelAgregacion === "municipio"
+    const key = mapScope?.nivelAgregacion === "municipio"
       ? String(feature?.properties?.cvegeo || "")
       : String(feature?.properties?.cve_ent || "");
     const row = rowByKey.get(key);
@@ -173,7 +182,7 @@ export default function MapView({
   };
 
   const onEachFeature = (feature, layer) => {
-    const key = consultaActiva?.nivelAgregacion === "municipio"
+    const key = mapScope?.nivelAgregacion === "municipio"
       ? String(feature?.properties?.cvegeo || "")
       : String(feature?.properties?.cve_ent || "");
     const row = rowByKey.get(key);
@@ -191,6 +200,10 @@ export default function MapView({
     }
   };
 
+  const fitKey = mapScope
+    ? `${mapScope.nivelAgregacion}-${mapScope.cveEnt || "mx"}-${mapScope.cvegeo || "all"}-${mapScope.anio || ""}-${mapScope.mes || ""}`
+    : "sin-consulta";
+
   return (
     <div
       className="mapWrap"
@@ -199,7 +212,7 @@ export default function MapView({
       aria-describedby="map-accessible-summary"
     >
       <p id="map-accessible-summary" className="srOnly">
-        Mapa interactivo de México con límites administrativos de INEGI coloreados según el cluster ML de la consulta activa.
+        Mapa interactivo de México con límites administrativos de INEGI coloreados según el cluster ML de la última consulta ejecutada.
       </p>
       <MapContainer
         center={DEFAULT_VIEW.center}
@@ -213,14 +226,18 @@ export default function MapView({
 
         {filteredGeojson?.features?.length ? (
           <GeoJSON
-            key={`${consultaActiva?.nivelAgregacion || "estados"}-${consultaActiva?.cveEnt || "mx"}-${consultaActiva?.cvegeo || "all"}-${resumenConsulta?.periodo || "sin-resultados"}-${selectedMlCluster ?? "all"}`}
+            key={`${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${selectedMlCluster ?? "all"}`}
             data={filteredGeojson}
             style={styleFeature}
             onEachFeature={onEachFeature}
           />
         ) : null}
 
-        <FitGeoJsonBounds geojson={filteredGeojson} enabled={Boolean(consultaActiva?.cveEnt || consultaActiva?.cvegeo)} />
+        <FitGeoJsonBounds
+          geojson={filteredGeojson}
+          enabled={Boolean(mapScope && (mapScope.cveEnt || mapScope.cvegeo))}
+          fitKey={fitKey}
+        />
         <MapResizeInvalidator watchKey={`${leftPanelOpen}-${rightPanelOpen}-${baseLayerId}`} />
         <MapPopupCloser />
         <MapControls
@@ -236,7 +253,7 @@ export default function MapView({
       </MapContainer>
 
       {geometryError ? <div className="mapGeometryError">No fue posible cargar la geometría: {geometryError}</div> : null}
-      <MapLegend consultaActiva={consultaActiva} rightPanelOpen={rightPanelOpen} />
+      <MapLegend consultaActiva={mapScope || consultaActiva} rightPanelOpen={rightPanelOpen} />
     </div>
   );
 }
