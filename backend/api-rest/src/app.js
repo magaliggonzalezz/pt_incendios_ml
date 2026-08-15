@@ -11,7 +11,6 @@ import condicionesmeteorologicasRoutes from "./presentation/routes/CondicionesMe
 import sesionesAnalisisRoutes from "./presentation/routes/sesionesAnalisis.routes.js";
 import ndviRoutes from "./presentation/routes/ndvi.routes.js";
 import datasetsRoutes from "./presentation/routes/datasets.routes.js";
-import analisisMLRoutes from "./presentation/routes/analisisML.routes.js";
 import catalogosRoutes from "./presentation/routes/catalogos.routes.js";
 import resultadosRoutes from "./presentation/routes/resultados.routes.js";
 
@@ -34,7 +33,6 @@ app.use("/api/condicionesmeteorologicas", condicionesmeteorologicasRoutes);
 app.use("/api/sesiones-analisis", sesionesAnalisisRoutes);
 app.use("/api/ndvi", ndviRoutes);
 app.use("/api/datasets", datasetsRoutes);
-app.use("/api/analisis-ml", analisisMLRoutes);
 app.use("/api/catalogos", catalogosRoutes);
 app.use("/api/resultados", resultadosRoutes);
 
