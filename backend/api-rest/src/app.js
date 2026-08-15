@@ -14,6 +14,8 @@ import datasetsRoutes from "./presentation/routes/datasets.routes.js";
 import microserviciosRoutes from "./presentation/routes/microservicios.routes.js";
 import analisisMLRoutes from "./presentation/routes/analisisML.routes.js";
 import importacionRoutes from "./presentation/routes/importacion.routes.js";
+import catalogosRoutes from "./presentation/routes/catalogos.routes.js";
+import resultadosRoutes from "./presentation/routes/resultados.routes.js";
 
 // Forzar DNS públicos para resolver correctamente MongoDB Atlas SRV
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
@@ -37,15 +39,15 @@ app.use("/api/datasets", datasetsRoutes);
 app.use("/api/microservicios", microserviciosRoutes);
 app.use("/api/analisis-ml", analisisMLRoutes);
 app.use("/api/importacion", importacionRoutes);
-
+app.use("/api/catalogos", catalogosRoutes);
+app.use("/api/resultados", resultadosRoutes);
 
 async function startServer() {
   await connectMongo();
 
   app.listen(env.port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${env.port}`);
-    });
+  });
 }
-
 
 startServer();
