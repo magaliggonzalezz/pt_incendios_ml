@@ -186,22 +186,47 @@ export default function MapView({
     return geojson;
   }, [geojson, mapScope]);
 
-  const styleFeature = (feature) => {
-    const key = getFeatureKey(feature, nivelMapa);
-    const row = rowByKey.get(key);
-    const isSelectedCluster = selectedMlCluster === null || selectedMlCluster === "" || Number(row?.cluster) === Number(selectedMlCluster);
+  const displayGeojson = useMemo(() => {
+    if (!filteredGeojson?.features) return null;
 
     return {
-      color: row ? "#FFFFFF" : "rgba(255,255,255,.65)",
-      weight: row ? 1.6 : 0.8,
-      fillColor: row?.color_sugerido_app || "#64748B",
-      fillOpacity: row ? (isSelectedCluster ? 0.72 : 0.16) : 0.08,
+      ...filteredGeojson,
+      features: filteredGeojson.features.map((feature) => {
+        const key = getFeatureKey(feature, nivelMapa);
+        const row = rowByKey.get(key) ?? null;
+        const clusterMatches =
+          selectedMlCluster === null ||
+          selectedMlCluster === "" ||
+          Number(row?.cluster) === Number(selectedMlCluster);
+
+        return {
+          ...feature,
+          properties: {
+            ...(feature.properties || {}),
+            __map_key: key,
+            __resultado: row,
+            __map_style: {
+              color: row ? "#FFFFFF" : "rgba(255,255,255,.65)",
+              weight: row ? 1.6 : 0.8,
+              fillColor: row?.color_sugerido_app || "#64748B",
+              fillOpacity: row ? (clusterMatches ? 0.72 : 0.16) : 0.08,
+            },
+          },
+        };
+      }),
     };
+  }, [filteredGeojson, rowByKey, nivelMapa, selectedMlCluster]);
+
+  const styleFeature = (feature) => feature?.properties?.__map_style || {
+    color: "rgba(255,255,255,.65)",
+    weight: 0.8,
+    fillColor: "#64748B",
+    fillOpacity: 0.08,
   };
 
   const onEachFeature = (feature, layer) => {
-    const key = getFeatureKey(feature, nivelMapa);
-    const row = rowByKey.get(key);
+    const key = feature?.properties?.__map_key || getFeatureKey(feature, nivelMapa);
+    const row = feature?.properties?.__resultado || null;
     const name = feature?.properties?.nomgeo || row?.nombre_municipio || row?.nombre_entidad || key;
 
     layer.bindTooltip(
@@ -219,6 +244,8 @@ export default function MapView({
   const fitKey = mapScope
     ? `${mapScope.nivelAgregacion}-${mapScope.cveEnt || "mx"}-${mapScope.cvegeo || "all"}-${mapScope.anio || ""}-${mapScope.mes || ""}`
     : "sin-consulta";
+
+  const renderKey = `${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${rows.length}-${selectedMlCluster ?? "all"}`;
 
   return (
     <div
@@ -240,17 +267,17 @@ export default function MapView({
       >
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
 
-        {filteredGeojson?.features?.length ? (
+        {displayGeojson?.features?.length ? (
           <GeoJSON
-            key={`${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${selectedMlCluster ?? "all"}`}
-            data={filteredGeojson}
+            key={renderKey}
+            data={displayGeojson}
             style={styleFeature}
             onEachFeature={onEachFeature}
           />
         ) : null}
 
         <FitGeoJsonBounds
-          geojson={filteredGeojson}
+          geojson={displayGeojson}
           enabled={Boolean(mapScope && (mapScope.cveEnt || mapScope.cvegeo))}
           fitKey={fitKey}
         />
