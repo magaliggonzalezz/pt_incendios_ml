@@ -51,11 +51,18 @@ const getConsultaInicial = () => ({
   filtrosSmn: { ...CONSULTA_INICIAL.filtrosSmn },
 });
 
+const snapshotConsulta = (consulta) => ({
+  ...consulta,
+  capasActivas: { ...(consulta.capasActivas || {}) },
+  filtrosSmn: { ...(consulta.filtrosSmn || {}) },
+});
+
 export default function DashboardPage() {
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
   const [consultaActiva, setConsultaActiva] = useState(getConsultaInicial);
   const [consultaEjecutada, setConsultaEjecutada] = useState(false);
+  const [ultimaConsultaEjecutada, setUltimaConsultaEjecutada] = useState(null);
   const [resumenConsulta, setResumenConsulta] = useState(null);
   const [selectedMlCluster, setSelectedMlCluster] = useState(null);
   const [clusters, setClusters] = useState([]);
@@ -141,6 +148,7 @@ export default function DashboardPage() {
   const handleResetConsulta = () => {
     setConsultaActiva(getConsultaInicial());
     setConsultaEjecutada(false);
+    setUltimaConsultaEjecutada(null);
     setResumenConsulta(null);
     setSelectedMlCluster(null);
     setError(null);
@@ -184,10 +192,12 @@ export default function DashboardPage() {
       });
 
       setResumenConsulta(resumen);
+      setUltimaConsultaEjecutada(snapshotConsulta(consulta));
       setConsultaEjecutada(true);
       setSelectedMlCluster(null);
     } catch (err) {
       setResumenConsulta(null);
+      setUltimaConsultaEjecutada(null);
       setConsultaEjecutada(false);
       setError(err.message);
     } finally {
@@ -236,6 +246,7 @@ export default function DashboardPage() {
     <div className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
       <MapView
         consultaActiva={consultaActiva}
+        consultaEjecutada={ultimaConsultaEjecutada}
         resumenConsulta={resumenConsulta}
         onConsultaChange={handleConsultaChange}
         onConsultar={handleConsultar}
@@ -263,7 +274,7 @@ export default function DashboardPage() {
         open={rightOpen}
         onToggle={() => setRightOpen((v) => !v)}
         consultaEjecutada={consultaEjecutada}
-        consultaActiva={consultaActiva}
+        consultaActiva={ultimaConsultaEjecutada}
         resumenConsulta={resumenConsulta}
         totalRecords={resumenConsulta?.totalRecords ?? 0}
         availableFormats={["csv", "json"]}
