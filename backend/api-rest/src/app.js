@@ -13,6 +13,7 @@ import ndviRoutes from "./presentation/routes/ndvi.routes.js";
 import datasetsRoutes from "./presentation/routes/datasets.routes.js";
 import catalogosRoutes from "./presentation/routes/catalogos.routes.js";
 import resultadosRoutes from "./presentation/routes/resultados.routes.js";
+import geometriasRoutes from "./presentation/routes/geometrias.routes.js";
 
 // Forzar DNS públicos para resolver correctamente MongoDB Atlas SRV
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
@@ -35,6 +36,7 @@ app.use("/api/ndvi", ndviRoutes);
 app.use("/api/datasets", datasetsRoutes);
 app.use("/api/catalogos", catalogosRoutes);
 app.use("/api/resultados", resultadosRoutes);
+app.use("/api/geometrias", geometriasRoutes);
 
 async function startServer() {
   await connectMongo();
