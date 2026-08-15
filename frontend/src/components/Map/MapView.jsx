@@ -27,6 +27,23 @@ const BASE_LAYERS = {
   },
 };
 
+function normalizeGeoKey(value, length) {
+  if (value === undefined || value === null || value === "") return "";
+  return String(value).trim().padStart(length, "0");
+}
+
+function getFeatureKey(feature, nivelAgregacion) {
+  return nivelAgregacion === "municipio"
+    ? normalizeGeoKey(feature?.properties?.cvegeo, 5)
+    : normalizeGeoKey(feature?.properties?.cve_ent ?? feature?.properties?.cvegeo, 2);
+}
+
+function getRowKey(row, nivelAgregacion) {
+  return nivelAgregacion === "municipio"
+    ? normalizeGeoKey(row?.cvegeo, 5)
+    : normalizeGeoKey(row?.cve_ent, 2);
+}
+
 function MapResizeInvalidator({ watchKey }) {
   const map = useMap();
 
@@ -100,6 +117,7 @@ export default function MapView({
   const activeLayer = BASE_LAYERS[baseLayerId];
   const rows = resumenConsulta?.rows ?? [];
   const mapScope = consultaEjecutada;
+  const nivelMapa = mapScope?.nivelAgregacion || "entidad";
 
   useEffect(() => {
     let active = true;
@@ -115,7 +133,7 @@ export default function MapView({
         }
 
         if (mapScope.nivelAgregacion === "municipio" && mapScope.cveEnt) {
-          const data = await obtenerGeometriasMunicipios(mapScope.cveEnt);
+          const data = await obtenerGeometriasMunicipios(normalizeGeoKey(mapScope.cveEnt, 2));
           if (active) setGeojson(data);
           return;
         }
@@ -139,27 +157,29 @@ export default function MapView({
   const rowByKey = useMemo(() => {
     const map = new Map();
     rows.forEach((row) => {
-      const key = mapScope?.nivelAgregacion === "municipio" ? row.cvegeo : row.cve_ent;
-      if (key) map.set(String(key), row);
+      const key = getRowKey(row, nivelMapa);
+      if (key) map.set(key, row);
     });
     return map;
-  }, [rows, mapScope?.nivelAgregacion]);
+  }, [rows, nivelMapa]);
 
   const filteredGeojson = useMemo(() => {
     if (!geojson?.features) return null;
     if (!mapScope) return geojson;
 
     if (mapScope.nivelAgregacion === "entidad" && mapScope.cveEnt) {
+      const target = normalizeGeoKey(mapScope.cveEnt, 2);
       return {
         ...geojson,
-        features: geojson.features.filter((feature) => String(feature?.properties?.cve_ent || "") === mapScope.cveEnt),
+        features: geojson.features.filter((feature) => getFeatureKey(feature, "entidad") === target),
       };
     }
 
     if (mapScope.nivelAgregacion === "municipio" && mapScope.cvegeo) {
+      const target = normalizeGeoKey(mapScope.cvegeo, 5);
       return {
         ...geojson,
-        features: geojson.features.filter((feature) => String(feature?.properties?.cvegeo || "") === mapScope.cvegeo),
+        features: geojson.features.filter((feature) => getFeatureKey(feature, "municipio") === target),
       };
     }
 
@@ -167,9 +187,7 @@ export default function MapView({
   }, [geojson, mapScope]);
 
   const styleFeature = (feature) => {
-    const key = mapScope?.nivelAgregacion === "municipio"
-      ? String(feature?.properties?.cvegeo || "")
-      : String(feature?.properties?.cve_ent || "");
+    const key = getFeatureKey(feature, nivelMapa);
     const row = rowByKey.get(key);
     const isSelectedCluster = selectedMlCluster === null || selectedMlCluster === "" || Number(row?.cluster) === Number(selectedMlCluster);
 
@@ -182,9 +200,7 @@ export default function MapView({
   };
 
   const onEachFeature = (feature, layer) => {
-    const key = mapScope?.nivelAgregacion === "municipio"
-      ? String(feature?.properties?.cvegeo || "")
-      : String(feature?.properties?.cve_ent || "");
+    const key = getFeatureKey(feature, nivelMapa);
     const row = rowByKey.get(key);
     const name = feature?.properties?.nomgeo || row?.nombre_municipio || row?.nombre_entidad || key;
 
