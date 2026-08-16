@@ -4,13 +4,6 @@ import dns from "node:dns";
 
 import { env } from "./config/env.js";
 import { connectMongo } from "./data/database/mongo.js";
-import incendiosRoutes from "./presentation/routes/incendios.routes.js";
-import areainteresRoutes from "./presentation/routes/areainteres.routes.js";
-import hotspotRoutes from "./presentation/routes/hotspot.routes.js";
-import condicionesmeteorologicasRoutes from "./presentation/routes/CondicionesMetereologicas.routes.js";
-import sesionesAnalisisRoutes from "./presentation/routes/sesionesAnalisis.routes.js";
-import ndviRoutes from "./presentation/routes/ndvi.routes.js";
-import datasetsRoutes from "./presentation/routes/datasets.routes.js";
 import catalogosRoutes from "./presentation/routes/catalogos.routes.js";
 import resultadosRoutes from "./presentation/routes/resultados.routes.js";
 import geometriasRoutes from "./presentation/routes/geometrias.routes.js";
@@ -28,13 +21,6 @@ app.get("/", (req, res) => {
   res.send("API REST funcionando");
 });
 
-app.use("/api/incendios", incendiosRoutes);
-app.use("/api/areainteres", areainteresRoutes);
-app.use("/api/hotspot", hotspotRoutes);
-app.use("/api/condicionesmeteorologicas", condicionesmeteorologicasRoutes);
-app.use("/api/sesiones-analisis", sesionesAnalisisRoutes);
-app.use("/api/ndvi", ndviRoutes);
-app.use("/api/datasets", datasetsRoutes);
 app.use("/api/catalogos", catalogosRoutes);
 app.use("/api/resultados", resultadosRoutes);
 app.use("/api/geometrias", geometriasRoutes);
