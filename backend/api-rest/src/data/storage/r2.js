@@ -1,4 +1,4 @@
-import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { env } from "../../config/env.js";
 
@@ -63,4 +63,21 @@ export async function obtenerMetadataObjetoR2(key) {
     etag: response.ETag?.replaceAll('"', "") ?? null,
     ultimaModificacion: response.LastModified?.toISOString() ?? null,
   };
+}
+
+export async function descargarObjetoR2(key) {
+  const s3 = getR2Client();
+  const response = await s3.send(
+    new GetObjectCommand({
+      Bucket: env.r2Bucket,
+      Key: key,
+    }),
+  );
+
+  if (!response.Body) {
+    throw new Error(`R2 devolvió el objeto sin contenido: ${key}`);
+  }
+
+  const bytes = await response.Body.transformToByteArray();
+  return Buffer.from(bytes);
 }
