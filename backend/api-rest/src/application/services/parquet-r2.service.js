@@ -9,6 +9,13 @@ function normalizarValor(value) {
   return typeof value === "bigint" ? value.toString() : value;
 }
 
+function bufferAArrayBuffer(buffer) {
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength,
+  );
+}
+
 export async function inspeccionarMunicipioDia2025() {
   const inicio = performance.now();
   const metadata = await obtenerMetadataObjetoR2(MUNICIPIO_DIA_2025_KEY);
@@ -19,7 +26,7 @@ export async function inspeccionarMunicipioDia2025() {
   let primeraFila = null;
 
   await parquetRead({
-    file: buffer,
+    file: bufferAArrayBuffer(buffer),
     rowStart: 0,
     rowEnd: 1,
     onComplete: (data) => {
