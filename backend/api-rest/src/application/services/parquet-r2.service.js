@@ -1,4 +1,5 @@
 import { parquetRead } from "hyparquet";
+import { compressors } from "hyparquet-compressors";
 
 import { descargarObjetoR2, obtenerMetadataObjetoR2 } from "../../data/storage/r2.js";
 
@@ -9,24 +10,23 @@ function normalizarValor(value) {
   return typeof value === "bigint" ? value.toString() : value;
 }
 
-function bufferAArrayBuffer(buffer) {
-  return buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength,
-  );
-}
-
 export async function inspeccionarMunicipioDia2025() {
   const inicio = performance.now();
   const metadata = await obtenerMetadataObjetoR2(MUNICIPIO_DIA_2025_KEY);
   const buffer = await descargarObjetoR2(MUNICIPIO_DIA_2025_KEY);
   const descargaFin = performance.now();
 
+  const arrayBuffer = buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength,
+  );
+
   let columnas = [];
   let primeraFila = null;
 
   await parquetRead({
-    file: bufferAArrayBuffer(buffer),
+    file: arrayBuffer,
+    compressors,
     rowStart: 0,
     rowEnd: 1,
     onComplete: (data) => {
