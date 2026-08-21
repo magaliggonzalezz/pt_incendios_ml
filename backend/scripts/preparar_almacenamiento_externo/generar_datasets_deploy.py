@@ -38,6 +38,25 @@ def asegurar_padre(ruta: Path) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
 
 
+def alinear_tabla_al_esquema(tabla: pa.Table, esquema: pa.Schema) -> pa.Table:
+    """Alinea tipos entre chunks cuando pandas infiere int/float distinto.
+
+    Es común en CSV grandes que una columna sea int64 en un bloque y float64 en
+    otro solo porque aparecen nulos. Parquet exige un esquema fijo por archivo.
+    """
+    if tabla.schema.equals(esquema, check_metadata=False):
+        return tabla.cast(esquema, safe=False)
+
+    columnas = []
+    for campo in esquema:
+        columna = tabla[campo.name]
+        if columna.type != campo.type:
+            columna = columna.cast(campo.type, safe=False)
+        columnas.append(columna)
+
+    return pa.Table.from_arrays(columnas, schema=esquema)
+
+
 def convertir_csv_a_parquet(
     origen: Path,
     destino: Path,
@@ -48,7 +67,13 @@ def convertir_csv_a_parquet(
     asegurar_padre(destino)
     eliminar_columnas = eliminar_columnas or set()
 
+    # Se escribe primero a .part para nunca dejar un parquet final incompleto.
+    temporal = destino.with_suffix(destino.suffix + ".part")
+    if temporal.exists():
+        temporal.unlink()
+
     writer = None
+    esquema_base = None
     filas = 0
     columnas_finales = None
 
@@ -59,30 +84,43 @@ def convertir_csv_a_parquet(
                 chunk = chunk.drop(columns=columnas_a_eliminar)
 
             tabla = pa.Table.from_pandas(chunk, preserve_index=False)
+
             if writer is None:
+                esquema_base = tabla.schema
                 writer = pq.ParquetWriter(
-                    destino,
-                    tabla.schema,
+                    temporal,
+                    esquema_base,
                     compression="zstd",
                     compression_level=6,
                     use_dictionary=True,
                 )
                 columnas_finales = list(chunk.columns)
+            else:
+                tabla = alinear_tabla_al_esquema(tabla, esquema_base)
 
             writer.write_table(tabla)
             filas += len(chunk)
-    finally:
+
+        if writer is None:
+            # CSV sin filas: conserva al menos el esquema.
+            df = pd.read_csv(origen, nrows=0)
+            columnas_a_eliminar = [c for c in eliminar_columnas if c in df.columns]
+            if columnas_a_eliminar:
+                df = df.drop(columns=columnas_a_eliminar)
+            df.to_parquet(temporal, index=False, compression="zstd")
+            columnas_finales = list(df.columns)
+        else:
+            writer.close()
+            writer = None
+
+        temporal.replace(destino)
+
+    except Exception:
         if writer is not None:
             writer.close()
-
-    if writer is None:
-        # CSV sin filas: conserva al menos el esquema.
-        df = pd.read_csv(origen, nrows=0)
-        columnas_a_eliminar = [c for c in eliminar_columnas if c in df.columns]
-        if columnas_a_eliminar:
-            df = df.drop(columns=columnas_a_eliminar)
-        df.to_parquet(destino, index=False, compression="zstd")
-        columnas_finales = list(df.columns)
+        if temporal.exists():
+            temporal.unlink()
+        raise
 
     return {
         "origen": str(origen),
@@ -91,6 +129,26 @@ def convertir_csv_a_parquet(
         "columnas": columnas_finales,
         "bytes_origen": origen.stat().st_size,
         "bytes_destino": destino.stat().st_size,
+        "estado": "generado",
+    }
+
+
+def registrar_parquet_existente(origen: Path, destino: Path) -> dict:
+    """Registra un parquet ya generado sin volver a procesar el CSV."""
+    if not destino.is_file():
+        raise FileNotFoundError(
+            f"Se pidió reanudar, pero falta el archivo ya generado: {destino}"
+        )
+
+    parquet = pq.ParquetFile(destino)
+    return {
+        "origen": str(origen),
+        "destino": str(destino),
+        "filas": parquet.metadata.num_rows,
+        "columnas": parquet.schema_arrow.names,
+        "bytes_origen": origen.stat().st_size,
+        "bytes_destino": destino.stat().st_size,
+        "estado": "reutilizado",
     }
 
 
@@ -102,12 +160,35 @@ def copiar_archivo(origen: Path, destino: Path) -> dict:
         "destino": str(destino),
         "bytes_origen": origen.stat().st_size,
         "bytes_destino": destino.stat().st_size,
+        "estado": "generado",
     }
 
 
 def validar_archivo(ruta: Path) -> None:
     if not ruta.is_file():
         raise FileNotFoundError(f"No existe el archivo requerido: {ruta}")
+
+
+def procesar_o_reutilizar(
+    *,
+    etapa: int,
+    desde_etapa: int,
+    origen: Path,
+    destino: Path,
+    eliminar_columnas: set[str],
+    chunksize: int,
+) -> dict:
+    if etapa < desde_etapa:
+        print(f"  [reutiliza] {destino.name}")
+        return registrar_parquet_existente(origen, destino)
+
+    print(f"  {origen.name}")
+    return convertir_csv_a_parquet(
+        origen,
+        destino,
+        eliminar_columnas=eliminar_columnas,
+        chunksize=chunksize,
+    )
 
 
 def main() -> None:
@@ -132,6 +213,17 @@ def main() -> None:
         type=int,
         default=150_000,
         help="Filas por bloque al convertir CSV grandes a Parquet.",
+    )
+    parser.add_argument(
+        "--desde-etapa",
+        type=int,
+        choices=range(1, 6),
+        default=1,
+        metavar="N",
+        help=(
+            "Reanuda desde la etapa N (1-5). Las etapas anteriores se reutilizan "
+            "desde data_deploy sin reconvertirlas."
+        ),
     )
     args = parser.parse_args()
 
@@ -161,6 +253,7 @@ def main() -> None:
             "inegi": "Se conserva contexto municipal agregado; capas fuente pesadas quedan fuera del deploy por ahora.",
             "smn": "Se conserva GeoJSON de estaciones por ser una capa ligera y directamente visualizable.",
             "geometrias_inegi": "Pendientes de optimización web específica (no se copian todavía).",
+            "desde_etapa": args.desde_etapa,
         },
         "archivos": [],
         "excluidos_deploy": [],
@@ -169,13 +262,14 @@ def main() -> None:
     print("\n[1/5] Resultados municipio-día -> Parquet")
     for origen in sorted(ruta_resultados.glob("app_municipio_dia_resultados_*.csv")):
         destino = salida / "resultados" / "municipio_dia" / f"{origen.stem}.parquet"
-        print(f"  {origen.name}")
         reporte["archivos"].append(
             {
                 "categoria": "resultados_municipio_dia",
-                **convertir_csv_a_parquet(
-                    origen,
-                    destino,
+                **procesar_o_reutilizar(
+                    etapa=1,
+                    desde_etapa=args.desde_etapa,
+                    origen=origen,
+                    destino=destino,
                     eliminar_columnas=COLUMNAS_DERIVABLES_TEMPORALES,
                     chunksize=args.chunksize,
                 ),
@@ -185,13 +279,14 @@ def main() -> None:
     print("\n[2/5] Exportación detallada -> Parquet")
     for origen in sorted(ruta_exportacion.glob("app_municipio_dia_detalle_exportacion_*.csv")):
         destino = salida / "exportaciones" / "municipio_dia_detalle" / f"{origen.stem}.parquet"
-        print(f"  {origen.name}")
         reporte["archivos"].append(
             {
                 "categoria": "exportacion_municipio_dia_detalle",
-                **convertir_csv_a_parquet(
-                    origen,
-                    destino,
+                **procesar_o_reutilizar(
+                    etapa=2,
+                    desde_etapa=args.desde_etapa,
+                    origen=origen,
+                    destino=destino,
                     eliminar_columnas=COLUMNAS_DERIVABLES_TEMPORALES,
                     chunksize=args.chunksize,
                 ),
@@ -213,13 +308,14 @@ def main() -> None:
     ]
     for categoria, origen, destino in fuentes:
         validar_archivo(origen)
-        print(f"  {origen.name}")
         reporte["archivos"].append(
             {
                 "categoria": f"fuente_{categoria}_canonica",
-                **convertir_csv_a_parquet(
-                    origen,
-                    destino,
+                **procesar_o_reutilizar(
+                    etapa=3,
+                    desde_etapa=args.desde_etapa,
+                    origen=origen,
+                    destino=destino,
                     eliminar_columnas=set(),
                     chunksize=args.chunksize,
                 ),
@@ -229,12 +325,15 @@ def main() -> None:
     print("\n[4/5] Contexto INEGI agregado -> Parquet")
     inegi_contexto = ruta_layers / "inegi" / "inegi_contexto_municipal.csv"
     validar_archivo(inegi_contexto)
+    destino_inegi = salida / "contexto" / "inegi_contexto_municipal.parquet"
     reporte["archivos"].append(
         {
             "categoria": "contexto_inegi_municipal",
-            **convertir_csv_a_parquet(
-                inegi_contexto,
-                salida / "contexto" / "inegi_contexto_municipal.parquet",
+            **procesar_o_reutilizar(
+                etapa=4,
+                desde_etapa=args.desde_etapa,
+                origen=inegi_contexto,
+                destino=destino_inegi,
                 eliminar_columnas=set(),
                 chunksize=args.chunksize,
             ),
@@ -244,17 +343,25 @@ def main() -> None:
     print("\n[5/5] Capa ligera SMN -> GeoJSON")
     smn_geojson = ruta_layers / "smn" / "smn_estaciones.geojson"
     validar_archivo(smn_geojson)
+    destino_smn = salida / "capas_web" / "smn" / "smn_estaciones.geojson"
+    if args.desde_etapa > 5:
+        # No ocurre con choices 1-5; se deja explícito por consistencia.
+        datos_smn = {
+            "origen": str(smn_geojson),
+            "destino": str(destino_smn),
+            "bytes_origen": smn_geojson.stat().st_size,
+            "bytes_destino": destino_smn.stat().st_size,
+            "estado": "reutilizado",
+        }
+    else:
+        datos_smn = copiar_archivo(smn_geojson, destino_smn)
     reporte["archivos"].append(
         {
             "categoria": "capa_web_smn_estaciones",
-            **copiar_archivo(
-                smn_geojson,
-                salida / "capas_web" / "smn" / "smn_estaciones.geojson",
-            ),
+            **datos_smn,
         }
     )
 
-    # Exclusiones intencionales del despliegue.
     reporte["excluidos_deploy"].extend(
         [
             {
@@ -293,7 +400,7 @@ def main() -> None:
     )
 
     reporte["resumen"] = {
-        "archivos_generados": len(reporte["archivos"]),
+        "archivos_generados_o_reutilizados": len(reporte["archivos"]),
         "bytes_origen_referenciado": total_origen_referenciado,
         "tamano_origen_referenciado": bytes_legibles(total_origen_referenciado),
         "bytes_deploy": total_deploy,
