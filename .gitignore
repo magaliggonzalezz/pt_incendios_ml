@@ -77,3 +77,6 @@ ms03_ml/
 ms04_evaluation/
 
 data_v2_mongo_ready/
+
+# Versiones generadas para despliegue / object storage
+data_deploy/
