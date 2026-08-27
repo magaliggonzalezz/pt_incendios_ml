@@ -65,7 +65,7 @@ export async function obtenerMetadataObjetoR2(key) {
   };
 }
 
-export async function descargarObjetoR2(key) {
+export async function obtenerObjetoR2Stream(key) {
   const s3 = getR2Client();
   const response = await s3.send(
     new GetObjectCommand({
@@ -75,10 +75,23 @@ export async function descargarObjetoR2(key) {
   );
 
   if (!response.Body) {
-    throw new Error(`R2 devolvió el objeto sin contenido: ${key}`);
+    const error = new Error(`R2 devolvió el objeto sin contenido: ${key}`);
+    error.statusCode = 502;
+    throw error;
   }
 
-  const bytes = await response.Body.transformToByteArray();
+  return {
+    body: response.Body,
+    bytes: response.ContentLength ?? null,
+    contentType: response.ContentType ?? "application/octet-stream",
+    etag: response.ETag?.replaceAll('"', "") ?? null,
+    ultimaModificacion: response.LastModified?.toISOString() ?? null,
+  };
+}
+
+export async function descargarObjetoR2(key) {
+  const { body } = await obtenerObjetoR2Stream(key);
+  const bytes = await body.transformToByteArray();
   return Buffer.from(bytes);
 }
 
