@@ -3,11 +3,29 @@ import { descargarObjetoR2 } from "../../data/storage/r2.js";
 const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
 const SMN_KEY = "capas_web/smn/smn_estaciones.geojson";
 const CACHE_TTL_MS = 10 * 60 * 1000;
+const CAPAS_TEMATICAS = new Set([
+  "fisiografia",
+  "edafologia",
+  "hidrografia",
+  "uso_suelo_vegetacion",
+]);
 
 const cache = new Map();
 
+function validarCveEnt(cveEnt) {
+  if (!/^\d{2}$/.test(cveEnt || "")) {
+    const error = new Error("cve_ent debe tener 2 dígitos");
+    error.statusCode = 400;
+    throw error;
+  }
+}
+
 function municipiosKey(cveEnt) {
   return `capas_web/inegi/municipios/inegi_municipios_${cveEnt}.geojson`;
+}
+
+function tematicaKey(capa, cveEnt) {
+  return `capas_web/inegi/tematicas/${capa}/${capa}_${cveEnt}.geojson`;
 }
 
 function parseGeoJson(buffer, key) {
@@ -51,15 +69,21 @@ export async function obtenerGeometriasEstados() {
 }
 
 export async function obtenerGeometriasMunicipios(cveEnt) {
-  if (!/^\d{2}$/.test(cveEnt || "")) {
-    const error = new Error("cve_ent debe tener 2 dígitos");
-    error.statusCode = 400;
-    throw error;
-  }
-
+  validarCveEnt(cveEnt);
   return obtenerGeoJsonR2(municipiosKey(cveEnt));
 }
 
 export async function obtenerEstacionesSmn() {
   return obtenerGeoJsonR2(SMN_KEY);
+}
+
+export async function obtenerCapaTematica(capa, cveEnt) {
+  if (!CAPAS_TEMATICAS.has(capa)) {
+    const error = new Error("capa temática no válida");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  validarCveEnt(cveEnt);
+  return obtenerGeoJsonR2(tematicaKey(capa, cveEnt));
 }
