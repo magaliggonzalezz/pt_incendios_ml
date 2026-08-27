@@ -1,6 +1,10 @@
 import { descargarObjetoR2 } from "../../data/storage/r2.js";
 
 const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
+const SMN_KEY = "capas_web/smn/smn_estaciones.geojson";
+const CACHE_TTL_MS = 10 * 60 * 1000;
+
+const cache = new Map();
 
 function municipiosKey(cveEnt) {
   return `capas_web/inegi/municipios/inegi_municipios_${cveEnt}.geojson`;
@@ -21,9 +25,18 @@ function parseGeoJson(buffer, key) {
 }
 
 async function obtenerGeoJsonR2(key) {
+  const ahora = Date.now();
+  const cacheado = cache.get(key);
+
+  if (cacheado && ahora - cacheado.creadoEn < CACHE_TTL_MS) {
+    return cacheado.data;
+  }
+
   try {
     const buffer = await descargarObjetoR2(key);
-    return parseGeoJson(buffer, key);
+    const data = parseGeoJson(buffer, key);
+    cache.set(key, { creadoEn: ahora, data });
+    return data;
   } catch (error) {
     if (error.statusCode) throw error;
 
@@ -45,4 +58,8 @@ export async function obtenerGeometriasMunicipios(cveEnt) {
   }
 
   return obtenerGeoJsonR2(municipiosKey(cveEnt));
+}
+
+export async function obtenerEstacionesSmn() {
+  return obtenerGeoJsonR2(SMN_KEY);
 }
