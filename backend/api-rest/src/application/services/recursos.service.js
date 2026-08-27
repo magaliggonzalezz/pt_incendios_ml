@@ -1,16 +1,5 @@
-import { env } from "../../config/env.js";
-
 const YEAR_MIN = 2001;
 const YEAR_MAX = 2025;
-
-function normalizeBaseUrl(url) {
-  return String(url || "").trim().replace(/\/+$/, "");
-}
-
-function buildAssetUrl(relativePath) {
-  const baseUrl = normalizeBaseUrl(env.assetsBaseUrl);
-  return baseUrl ? `${baseUrl}/${relativePath}` : null;
-}
 
 function parseYear(value) {
   const year = Number(value);
@@ -22,40 +11,63 @@ function parseYear(value) {
   return year;
 }
 
+function recursoMunicipioDia(year) {
+  return {
+    id: "municipio_dia",
+    nombre: `Resultados ML municipio-día ${year}`,
+    descripcion: "Resultados municipio-día derivados del proyecto.",
+    formato: "parquet",
+    key: `resultados/municipio_dia/app_municipio_dia_resultados_${year}.parquet`,
+    descargable: true,
+  };
+}
+
+function recursoDetalleExportacion(year) {
+  return {
+    id: "detalle_exportacion",
+    nombre: `Detalle de exportación ML ${year}`,
+    descripcion: "Dataset detallado de resultados derivados preparado para exportación.",
+    formato: "parquet",
+    key: `exportacion/municipio_dia/app_municipio_dia_detalle_exportacion_${year}.parquet`,
+    descargable: true,
+  };
+}
+
 export function obtenerExportacionesPorAnio(anio) {
   const year = parseYear(anio);
-
-  const municipioDiaPath = `ml/csv/municipio_dia/app_municipio_dia_resultados_${year}.csv`;
-  const detallePath = `ml/csv/exportacion/app_municipio_dia_detalle_exportacion_${year}.csv`;
+  const recursos = [recursoMunicipioDia(year), recursoDetalleExportacion(year)];
 
   return {
     anio: year,
-    almacenamientoConfigurado: Boolean(normalizeBaseUrl(env.assetsBaseUrl)),
-    recursos: [
-      {
-        id: "municipio_dia",
-        nombre: `Resultados ML municipio-día ${year}`,
-        descripcion: "Dataset municipio-día preparado para consumo y análisis.",
-        formato: "csv",
-        ruta: municipioDiaPath,
-        url: buildAssetUrl(municipioDiaPath),
-      },
-      {
-        id: "detalle_exportacion",
-        nombre: `Detalle de exportación ML ${year}`,
-        descripcion: "Dataset detallado de exportación preparado por eval05.",
-        formato: "csv",
-        ruta: detallePath,
-        url: buildAssetUrl(detallePath),
-      },
-    ],
+    periodo: { desde: YEAR_MIN, hasta: YEAR_MAX },
+    recursos: recursos.map(({ key, ...recurso }) => ({
+      ...recurso,
+      endpointDescarga: `/api/recursos/exportaciones/${recurso.id}?anio=${year}`,
+    })),
   };
+}
+
+export function resolverExportacion({ id, anio }) {
+  const year = parseYear(anio);
+  const recursos = {
+    municipio_dia: recursoMunicipioDia(year),
+    detalle_exportacion: recursoDetalleExportacion(year),
+  };
+
+  const recurso = recursos[id];
+  if (!recurso) {
+    const error = new Error("recurso de exportación no válido");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return recurso;
 }
 
 export function obtenerConfiguracionRecursos() {
   return {
-    almacenamientoConfigurado: Boolean(normalizeBaseUrl(env.assetsBaseUrl)),
     periodo: { desde: YEAR_MIN, hasta: YEAR_MAX },
-    baseUrlPublica: normalizeBaseUrl(env.assetsBaseUrl) || null,
+    almacenamiento: "Cloudflare R2 privado",
+    formatosExportacion: ["parquet"],
   };
 }
