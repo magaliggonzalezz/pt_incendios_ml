@@ -1,4 +1,3 @@
-import { consultarMunicipioDiaR2 } from "../../application/services/consulta-municipio-dia-r2.service.js";
 import { ResultadosMunicipioService } from "../../application/services/resultadosMunicipio.service.js";
 
 const service = new ResultadosMunicipioService();
@@ -70,14 +69,20 @@ export class ResultadosMunicipioController {
       if (!cvegeo) return res.status(400).json({ error: "cvegeo es obligatorio" });
       if (fecha.error) return res.status(400).json({ error: fecha.error });
 
-      const data = await consultarMunicipioDiaR2({
+      const data = await service.obtenerDia({
         cvegeo,
         fecha: fecha.value,
       });
 
+      if (!data) {
+        return res.status(404).json({
+          error: "No se encontró resultado municipio-día para los filtros solicitados",
+        });
+      }
+
       res.status(200).json(data);
     } catch (error) {
-      res.status(error.statusCode || 500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
