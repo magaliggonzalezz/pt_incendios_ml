@@ -1,13 +1,6 @@
-import {
-  obtenerConfiguracionRecursos,
-  obtenerExportacionesPorAnio,
-  resolverExportacion,
-} from "../../application/services/recursos.service.js";
+import { obtenerConfiguracionRecursos } from "../../application/services/recursos.service.js";
 import { inspeccionarMunicipioDia2025 } from "../../application/services/parquet-r2.service.js";
-import {
-  obtenerMetadataObjetoR2,
-  obtenerObjetoR2Stream,
-} from "../../data/storage/r2.js";
+import { obtenerMetadataObjetoR2 } from "../../data/storage/r2.js";
 
 export class RecursosController {
   configuracion(req, res) {
@@ -15,37 +8,6 @@ export class RecursosController {
       res.json(obtenerConfiguracionRecursos());
     } catch (error) {
       res.status(error.statusCode || 500).json({ error: error.message });
-    }
-  }
-
-  exportaciones(req, res) {
-    try {
-      res.json(obtenerExportacionesPorAnio(req.query.anio));
-    } catch (error) {
-      res.status(error.statusCode || 500).json({ error: error.message });
-    }
-  }
-
-  async descargarExportacion(req, res) {
-    try {
-      const recurso = resolverExportacion({
-        id: req.params.id,
-        anio: req.query.anio,
-      });
-      const objeto = await obtenerObjetoR2Stream(recurso.key);
-      const fileName = recurso.key.split("/").at(-1);
-
-      res.setHeader("Content-Type", objeto.contentType || "application/octet-stream");
-      res.setHeader("Content-Disposition", `attachment; filename=\"${fileName}\"`);
-      if (objeto.bytes !== null) {
-        res.setHeader("Content-Length", String(objeto.bytes));
-      }
-
-      objeto.body.pipe(res);
-    } catch (error) {
-      if (!res.headersSent) {
-        res.status(error.statusCode || 500).json({ error: error.message });
-      }
     }
   }
 
