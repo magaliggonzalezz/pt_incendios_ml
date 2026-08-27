@@ -1,7 +1,7 @@
 import { parquetRead } from "hyparquet";
 import { compressors } from "hyparquet-compressors";
 
-import { descargarObjetoR2, obtenerMetadataObjetoR2 } from "../../data/storage/r2.js";
+import { crearAsyncBufferR2 } from "../../data/storage/r2.js";
 
 const MUNICIPIO_DIA_2025_KEY =
   "resultados/municipio_dia/app_municipio_dia_resultados_2025.parquet";
@@ -12,20 +12,16 @@ function normalizarValor(value) {
 
 export async function inspeccionarMunicipioDia2025() {
   const inicio = performance.now();
-  const metadata = await obtenerMetadataObjetoR2(MUNICIPIO_DIA_2025_KEY);
-  const buffer = await descargarObjetoR2(MUNICIPIO_DIA_2025_KEY);
-  const descargaFin = performance.now();
-
-  const arrayBuffer = buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength,
+  const { file, metadata, obtenerEstadisticas } = await crearAsyncBufferR2(
+    MUNICIPIO_DIA_2025_KEY,
   );
+  const preparacionFin = performance.now();
 
   let columnas = [];
   let primeraFila = null;
 
   await parquetRead({
-    file: arrayBuffer,
+    file,
     compressors,
     rowStart: 0,
     rowEnd: 1,
@@ -50,20 +46,33 @@ export async function inspeccionarMunicipioDia2025() {
   });
 
   const fin = performance.now();
+  const estadisticas = obtenerEstadisticas();
+  const bytesObjeto = Number(metadata.bytes || 0);
+  const porcentajeTransferido = bytesObjeto
+    ? (estadisticas.bytesTransferidos / bytesObjeto) * 100
+    : null;
 
   return {
     ok: true,
-    advertencia:
-      "Prueba piloto: este endpoint todavía descarga el Parquet completo en memoria. No es la estrategia final para archivos grandes.",
+    estrategia: "lectura remota por rangos HTTP desde R2",
     objeto: metadata,
     parquet: {
       columnas,
       numeroColumnas: columnas.length,
       primeraFila,
     },
+    transferencia: {
+      solicitudesRange: estadisticas.solicitudesRange,
+      bytesTransferidos: estadisticas.bytesTransferidos,
+      bytesObjeto,
+      porcentajeObjetoTransferido:
+        porcentajeTransferido === null
+          ? null
+          : Number(porcentajeTransferido.toFixed(2)),
+    },
     tiemposMs: {
-      descarga: Math.round(descargaFin - inicio),
-      lectura: Math.round(fin - descargaFin),
+      preparacion: Math.round(preparacionFin - inicio),
+      lectura: Math.round(fin - preparacionFin),
       total: Math.round(fin - inicio),
     },
   };

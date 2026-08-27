@@ -81,3 +81,58 @@ export async function descargarObjetoR2(key) {
   const bytes = await response.Body.transformToByteArray();
   return Buffer.from(bytes);
 }
+
+export async function crearAsyncBufferR2(key) {
+  const metadata = await obtenerMetadataObjetoR2(key);
+  const byteLength = Number(metadata.bytes);
+
+  if (!Number.isFinite(byteLength) || byteLength < 0) {
+    throw new Error(`No se pudo determinar el tamaño del objeto R2: ${key}`);
+  }
+
+  const estadisticas = {
+    solicitudesRange: 0,
+    bytesTransferidos: 0,
+  };
+
+  const file = {
+    byteLength,
+    async slice(start, end = byteLength) {
+      const inicio = Math.max(0, Number(start));
+      const finExclusivo = Math.min(byteLength, Number(end));
+
+      if (finExclusivo <= inicio) {
+        return new ArrayBuffer(0);
+      }
+
+      const s3 = getR2Client();
+      const response = await s3.send(
+        new GetObjectCommand({
+          Bucket: env.r2Bucket,
+          Key: key,
+          Range: `bytes=${inicio}-${finExclusivo - 1}`,
+        }),
+      );
+
+      if (!response.Body) {
+        throw new Error(`R2 devolvió un rango sin contenido: ${key}`);
+      }
+
+      const bytes = await response.Body.transformToByteArray();
+      const buffer = Buffer.from(bytes);
+      estadisticas.solicitudesRange += 1;
+      estadisticas.bytesTransferidos += buffer.byteLength;
+
+      return buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength,
+      );
+    },
+  };
+
+  return {
+    file,
+    metadata,
+    obtenerEstadisticas: () => ({ ...estadisticas }),
+  };
+}
