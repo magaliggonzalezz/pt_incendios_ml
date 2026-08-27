@@ -5,6 +5,15 @@ export class MongoResultadosMunicipioRepository {
     return mongoose.connection.db;
   }
 
+  async obtenerDia({ fecha, cvegeo }) {
+    return await this.db
+      .collection("resultados_municipio_dia")
+      .findOne(
+        { cvegeo, fecha },
+        { projection: { _id: 0 } },
+      );
+  }
+
   async obtenerMes({ anio, mes, cveEnt, cvegeo }) {
     const query = { anio, mes };
 
