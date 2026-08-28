@@ -74,6 +74,12 @@ function normalizarCve(value, longitud) {
   return text.padStart(longitud, "0");
 }
 
+function valorJson(value) {
+  if (typeof value !== "bigint") return value ?? null;
+  const number = Number(value);
+  return Number.isSafeInteger(number) ? number : value.toString();
+}
+
 function parseBbox(value) {
   if (!value) return null;
   const parts = String(value).split(",").map(Number);
@@ -175,16 +181,16 @@ export async function obtenerFirmsMapa(params = {}) {
       geometry: { type: "Point", coordinates: [longitude, latitude] },
       properties: {
         fecha,
-        acq_time: row.acq_time ?? null,
-        satellite: row.satellite ?? null,
-        instrument: row.instrument ?? null,
-        confidence: row.confidence ?? null,
-        confidence_category: row.confidence_category ?? null,
-        brightness: row.brightness ?? null,
-        frp: row.frp ?? null,
-        daynight: row.daynight ?? null,
-        estado: row.estado ?? null,
-        municipio: row.municipio ?? null,
+        acq_time: valorJson(row.acq_time),
+        satellite: valorJson(row.satellite),
+        instrument: valorJson(row.instrument),
+        confidence: valorJson(row.confidence),
+        confidence_category: valorJson(row.confidence_category),
+        brightness: valorJson(row.brightness),
+        frp: valorJson(row.frp),
+        daynight: valorJson(row.daynight),
+        estado: valorJson(row.estado),
+        municipio: valorJson(row.municipio),
         cve_ent: normalizarCve(row.cve_ent, 2),
         cve_mun: normalizarCve(row.cve_mun, 3),
         cvegeo: normalizarCve(row.cvegeo, 5),
@@ -204,9 +210,9 @@ export async function obtenerFirmsMapa(params = {}) {
     registros: features.length,
     r2: {
       key,
-      bytes_objeto: metadata.bytes,
-      solicitudes_range: estadisticas.solicitudesRange,
-      bytes_transferidos: estadisticas.bytesTransferidos,
+      bytes_objeto: valorJson(metadata.bytes),
+      solicitudes_range: valorJson(estadisticas.solicitudesRange),
+      bytes_transferidos: valorJson(estadisticas.bytesTransferidos),
     },
   });
 }
@@ -242,21 +248,21 @@ export async function obtenerConaforMapa(params = {}) {
       type: "Feature",
       geometry: { type: "Point", coordinates: [longitude, latitude] },
       properties: {
-        clave_incendio: row.clave_incendio ?? null,
+        clave_incendio: valorJson(row.clave_incendio),
         fecha_inicio: fecha,
         fecha_termino: fechaIso(row.fecha_termino),
-        estado: row.estado ?? null,
-        municipio: row.municipio ?? null,
+        estado: valorJson(row.estado),
+        municipio: valorJson(row.municipio),
         cve_ent: normalizarCve(row.cve_ent, 2),
         cve_mun: normalizarCve(row.cve_mun, 3),
         cvegeo: normalizarCve(row.cvegeo, 5),
-        causa: row.causa ?? null,
-        causa_especifica: row.causa_especifica ?? null,
-        tipo_incendio: row.tipo_incendio ?? null,
-        tipo_impacto: row.tipo_impacto ?? null,
-        tipo_vegetacion: row.tipo_vegetacion ?? null,
-        superficie_total_ha: row.superficie_total_ha ?? null,
-        duracion: row.duracion ?? null,
+        causa: valorJson(row.causa),
+        causa_especifica: valorJson(row.causa_especifica),
+        tipo_incendio: valorJson(row.tipo_incendio),
+        tipo_impacto: valorJson(row.tipo_impacto),
+        tipo_vegetacion: valorJson(row.tipo_vegetacion),
+        superficie_total_ha: valorJson(row.superficie_total_ha),
+        duracion: valorJson(row.duracion),
       },
     });
   }
@@ -273,9 +279,9 @@ export async function obtenerConaforMapa(params = {}) {
     registros: features.length,
     r2: {
       key: CONAFOR_KEY,
-      bytes_objeto: metadata.bytes,
-      solicitudes_range: estadisticas.solicitudesRange,
-      bytes_transferidos: estadisticas.bytesTransferidos,
+      bytes_objeto: valorJson(metadata.bytes),
+      solicitudes_range: valorJson(estadisticas.solicitudesRange),
+      bytes_transferidos: valorJson(estadisticas.bytesTransferidos),
     },
   });
 }
