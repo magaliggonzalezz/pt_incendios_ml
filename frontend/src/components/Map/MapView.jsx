@@ -63,8 +63,7 @@ const SELECTED_TERRITORY_STYLE = {
   color: "#0F766E",
   weight: 3,
   opacity: 1,
-  fillColor: "#14B8A6",
-  fillOpacity: 0.04,
+  fillOpacity: 0,
 };
 
 const FIRMS_CONFIDENCE_COLORS = {
@@ -242,24 +241,24 @@ function firmsMarkerStyle(feature) {
 
 function conaforImpactColor(value) {
   const impact = String(value || "").toLowerCase();
-  if (impact.includes("alto") || impact.includes("severo") || impact.includes("extremo")) return "#991B1B";
+  if (impact.includes("alto") || impact.includes("severo") || impact.includes("extremo")) return "#7F1D1D";
   if (impact.includes("moderado")) return "#DC2626";
-  if (impact.includes("bajo")) return "#EA580C";
+  if (impact.includes("bajo")) return "#F97316";
   return "#B91C1C";
 }
 
-function conaforFireIcon(feature) {
+function conaforMarkerStyle(feature) {
   const props = feature?.properties || {};
   const superficie = Math.max(0, Number(props.superficie_total_ha) || 0);
-  const size = Math.round(Math.min(32, Math.max(20, 20 + Math.log10(superficie + 1) * 3)));
-  const color = conaforImpactColor(props.tipo_impacto);
-
-  return L.divIcon({
-    className: "conaforFireIcon",
-    html: `<div class="conaforFireMarker" style="--fire-size:${size}px;--fire-color:${color}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2.2c.4 2.8-.8 4.3-2 5.7-1.1 1.3-2.1 2.5-1.5 4.5.3-1.1 1-2 2-2.9.2 1.8 1.4 2.6 2.2 3.7.7.9 1.1 1.9.8 3.1 1.5-1 2.4-2.8 2.2-4.7 2.7 2 3.8 4.9 3.8 7.9 0 4.6-3.5 8.1-8 8.1s-8-3.5-8-8.1c0-3.4 1.9-6.1 4.5-8.9-.3 2.3.3 3.8 1.4 5 .2-3.7 2.1-5.6 3.9-7.5 1.5-1.6 2.8-3.1 2.8-5.7Z"/></svg></div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size],
-  });
+  const radius = Math.min(9, Math.max(4.5, 4.5 + Math.log10(superficie + 1) * 1.5));
+  return {
+    radius,
+    color: "#7F1D1D",
+    weight: 1.5,
+    fillColor: conaforImpactColor(props.tipo_impacto),
+    fillOpacity: 0.82,
+    opacity: 0.95,
+  };
 }
 
 function bindFirmsInfo(feature, layer) {
@@ -273,23 +272,29 @@ function bindFirmsInfo(feature, layer) {
     kind: "firms",
     tooltipRows: [
       ["Fecha", props.fecha],
-      ["Hora adquisición", props.acq_time],
+      ["Hora", props.acq_time],
+      ["Municipio", props.municipio],
       ["Confianza", confidenceLabel],
       ["FRP", formatMapValue(props.frp, { number: true })],
-      ["Satélite", props.satellite],
       ["Día / noche", dayNight],
     ],
     popupRows: propertyRows(
       { ...props, confianza_interpretada: confidenceLabel, periodo_dia: dayNight },
       [
         ["Fecha", "fecha"],
-        ["Hora adquisición", "acq_time"],
+        ["Hora de adquisición", "acq_time"],
         ["Estado", "estado"],
         ["Municipio", "municipio"],
+        ["Confianza", "confianza_interpretada"],
+        ["FRP", "frp", { number: true }],
+        ["Día / noche", "periodo_dia"],
         ["Satélite", "satellite"],
         ["Instrumento", "instrument"],
-        ["Confianza", "confianza_interpretada"],
-        ["Día / noche", "periodo_dia"],
+        ["Brillo", "brightness", { number: true }],
+        ["Tipo", "type"],
+        ["Scan", "scan", { number: true }],
+        ["Track", "track", { number: true }],
+        ["Versión", "version"],
       ],
     ).slice(0, 40),
   });
@@ -301,24 +306,31 @@ function bindConaforInfo(feature, layer) {
     title: "Incendio CONAFOR",
     kind: "conafor",
     tooltipRows: [
-      ["Clave", props.clave_incendio],
       ["Inicio", props.fecha_inicio],
       ["Municipio", props.municipio],
-      ["Causa", props.causa],
-      ["Impacto", props.tipo_impacto],
       ["Superficie (ha)", formatMapValue(props.superficie_total_ha, { number: true })],
+      ["Impacto", props.tipo_impacto],
+      ["Tipo", props.tipo_incendio],
+      ["Causa", props.causa],
     ],
     popupRows: propertyRows(props, [
-      ["Clave", "clave_incendio"],
       ["Inicio", "fecha_inicio"],
       ["Término", "fecha_termino"],
       ["Estado", "estado"],
       ["Municipio", "municipio"],
+      ["Clave", "clave_incendio"],
+      ["Superficie total (ha)", "superficie_total_ha", { number: true }],
+      ["Tipo de impacto", "tipo_impacto"],
+      ["Tipo de incendio", "tipo_incendio"],
       ["Causa", "causa"],
       ["Causa específica", "causa_especifica"],
-      ["Tipo de incendio", "tipo_incendio"],
-      ["Tipo de impacto", "tipo_impacto"],
       ["Vegetación", "tipo_vegetacion"],
+      ["Régimen de fuego", "regimen_fuego"],
+      ["Región", "region"],
+      ["Predio", "predio"],
+      ["Duración", "duracion"],
+      ["Detección", "deteccion"],
+      ["Llegada", "llegada"],
     ]).slice(0, 40),
   });
 }
@@ -371,7 +383,6 @@ function stationCoversPeriod(feature, scope) {
       (!Number.isFinite(endYear) || targetYear <= endYear);
   }
 
-  // Si la capa no trae metadatos temporales, no se excluye la estación por inferencia
   return true;
 }
 
@@ -478,6 +489,10 @@ export default function MapView({
   const cveEntCapas = normalizeGeoKey(overlayScope?.cveEnt, 2);
   const cvegeoSeleccionado = normalizeGeoKey(overlayScope?.cvegeo, 5);
 
+  const setOverlay = (key, data) => {
+    setOverlays((prev) => ({ ...prev, [key]: data || EMPTY_FEATURE_COLLECTION }));
+  };
+
   useEffect(() => {
     let active = true;
     obtenerGeometriasEstados()
@@ -494,12 +509,8 @@ export default function MapView({
 
   useEffect(() => {
     let active = true;
-    if (!cveEntCapas) {
-      setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
-      return () => {
-        active = false;
-      };
-    }
+    setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
+    if (!cveEntCapas) return () => { active = false; };
 
     obtenerGeometriasMunicipios(cveEntCapas)
       .then((data) => {
@@ -516,119 +527,135 @@ export default function MapView({
 
   useEffect(() => {
     let active = true;
-    const setLayer = (key, data) => {
-      if (!active) return;
-      setOverlays((prev) => ({ ...prev, [key]: data || EMPTY_FEATURE_COLLECTION }));
+    setOverlay("smn", EMPTY_FEATURE_COLLECTION);
+    if (!capasActivas.estacionesSmn) return () => { active = false; };
+
+    obtenerEstacionesSmn()
+      .then((data) => {
+        if (active) setOverlay("smn", data);
+      })
+      .catch((error) => {
+        if (active) setLayerError(`SMN: ${error.message}`);
+      });
+
+    return () => {
+      active = false;
     };
-    const clearLayer = (key) => setLayer(key, EMPTY_FEATURE_COLLECTION);
+  }, [capasActivas.estacionesSmn]);
 
-    const load = async () => {
-      setLayerError(null);
-      const tasks = [];
+  useEffect(() => {
+    let active = true;
+    setOverlay("fisiografia", EMPTY_FEATURE_COLLECTION);
+    setOverlay("hidrografia", EMPTY_FEATURE_COLLECTION);
+    if (!cveEntCapas) return () => { active = false; };
 
-      if (capasActivas.estacionesSmn) {
-        tasks.push(
-          obtenerEstacionesSmn()
-            .then((data) => setLayer("smn", data))
-            .catch((error) => {
-              throw new Error(`SMN: ${error.message}`);
-            }),
-        );
-      } else clearLayer("smn");
+    const tasks = [];
+    if (capasActivas.fisiografiaInegi) {
+      tasks.push(
+        obtenerCapaTematica("fisiografia", cveEntCapas).then((data) => {
+          if (active) setOverlay("fisiografia", data);
+        }),
+      );
+    }
+    if (capasActivas.corrientesAguaInegi) {
+      tasks.push(
+        obtenerCapaTematica("hidrografia", cveEntCapas).then((data) => {
+          if (active) setOverlay("hidrografia", data);
+        }),
+      );
+    }
 
-      if (cveEntCapas && capasActivas.fisiografiaInegi) {
-        tasks.push(
-          obtenerCapaTematica("fisiografia", cveEntCapas)
-            .then((data) => setLayer("fisiografia", data))
-            .catch((error) => {
-              throw new Error(`Fisiografía: ${error.message}`);
-            }),
-        );
-      } else clearLayer("fisiografia");
-
-      if (cveEntCapas && capasActivas.corrientesAguaInegi) {
-        tasks.push(
-          obtenerCapaTematica("hidrografia", cveEntCapas)
-            .then((data) => setLayer("hidrografia", data))
-            .catch((error) => {
-              throw new Error(`Hidrografía: ${error.message}`);
-            }),
-        );
-      } else clearLayer("hidrografia");
-
-      if (cveEntCapas && viewportBbox && capasActivas.edafologiaInegi) {
-        tasks.push(
-          obtenerCapaTematicaViewport("edafologia", cveEntCapas, viewportBbox)
-            .then((data) => setLayer("edafologia", data))
-            .catch((error) => {
-              throw new Error(`Edafología: ${error.message}`);
-            }),
-        );
-      } else clearLayer("edafologia");
-
-      if (cveEntCapas && viewportBbox && capasActivas.usoSueloVegetacionInegi) {
-        tasks.push(
-          obtenerCapaTematicaViewport("uso_suelo_vegetacion", cveEntCapas, viewportBbox)
-            .then((data) => setLayer("usoSueloVegetacion", data))
-            .catch((error) => {
-              throw new Error(`Uso de suelo/vegetación: ${error.message}`);
-            }),
-        );
-      } else clearLayer("usoSueloVegetacion");
-
-      const puntosParams = overlayScope?.anio
-        ? {
-            anio: overlayScope.anio,
-            mes: overlayScope.tipoPeriodo === "anio_mes" ? overlayScope.mes : undefined,
-            cve_ent: overlayScope.cveEnt || undefined,
-            cvegeo: overlayScope.cvegeo || undefined,
-            bbox: viewportBbox || undefined,
-          }
-        : null;
-
-      if (puntosParams && capasActivas.puntosCalorFirms) {
-        tasks.push(
-          obtenerPuntosFirms(puntosParams)
-            .then((data) => setLayer("firms", data))
-            .catch((error) => {
-              throw new Error(`FIRMS: ${error.message}`);
-            }),
-        );
-      } else clearLayer("firms");
-
-      if (puntosParams && capasActivas.incendiosConafor) {
-        tasks.push(
-          obtenerIncendiosConafor(puntosParams)
-            .then((data) => setLayer("conafor", data))
-            .catch((error) => {
-              throw new Error(`CONAFOR: ${error.message}`);
-            }),
-        );
-      } else clearLayer("conafor");
-
-      const results = await Promise.allSettled(tasks);
+    Promise.allSettled(tasks).then((results) => {
       if (!active) return;
-      const errors = results
-        .filter((result) => result.status === "rejected")
-        .map((result) => result.reason?.message)
-        .filter(Boolean);
-      if (errors.length) setLayerError(errors.join(" | "));
-    };
+      const errors = results.filter((result) => result.status === "rejected");
+      if (errors.length) setLayerError(errors.map((result) => result.reason?.message).filter(Boolean).join(" | "));
+    });
 
-    load();
+    return () => {
+      active = false;
+    };
+  }, [cveEntCapas, capasActivas.fisiografiaInegi, capasActivas.corrientesAguaInegi]);
+
+  useEffect(() => {
+    let active = true;
+    setOverlay("edafologia", EMPTY_FEATURE_COLLECTION);
+    setOverlay("usoSueloVegetacion", EMPTY_FEATURE_COLLECTION);
+    if (!cveEntCapas || !viewportBbox) return () => { active = false; };
+
+    const tasks = [];
+    if (capasActivas.edafologiaInegi) {
+      tasks.push(
+        obtenerCapaTematicaViewport("edafologia", cveEntCapas, viewportBbox).then((data) => {
+          if (active) setOverlay("edafologia", data);
+        }),
+      );
+    }
+    if (capasActivas.usoSueloVegetacionInegi) {
+      tasks.push(
+        obtenerCapaTematicaViewport("uso_suelo_vegetacion", cveEntCapas, viewportBbox).then((data) => {
+          if (active) setOverlay("usoSueloVegetacion", data);
+        }),
+      );
+    }
+
+    Promise.allSettled(tasks).then((results) => {
+      if (!active) return;
+      const errors = results.filter((result) => result.status === "rejected");
+      if (errors.length) setLayerError(errors.map((result) => result.reason?.message).filter(Boolean).join(" | "));
+    });
+
     return () => {
       active = false;
     };
   }, [
-    capasActivas.estacionesSmn,
-    capasActivas.fisiografiaInegi,
-    capasActivas.corrientesAguaInegi,
-    capasActivas.edafologiaInegi,
-    capasActivas.usoSueloVegetacionInegi,
-    capasActivas.puntosCalorFirms,
-    capasActivas.incendiosConafor,
     cveEntCapas,
     viewportBbox,
+    capasActivas.edafologiaInegi,
+    capasActivas.usoSueloVegetacionInegi,
+  ]);
+
+  useEffect(() => {
+    let active = true;
+    setOverlay("firms", EMPTY_FEATURE_COLLECTION);
+    setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
+
+    if (!overlayScope?.anio) return () => { active = false; };
+
+    const puntosParams = {
+      anio: overlayScope.anio,
+      mes: overlayScope.tipoPeriodo === "anio_mes" ? overlayScope.mes : undefined,
+      cve_ent: overlayScope.cveEnt || undefined,
+      cvegeo: overlayScope.cvegeo || undefined,
+    };
+
+    const tasks = [];
+    if (capasActivas.puntosCalorFirms) {
+      tasks.push(
+        obtenerPuntosFirms(puntosParams).then((data) => {
+          if (active) setOverlay("firms", data);
+        }),
+      );
+    }
+    if (capasActivas.incendiosConafor) {
+      tasks.push(
+        obtenerIncendiosConafor(puntosParams).then((data) => {
+          if (active) setOverlay("conafor", data);
+        }),
+      );
+    }
+
+    Promise.allSettled(tasks).then((results) => {
+      if (!active) return;
+      const errors = results.filter((result) => result.status === "rejected");
+      if (errors.length) setLayerError(errors.map((result) => result.reason?.message).filter(Boolean).join(" | "));
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [
+    capasActivas.puntosCalorFirms,
+    capasActivas.incendiosConafor,
     overlayScope?.anio,
     overlayScope?.mes,
     overlayScope?.tipoPeriodo,
@@ -777,6 +804,7 @@ export default function MapView({
         className="leafletMap"
         zoomControl={false}
         keyboard={true}
+        preferCanvas={true}
       >
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
         <MapViewportTracker onChange={setViewportBbox} />
@@ -908,16 +936,16 @@ export default function MapView({
 
         {overlays.conafor?.features?.length ? (
           <GeoJSON
-            key={`conafor-${fitKey}-${viewportBbox}`}
+            key={`conafor-${fitKey}`}
             data={overlays.conafor}
-            pointToLayer={(feature, latlng) => L.marker(latlng, { icon: conaforFireIcon(feature) })}
+            pointToLayer={(feature, latlng) => L.circleMarker(latlng, conaforMarkerStyle(feature))}
             onEachFeature={bindConaforInfo}
           />
         ) : null}
 
         {overlays.firms?.features?.length ? (
           <GeoJSON
-            key={`firms-${fitKey}-${viewportBbox}`}
+            key={`firms-${fitKey}`}
             data={overlays.firms}
             pointToLayer={(feature, latlng) => L.circleMarker(latlng, firmsMarkerStyle(feature))}
             onEachFeature={bindFirmsInfo}
