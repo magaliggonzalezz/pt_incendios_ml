@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { GeoJSON, MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import MapControls from "./MapControls";
@@ -19,6 +19,7 @@ import "./MapView.css";
 
 const DEFAULT_VIEW = { center: [23.6345, -102.5528], zoom: 5 };
 const EMPTY_FEATURE_COLLECTION = { type: "FeatureCollection", features: [] };
+const VIEWPORT_DEBOUNCE_MS = 400;
 
 const BASE_LAYERS = {
   esri: {
@@ -121,6 +122,10 @@ function filterFeatureCollection(collection, predicate) {
 function bboxToString(bounds) {
   if (!bounds?.isValid?.()) return "";
   return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()].join(",");
+}
+
+function isAbortError(error) {
+  return error?.name === "AbortError" || /aborted|abort/i.test(String(error?.message || ""));
 }
 
 function escapeHtml(value) {
@@ -387,17 +392,35 @@ function stationCoversPeriod(feature, scope) {
 }
 
 function MapViewportTracker({ onChange }) {
+  const timerRef = useRef(null);
+  const lastBboxRef = useRef("");
+
   const map = useMapEvents({
     moveend() {
-      onChange(bboxToString(map.getBounds()));
+      scheduleViewportUpdate();
     },
     zoomend() {
-      onChange(bboxToString(map.getBounds()));
+      scheduleViewportUpdate();
     },
   });
 
+  const emitViewport = () => {
+    const bbox = bboxToString(map.getBounds());
+    if (!bbox || bbox === lastBboxRef.current) return;
+    lastBboxRef.current = bbox;
+    onChange(bbox);
+  };
+
+  const scheduleViewportUpdate = () => {
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(emitViewport, VIEWPORT_DEBOUNCE_MS);
+  };
+
   useEffect(() => {
-    onChange(bboxToString(map.getBounds()));
+    emitViewport();
+    return () => {
+      if (timerRef.current) window.clearTimeout(timerRef.current);
+    };
   }, [map, onChange]);
 
   return null;
@@ -527,15 +550,17 @@ export default function MapView({
 
   useEffect(() => {
     let active = true;
-    setOverlay("smn", EMPTY_FEATURE_COLLECTION);
-    if (!capasActivas.estacionesSmn) return () => { active = false; };
+    if (!capasActivas.estacionesSmn) {
+      setOverlay("smn", EMPTY_FEATURE_COLLECTION);
+      return () => { active = false; };
+    }
 
     obtenerEstacionesSmn()
       .then((data) => {
         if (active) setOverlay("smn", data);
       })
       .catch((error) => {
-        if (active) setLayerError(`SMN: ${error.message}`);
+        if (active && !isAbortError(error)) setLayerError(`SMN: ${error.message}`);
       });
 
     return () => {
@@ -545,67 +570,101 @@ export default function MapView({
 
   useEffect(() => {
     let active = true;
-    setOverlay("fisiografia", EMPTY_FEATURE_COLLECTION);
-    setOverlay("hidrografia", EMPTY_FEATURE_COLLECTION);
-    if (!cveEntCapas) return () => { active = false; };
+    const controller = new AbortController();
+
+    if (!cveEntCapas) {
+      setOverlay("fisiografia", EMPTY_FEATURE_COLLECTION);
+      setOverlay("hidrografia", EMPTY_FEATURE_COLLECTION);
+      return () => {
+        active = false;
+        controller.abort();
+      };
+    }
 
     const tasks = [];
     if (capasActivas.fisiografiaInegi) {
       tasks.push(
-        obtenerCapaTematica("fisiografia", cveEntCapas).then((data) => {
+        obtenerCapaTematica("fisiografia", cveEntCapas, { signal: controller.signal }).then((data) => {
           if (active) setOverlay("fisiografia", data);
         }),
       );
+    } else {
+      setOverlay("fisiografia", EMPTY_FEATURE_COLLECTION);
     }
+
     if (capasActivas.corrientesAguaInegi) {
       tasks.push(
-        obtenerCapaTematica("hidrografia", cveEntCapas).then((data) => {
+        obtenerCapaTematica("hidrografia", cveEntCapas, { signal: controller.signal }).then((data) => {
           if (active) setOverlay("hidrografia", data);
         }),
       );
+    } else {
+      setOverlay("hidrografia", EMPTY_FEATURE_COLLECTION);
     }
 
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
-      const errors = results.filter((result) => result.status === "rejected");
-      if (errors.length) setLayerError(errors.map((result) => result.reason?.message).filter(Boolean).join(" | "));
+      const errors = results
+        .filter((result) => result.status === "rejected" && !isAbortError(result.reason))
+        .map((result) => result.reason?.message)
+        .filter(Boolean);
+      if (errors.length) setLayerError(errors.join(" | "));
     });
 
     return () => {
       active = false;
+      controller.abort();
     };
   }, [cveEntCapas, capasActivas.fisiografiaInegi, capasActivas.corrientesAguaInegi]);
 
   useEffect(() => {
     let active = true;
-    setOverlay("edafologia", EMPTY_FEATURE_COLLECTION);
-    setOverlay("usoSueloVegetacion", EMPTY_FEATURE_COLLECTION);
-    if (!cveEntCapas || !viewportBbox) return () => { active = false; };
+    const controller = new AbortController();
+
+    if (!cveEntCapas || !viewportBbox) {
+      setOverlay("edafologia", EMPTY_FEATURE_COLLECTION);
+      setOverlay("usoSueloVegetacion", EMPTY_FEATURE_COLLECTION);
+      return () => {
+        active = false;
+        controller.abort();
+      };
+    }
 
     const tasks = [];
     if (capasActivas.edafologiaInegi) {
       tasks.push(
-        obtenerCapaTematicaViewport("edafologia", cveEntCapas, viewportBbox).then((data) => {
-          if (active) setOverlay("edafologia", data);
-        }),
+        obtenerCapaTematicaViewport("edafologia", cveEntCapas, viewportBbox, { signal: controller.signal })
+          .then((data) => {
+            if (active) setOverlay("edafologia", data);
+          }),
       );
+    } else {
+      setOverlay("edafologia", EMPTY_FEATURE_COLLECTION);
     }
+
     if (capasActivas.usoSueloVegetacionInegi) {
       tasks.push(
-        obtenerCapaTematicaViewport("uso_suelo_vegetacion", cveEntCapas, viewportBbox).then((data) => {
-          if (active) setOverlay("usoSueloVegetacion", data);
-        }),
+        obtenerCapaTematicaViewport("uso_suelo_vegetacion", cveEntCapas, viewportBbox, { signal: controller.signal })
+          .then((data) => {
+            if (active) setOverlay("usoSueloVegetacion", data);
+          }),
       );
+    } else {
+      setOverlay("usoSueloVegetacion", EMPTY_FEATURE_COLLECTION);
     }
 
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
-      const errors = results.filter((result) => result.status === "rejected");
-      if (errors.length) setLayerError(errors.map((result) => result.reason?.message).filter(Boolean).join(" | "));
+      const errors = results
+        .filter((result) => result.status === "rejected" && !isAbortError(result.reason))
+        .map((result) => result.reason?.message)
+        .filter(Boolean);
+      if (errors.length) setLayerError(errors.join(" | "));
     });
 
     return () => {
       active = false;
+      controller.abort();
     };
   }, [
     cveEntCapas,
@@ -616,46 +675,63 @@ export default function MapView({
 
   useEffect(() => {
     let active = true;
-    setOverlay("firms", EMPTY_FEATURE_COLLECTION);
-    setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
+    const controller = new AbortController();
 
-    if (!overlayScope?.anio) return () => { active = false; };
+    if (!overlayScope?.anio || !viewportBbox) {
+      setOverlay("firms", EMPTY_FEATURE_COLLECTION);
+      setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
+      return () => {
+        active = false;
+        controller.abort();
+      };
+    }
 
     const puntosParams = {
       anio: overlayScope.anio,
       mes: overlayScope.tipoPeriodo === "anio_mes" ? overlayScope.mes : undefined,
       cve_ent: overlayScope.cveEnt || undefined,
       cvegeo: overlayScope.cvegeo || undefined,
+      bbox: viewportBbox,
     };
 
     const tasks = [];
     if (capasActivas.puntosCalorFirms) {
       tasks.push(
-        obtenerPuntosFirms(puntosParams).then((data) => {
+        obtenerPuntosFirms(puntosParams, { signal: controller.signal }).then((data) => {
           if (active) setOverlay("firms", data);
         }),
       );
+    } else {
+      setOverlay("firms", EMPTY_FEATURE_COLLECTION);
     }
+
     if (capasActivas.incendiosConafor) {
       tasks.push(
-        obtenerIncendiosConafor(puntosParams).then((data) => {
+        obtenerIncendiosConafor(puntosParams, { signal: controller.signal }).then((data) => {
           if (active) setOverlay("conafor", data);
         }),
       );
+    } else {
+      setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
     }
 
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
-      const errors = results.filter((result) => result.status === "rejected");
-      if (errors.length) setLayerError(errors.map((result) => result.reason?.message).filter(Boolean).join(" | "));
+      const errors = results
+        .filter((result) => result.status === "rejected" && !isAbortError(result.reason))
+        .map((result) => result.reason?.message)
+        .filter(Boolean);
+      if (errors.length) setLayerError(errors.join(" | "));
     });
 
     return () => {
       active = false;
+      controller.abort();
     };
   }, [
     capasActivas.puntosCalorFirms,
     capasActivas.incendiosConafor,
+    viewportBbox,
     overlayScope?.anio,
     overlayScope?.mes,
     overlayScope?.tipoPeriodo,
@@ -936,7 +1012,7 @@ export default function MapView({
 
         {overlays.conafor?.features?.length ? (
           <GeoJSON
-            key={`conafor-${fitKey}`}
+            key={`conafor-${fitKey}-${viewportBbox}`}
             data={overlays.conafor}
             pointToLayer={(feature, latlng) => L.circleMarker(latlng, conaforMarkerStyle(feature))}
             onEachFeature={bindConaforInfo}
@@ -945,7 +1021,7 @@ export default function MapView({
 
         {overlays.firms?.features?.length ? (
           <GeoJSON
-            key={`firms-${fitKey}`}
+            key={`firms-${fitKey}-${viewportBbox}`}
             data={overlays.firms}
             pointToLayer={(feature, latlng) => L.circleMarker(latlng, firmsMarkerStyle(feature))}
             onEachFeature={bindFirmsInfo}
