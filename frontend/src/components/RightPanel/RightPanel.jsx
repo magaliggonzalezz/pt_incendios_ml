@@ -46,11 +46,20 @@ const normalizeMlResult = (resumen) => {
   };
 };
 
+function buildPeriodoLabel(consulta) {
+  if (!consulta?.anio) return "Sin período";
+  if (consulta.tipoPeriodo === "anio_mes" && consulta.mes) {
+    return `${consulta.anio}-${String(consulta.mes).padStart(2, "0")}`;
+  }
+  return String(consulta.anio);
+}
+
 export default function RightPanel({
   open,
   onToggle,
   consultaEjecutada = false,
   consultaActiva = null,
+  consultaResultado = null,
   resumenConsulta = null,
   totalRecords = 0,
   availableFormats = ["csv", "json"],
@@ -64,7 +73,9 @@ export default function RightPanel({
   const [openCharts, setOpenCharts] = useState(false);
   const hasResults = Boolean(consultaEjecutada && resumenConsulta);
   const resumen = resumenConsulta ?? fallbackResumen;
-  const territorio = resumenConsulta?.territorio || consultaActiva?.municipio || consultaActiva?.estado || "México";
+  const territorio = consultaActiva?.municipio || consultaActiva?.estado || resumenConsulta?.territorio || "México";
+  const periodoActivo = buildPeriodoLabel(consultaActiva);
+  const nivelActivo = getNivelUiLabel(consultaActiva?.nivelAgregacion);
   const mlResult = normalizeMlResult(resumenConsulta);
 
   return (
@@ -89,34 +100,34 @@ export default function RightPanel({
           </div>
 
           <div className="kpiBody">
+            <div className="metaGrid">
+              <div className="metaBox">
+                <span className="metaIcon metaIconPeriod" aria-hidden="true">
+                  <CalendarDays size={15} />
+                </span>
+                <div>
+                  <span>Período</span>
+                  <strong>{hasResults ? (resumen.periodo || periodoActivo) : periodoActivo}</strong>
+                </div>
+              </div>
+
+              <div className="metaBox">
+                <span className="metaIcon metaIconLevel" aria-hidden="true">
+                  <Layers3 size={15} />
+                </span>
+                <div>
+                  <span>Nivel de análisis</span>
+                  <strong>{hasResults ? getNivelUiLabel(resumen.nivelAgregacion) : nivelActivo}</strong>
+                </div>
+              </div>
+            </div>
+
             {!hasResults ? (
               <div className="emptyState">
-                Selecciona filtros y ejecuta una consulta para visualizar resultados.
+                Filtros listos. Ejecuta la consulta para calcular y visualizar los resultados ML.
               </div>
             ) : (
               <>
-                <div className="metaGrid">
-                  <div className="metaBox">
-                    <span className="metaIcon metaIconPeriod" aria-hidden="true">
-                      <CalendarDays size={15} />
-                    </span>
-                    <div>
-                      <span>Período</span>
-                      <strong>{resumen.periodo || "Sin período"}</strong>
-                    </div>
-                  </div>
-
-                  <div className="metaBox">
-                    <span className="metaIcon metaIconLevel" aria-hidden="true">
-                      <Layers3 size={15} />
-                    </span>
-                    <div>
-                      <span>Nivel de análisis</span>
-                      <strong>{getNivelUiLabel(resumen.nivelAgregacion)}</strong>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="kpiBox">
                   <div className="kpiTopRow">
                     <span className="kpiIcon" aria-hidden="true">
@@ -168,7 +179,7 @@ export default function RightPanel({
       <ExportModal
         open={openExport}
         onClose={() => setOpenExport(false)}
-        consultaActiva={consultaActiva}
+        consultaActiva={consultaResultado}
         resumenConsulta={resumenConsulta}
         totalRecords={totalRecords}
         availableFormats={availableFormats}
