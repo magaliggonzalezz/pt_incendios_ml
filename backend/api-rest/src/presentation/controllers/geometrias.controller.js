@@ -49,6 +49,7 @@ export class GeometriasController {
         req.params.capa,
         req.query.cve_ent,
         req.query.bbox,
+        req.query.cvegeo,
       );
       res.json(data);
     } catch (error) {
