@@ -45,6 +45,12 @@ const THEMATIC_STYLES = {
   uso_suelo_vegetacion: { color: "#15803D", weight: 0.7, fillColor: "#22C55E", fillOpacity: 0.16 },
 };
 
+const FIRMS_CONFIDENCE_COLORS = {
+  low: "#FACC15",
+  nominal: "#F97316",
+  high: "#DC2626",
+};
+
 function normalizeGeoKey(value, length) {
   if (value === undefined || value === null || value === "") return "";
   return String(value).trim().padStart(length, "0");
@@ -70,6 +76,104 @@ function bboxToString(bounds) {
     bounds.getEast(),
     bounds.getNorth(),
   ].join(",");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function formatMapValue(value, options = {}) {
+  if (value === undefined || value === null || value === "") return null;
+  if (options.number) {
+    const number = Number(value);
+    if (Number.isFinite(number)) {
+      return number.toLocaleString("es-MX", {
+        maximumFractionDigits: options.maximumFractionDigits ?? 2,
+      });
+    }
+  }
+  return String(value);
+}
+
+function infoRowsHtml(rows) {
+  return rows
+    .map(([label, value, options]) => [label, formatMapValue(value, options)])
+    .filter(([, value]) => value !== null)
+    .map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`)
+    .join("");
+}
+
+function bindRichInfo(layer, { title, kind, tooltipRows, popupRows }) {
+  const tooltipBody = infoRowsHtml(tooltipRows);
+  if (tooltipBody) {
+    layer.bindTooltip(
+      `<div class="mapFeatureTooltipInner"><div class="mapFeatureTooltipTitle"><span></span>${escapeHtml(title)}</div><dl>${tooltipBody}</dl></div>`,
+      { sticky: true, direction: "top", className: `mapFeatureTooltip mapFeaturePopup-${kind}` },
+    );
+  }
+
+  const popupBody = infoRowsHtml(popupRows);
+  if (popupBody) {
+    layer.bindPopup(
+      `<div class="mapFeaturePopupScroll"><div class="mapFeatureTooltipTitle"><span></span>${escapeHtml(title)}</div><dl>${popupBody}</dl></div>`,
+      { className: `mapFeaturePopup mapFeaturePopup-${kind}`, maxWidth: 320 },
+    );
+  }
+}
+
+function firmsConfidenceCategory(props) {
+  const category = String(props?.confidence_category || "").toLowerCase();
+  if (FIRMS_CONFIDENCE_COLORS[category]) return category;
+
+  const confidence = Number(props?.confidence);
+  if (!Number.isFinite(confidence)) return "nominal";
+  if (confidence >= 80) return "high";
+  if (confidence >= 30) return "nominal";
+  return "low";
+}
+
+function firmsMarkerStyle(feature) {
+  const props = feature?.properties || {};
+  const category = firmsConfidenceCategory(props);
+  const frp = Math.max(0, Number(props.frp) || 0);
+  const radius = Math.min(8, Math.max(3.5, 3.5 + Math.log10(frp + 1) * 1.8));
+  const isNight = String(props.daynight || "").toUpperCase() === "N";
+
+  return {
+    radius,
+    color: isNight ? "#111827" : "#FFF7ED",
+    weight: isNight ? 1.8 : 1.4,
+    fillColor: FIRMS_CONFIDENCE_COLORS[category],
+    fillOpacity: 0.88,
+    opacity: 0.95,
+  };
+}
+
+function conaforImpactColor(value) {
+  const impact = String(value || "").toLowerCase();
+  if (impact.includes("alto") || impact.includes("severo") || impact.includes("extremo")) return "#991B1B";
+  if (impact.includes("moderado")) return "#DC2626";
+  if (impact.includes("bajo")) return "#EA580C";
+  return "#B91C1C";
+}
+
+function conaforFireIcon(feature) {
+  const props = feature?.properties || {};
+  const superficie = Math.max(0, Number(props.superficie_total_ha) || 0);
+  const size = Math.round(Math.min(32, Math.max(20, 20 + Math.log10(superficie + 1) * 3)));
+  const color = conaforImpactColor(props.tipo_impacto);
+
+  return L.divIcon({
+    className: "conaforFireIcon",
+    html: `<div class="conaforFireMarker" style="--fire-size:${size}px;--fire-color:${color}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2.2c.4 2.8-.8 4.3-2 5.7-1.1 1.3-2.1 2.5-1.5 4.5.3-1.1 1-2 2-2.9.2 1.8 1.4 2.6 2.2 3.7.7.9 1.1 1.9.8 3.1 1.5-1 2.4-2.8 2.2-4.7 2.7 2 3.8 4.9 3.8 7.9 0 4.6-3.5 8.1-8 8.1s-8-3.5-8-8.1c0-3.4 1.9-6.1 4.5-8.9-.3 2.3.3 3.8 1.4 5 .2-3.7 2.1-5.6 3.9-7.5 1.5-1.6 2.8-3.1 2.8-5.7Z"/></svg></div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+  });
 }
 
 function MapViewportTracker({ onChange }) {
@@ -151,11 +255,96 @@ function bindSimpleTooltip(feature, layer, fields) {
   const lines = fields
     .map(([label, key]) => [label, props[key]])
     .filter(([, value]) => value !== undefined && value !== null && value !== "")
-    .map(([label, value]) => `<strong>${label}:</strong> ${value}`);
+    .map(([label, value]) => `<strong>${escapeHtml(label)}:</strong> ${escapeHtml(value)}`);
 
   if (lines.length) {
     layer.bindTooltip(lines.join("<br/>"), { sticky: true, direction: "top" });
   }
+}
+
+function bindFirmsInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const category = firmsConfidenceCategory(props);
+  const confidenceLabel = {
+    low: "Baja",
+    nominal: "Nominal",
+    high: "Alta",
+  }[category];
+  const dayNight = String(props.daynight || "").toUpperCase() === "N" ? "Noche" : "Día";
+
+  bindRichInfo(layer, {
+    title: "Detección FIRMS",
+    kind: "firms",
+    tooltipRows: [
+      ["Fecha", props.fecha],
+      ["Hora adquisición", props.acq_time],
+      ["Confianza", confidenceLabel],
+      ["FRP", props.frp, { number: true }],
+      ["Satélite", props.satellite],
+      ["Día / noche", dayNight],
+    ],
+    popupRows: [
+      ["Fecha", props.fecha],
+      ["Hora adquisición", props.acq_time],
+      ["Estado", props.estado],
+      ["Municipio", props.municipio],
+      ["CVEGEO", props.cvegeo],
+      ["Satélite", props.satellite],
+      ["Instrumento", props.instrument],
+      ["Confianza", confidenceLabel],
+      ["Valor confianza", props.confidence, { number: true }],
+      ["Brillo", props.brightness, { number: true }],
+      ["FRP", props.frp, { number: true }],
+      ["Día / noche", dayNight],
+      ["Tipo", props.type],
+      ["Scan", props.scan, { number: true }],
+      ["Track", props.track, { number: true }],
+      ["Versión", props.version],
+    ],
+  });
+}
+
+function bindConaforInfo(feature, layer) {
+  const props = feature?.properties || {};
+
+  bindRichInfo(layer, {
+    title: "Incendio CONAFOR",
+    kind: "conafor",
+    tooltipRows: [
+      ["Clave", props.clave_incendio],
+      ["Inicio", props.fecha_inicio],
+      ["Municipio", props.municipio],
+      ["Causa", props.causa],
+      ["Impacto", props.tipo_impacto],
+      ["Superficie (ha)", props.superficie_total_ha, { number: true }],
+    ],
+    popupRows: [
+      ["Clave", props.clave_incendio],
+      ["Inicio", props.fecha_inicio],
+      ["Término", props.fecha_termino],
+      ["Estado", props.estado],
+      ["Municipio", props.municipio],
+      ["CVEGEO", props.cvegeo],
+      ["Región", props.region],
+      ["Predio", props.predio],
+      ["Causa", props.causa],
+      ["Causa específica", props.causa_especifica],
+      ["Tipo de incendio", props.tipo_incendio],
+      ["Tipo de impacto", props.tipo_impacto],
+      ["Vegetación", props.tipo_vegetacion],
+      ["Régimen de fuego", props.regimen_fuego],
+      ["Superficie total (ha)", props.superficie_total_ha, { number: true }],
+      ["Categoría superficie", props.superficie_categoria],
+      ["Arbolado adulto", props.arbolado_adulto, { number: true }],
+      ["Arbustivo", props.arbustivo, { number: true }],
+      ["Herbáceo", props.herbaceo, { number: true }],
+      ["Hojarasca", props.hojarasca, { number: true }],
+      ["Renuevo", props.renuevo, { number: true }],
+      ["Duración", props.duracion],
+      ["Detección", props.deteccion],
+      ["Llegada", props.llegada],
+    ],
+  });
 }
 
 export default function MapView({
@@ -440,13 +629,13 @@ export default function MapView({
     const name = feature?.properties?.nomgeo || feature?.properties?.nom_ent || feature?.properties?.nom_mun || row?.nombre_municipio || row?.nombre_entidad || key;
 
     layer.bindTooltip(
-      `<strong>${name}</strong>${row ? `<br/>Cluster: ${row.cluster}<br/>Observaciones: ${row.observaciones}` : "<br/>Sin resultado para la consulta"}`,
+      `<strong>${escapeHtml(name)}</strong>${row ? `<br/>Cluster: ${escapeHtml(row.cluster)}<br/>Observaciones: ${escapeHtml(row.observaciones)}` : "<br/>Sin resultado para la consulta"}`,
       { sticky: true, direction: "top" }
     );
 
     if (row) {
       layer.bindPopup(
-        `<strong>${name}</strong><br/>Clave: ${key}<br/>Cluster: ${row.cluster}<br/>Observaciones: ${row.observaciones}<br/>FIRMS: ${row.firms_detecciones || 0}<br/>CONAFOR: ${row.conafor_eventos || 0}<br/>Hectáreas: ${Number(row.conafor_ha || 0).toLocaleString("es-MX", { maximumFractionDigits: 2 })}`
+        `<strong>${escapeHtml(name)}</strong><br/>Clave: ${escapeHtml(key)}<br/>Cluster: ${escapeHtml(row.cluster)}<br/>Observaciones: ${escapeHtml(row.observaciones)}<br/>FIRMS: ${escapeHtml(row.firms_detecciones || 0)}<br/>CONAFOR: ${escapeHtml(row.conafor_eventos || 0)}<br/>Hectáreas: ${escapeHtml(Number(row.conafor_ha || 0).toLocaleString("es-MX", { maximumFractionDigits: 2 }))}`
       );
     }
   };
@@ -542,14 +731,8 @@ export default function MapView({
           <GeoJSON
             key={`conafor-${fitKey}-${viewportBbox}`}
             data={overlays.conafor}
-            pointToLayer={(_, latlng) => L.circleMarker(latlng, {
-              radius: 5,
-              color: "#7F1D1D",
-              weight: 1,
-              fillColor: "#DC2626",
-              fillOpacity: 0.85,
-            })}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Incendio", "clave_incendio"], ["Inicio", "fecha_inicio"], ["Causa", "causa"], ["Superficie ha", "superficie_total_ha"]])}
+            pointToLayer={(feature, latlng) => L.marker(latlng, { icon: conaforFireIcon(feature) })}
+            onEachFeature={bindConaforInfo}
           />
         ) : null}
 
@@ -557,14 +740,8 @@ export default function MapView({
           <GeoJSON
             key={`firms-${fitKey}-${viewportBbox}`}
             data={overlays.firms}
-            pointToLayer={(_, latlng) => L.circleMarker(latlng, {
-              radius: 4,
-              color: "#9A3412",
-              weight: 1,
-              fillColor: "#F97316",
-              fillOpacity: 0.8,
-            })}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Fecha", "fecha"], ["FRP", "frp"], ["Confianza", "confidence_category"], ["Satélite", "satellite"]])}
+            pointToLayer={(feature, latlng) => L.circleMarker(latlng, firmsMarkerStyle(feature))}
+            onEachFeature={bindFirmsInfo}
           />
         ) : null}
 
