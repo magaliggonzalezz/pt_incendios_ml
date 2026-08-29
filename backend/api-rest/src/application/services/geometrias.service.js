@@ -1,4 +1,3 @@
-import * as turf from "@turf/turf";
 import { descargarObjetoR2 } from "../../data/storage/r2.js";
 
 const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
@@ -273,10 +272,11 @@ function getCvegeo(feature) {
   return String(value).trim().padStart(5, "0");
 }
 
-async function obtenerMunicipioFeature(cveEnt, cvegeo) {
+async function obtenerBboxMunicipio(cveEnt, cvegeo) {
   if (!cvegeo) return null;
   const municipios = await obtenerGeoJsonR2(municipiosKey(cveEnt));
-  return municipios.features.find((item) => getCvegeo(item) === cvegeo) || null;
+  const feature = municipios.features.find((item) => getCvegeo(item) === cvegeo);
+  return feature ? geometryBbox(feature.geometry) : null;
 }
 
 function bboxCacheKey(bbox) {
@@ -298,91 +298,6 @@ function thematicTolerance(capa, bbox) {
   else if (span >= 0.5) factor = 1.15;
 
   return Number((base * factor).toFixed(6));
-}
-
-function recortarPoligono(feature, mascara) {
-  try {
-    const clipped = turf.intersect(turf.featureCollection([feature, mascara]));
-    if (!clipped) return null;
-    return {
-      ...clipped,
-      properties: { ...(feature.properties || {}) },
-    };
-  } catch {
-    return null;
-  }
-}
-
-function recortarLineaSimple(coordinates, properties, mascara) {
-  if (!Array.isArray(coordinates) || coordinates.length < 2) return [];
-
-  const line = turf.lineString(coordinates, properties || {});
-  let segments;
-  try {
-    segments = turf.lineSplit(line, mascara)?.features || [];
-  } catch {
-    segments = [line];
-  }
-
-  return segments.filter((segment) => {
-    try {
-      const midpoint = turf.along(segment, turf.length(segment, { units: "kilometers" }) / 2, {
-        units: "kilometers",
-      });
-      return turf.booleanPointInPolygon(midpoint, mascara, { ignoreBoundary: false });
-    } catch {
-      return false;
-    }
-  });
-}
-
-function recortarLinea(feature, mascara) {
-  const geometry = feature?.geometry;
-  if (!geometry) return null;
-
-  const lineas = geometry.type === "LineString"
-    ? [geometry.coordinates]
-    : geometry.type === "MultiLineString"
-      ? geometry.coordinates
-      : [];
-
-  const segmentos = lineas.flatMap((coordinates) =>
-    recortarLineaSimple(coordinates, feature.properties, mascara),
-  );
-
-  if (!segmentos.length) return null;
-  if (segmentos.length === 1) {
-    return {
-      ...segmentos[0],
-      properties: { ...(feature.properties || {}) },
-    };
-  }
-
-  return turf.multiLineString(
-    segmentos.map((segment) => segment.geometry.coordinates),
-    { ...(feature.properties || {}) },
-  );
-}
-
-function recortarFeature(feature, mascara) {
-  const type = feature?.geometry?.type;
-  if (type === "Polygon" || type === "MultiPolygon") return recortarPoligono(feature, mascara);
-  if (type === "LineString" || type === "MultiLineString") return recortarLinea(feature, mascara);
-  if (type === "Point") {
-    try {
-      return turf.booleanPointInPolygon(feature, mascara, { ignoreBoundary: false }) ? feature : null;
-    } catch {
-      return null;
-    }
-  }
-  return null;
-}
-
-function recortarFeaturesPorMunicipio(features, municipioFeature) {
-  if (!municipioFeature) return features;
-  return features
-    .map((feature) => recortarFeature(feature, municipioFeature))
-    .filter(Boolean);
 }
 
 export async function obtenerGeometriasEstados({ completo = false } = {}) {
@@ -425,15 +340,8 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
   validarCveEnt(cveEnt);
   const cvegeo = validarCvegeo(cvegeoRaw);
   const viewportBbox = parseBbox(bboxRaw);
-  const municipioFeature = await obtenerMunicipioFeature(cveEnt, cvegeo);
-  const municipioBbox = municipioFeature ? geometryBbox(municipioFeature.geometry) : null;
+  const municipioBbox = await obtenerBboxMunicipio(cveEnt, cvegeo);
   const effectiveBbox = municipioBbox ? bboxIntersection(viewportBbox, municipioBbox) : viewportBbox;
-
-  if (cvegeo && !municipioFeature) {
-    const error = new Error(`No se encontró la geometría del municipio ${cvegeo}`);
-    error.statusCode = 404;
-    throw error;
-  }
 
   if (!effectiveBbox) {
     return {
@@ -444,8 +352,7 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
   }
 
   const tolerance = thematicTolerance(capa, effectiveBbox);
-  const clipMode = municipioFeature ? "municipio-exacto" : "bbox";
-  const cacheKey = `viewport:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}:${tolerance}:${clipMode}`;
+  const cacheKey = `viewport:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}:${tolerance}`;
   const cached = cacheGet(responseCache, cacheKey);
   if (cached) return cached;
 
@@ -483,8 +390,7 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
     features = data.features.filter((feature) => featureIntersectsBbox(feature, effectiveBbox));
   }
 
-  const clippedFeatures = recortarFeaturesPorMunicipio(features, municipioFeature);
-  const simplifiedFeatures = simplifyFeatures(clippedFeatures, tolerance);
+  const simplifiedFeatures = simplifyFeatures(features, tolerance);
 
   return cacheSet(responseCache, cacheKey, {
     type: "FeatureCollection",
@@ -495,8 +401,6 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
       cvegeo,
       bbox: viewportBbox,
       bbox_efectivo: effectiveBbox,
-      recorte: clipMode,
-      features_antes_recorte: features.length,
       features: simplifiedFeatures.length,
       tolerancia_web_grados: tolerance,
       ...metadata,
