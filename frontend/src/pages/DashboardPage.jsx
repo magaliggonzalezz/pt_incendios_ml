@@ -287,6 +287,7 @@ export default function DashboardPage() {
         totalRecords={resumenConsulta?.totalRecords ?? 0}
         availableFormats={["csv", "json"]}
         isExporting={false}
+        isLoading={isLoading}
         error={error}
         onPreviewExport={handlePreviewExport}
         onDownloadExport={handleDownloadExport}
