@@ -283,9 +283,21 @@ function bboxCacheKey(bbox) {
   return bbox.map((value) => Number(value).toFixed(4)).join(",");
 }
 
-function thematicTolerance(capa, cvegeo) {
+function thematicTolerance(capa, bbox) {
   const base = THEMATIC_SIMPLIFY_TOLERANCE[capa] || 0;
-  return cvegeo ? base * 0.5 : base;
+  if (!base || !bbox) return base;
+
+  const width = Math.abs(bbox[2] - bbox[0]);
+  const height = Math.abs(bbox[3] - bbox[1]);
+  const span = Math.max(width, height);
+
+  let factor = 0.75;
+  if (span >= 4) factor = 3;
+  else if (span >= 2) factor = 2.25;
+  else if (span >= 1) factor = 1.5;
+  else if (span >= 0.5) factor = 1.15;
+
+  return Number((base * factor).toFixed(6));
 }
 
 export async function obtenerGeometriasEstados({ completo = false } = {}) {
@@ -339,7 +351,7 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
     };
   }
 
-  const tolerance = thematicTolerance(capa, cvegeo);
+  const tolerance = thematicTolerance(capa, effectiveBbox);
   const cacheKey = `viewport:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}:${tolerance}`;
   const cached = cacheGet(responseCache, cacheKey);
   if (cached) return cached;
