@@ -1,4 +1,5 @@
 import * as turf from "@turf/turf";
+import polygonClipping from "polygon-clipping";
 import { descargarObjetoR2 } from "../../data/storage/r2.js";
 
 const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
@@ -299,21 +300,31 @@ function thematicTolerance(capa, bbox) {
   return Number((base * factor).toFixed(6));
 }
 
-function limpiarFeature(feature) {
-  try {
-    return turf.rewind(turf.cleanCoords(feature), { reverse: false });
-  } catch {
-    return feature;
-  }
+function polygonInput(geometry) {
+  if (!geometry?.coordinates) return null;
+  if (geometry.type === "Polygon") return geometry.coordinates;
+  if (geometry.type === "MultiPolygon") return geometry.coordinates;
+  return null;
 }
 
-function repararPoligono(feature) {
-  const limpio = limpiarFeature(feature);
+function polygonResultFeature(result, properties) {
+  if (!Array.isArray(result) || result.length === 0) return null;
+  const geometry = result.length === 1
+    ? { type: "Polygon", coordinates: result[0] }
+    : { type: "MultiPolygon", coordinates: result };
+  return { type: "Feature", properties: { ...(properties || {}) }, geometry };
+}
+
+function recortarPoligono(feature, mascara) {
+  const subject = polygonInput(feature?.geometry);
+  const clip = polygonInput(mascara?.geometry);
+  if (!subject || !clip) return null;
+
   try {
-    const reparado = turf.buffer(limpio, 0, { units: "meters" });
-    return reparado || limpio;
+    const result = polygonClipping.intersection(subject, clip);
+    return polygonResultFeature(result, feature.properties);
   } catch {
-    return limpio;
+    return null;
   }
 }
 
@@ -330,53 +341,6 @@ function obtenerFronterasMascara(mascara) {
   return fronteras;
 }
 
-function recortarPoligono(feature, mascara) {
-  const limpio = limpiarFeature(feature);
-
-  try {
-    if (turf.booleanWithin(limpio, mascara)) return limpio;
-    if (turf.booleanDisjoint(limpio, mascara)) return null;
-  } catch {
-    // Se intenta la intersección aunque las pruebas topológicas fallen
-  }
-
-  const candidatos = [limpio, repararPoligono(limpio)];
-  for (const candidato of candidatos) {
-    try {
-      const clipped = turf.intersect(turf.featureCollection([candidato, mascara]));
-      if (!clipped) return null;
-      return {
-        ...clipped,
-        properties: { ...(feature.properties || {}) },
-      };
-    } catch {
-      // Se intenta con el siguiente candidato reparado
-    }
-  }
-
-  return null;
-}
-
-function dividirLineaPorFronteras(line, fronteras) {
-  let segmentos = [line];
-
-  fronteras.forEach((frontera) => {
-    const siguientes = [];
-    segmentos.forEach((segmento) => {
-      try {
-        const partes = turf.lineSplit(segmento, frontera)?.features || [];
-        if (partes.length) siguientes.push(...partes);
-        else siguientes.push(segmento);
-      } catch {
-        siguientes.push(segmento);
-      }
-    });
-    segmentos = siguientes;
-  });
-
-  return segmentos;
-}
-
 function segmentoDentroMascara(segmento, mascara) {
   try {
     const longitudKm = turf.length(segmento, { units: "kilometers" });
@@ -388,32 +352,42 @@ function segmentoDentroMascara(segmento, mascara) {
   }
 }
 
+function recortarLineaSimple(coordinates, properties, mascara, fronteras) {
+  if (!Array.isArray(coordinates) || coordinates.length < 2) return [];
+  let segmentos = [turf.lineString(coordinates, { ...(properties || {}) })];
+
+  fronteras.forEach((frontera) => {
+    const siguientes = [];
+    segmentos.forEach((segmento) => {
+      try {
+        const partes = turf.lineSplit(segmento, frontera)?.features || [];
+        siguientes.push(...(partes.length ? partes : [segmento]));
+      } catch {
+        siguientes.push(segmento);
+      }
+    });
+    segmentos = siguientes;
+  });
+
+  return segmentos.filter((segmento) => segmentoDentroMascara(segmento, mascara));
+}
+
 function recortarLinea(feature, mascara, fronteras) {
   const geometry = feature?.geometry;
   if (!geometry) return null;
-
   const lineas = geometry.type === "LineString"
     ? [geometry.coordinates]
     : geometry.type === "MultiLineString"
       ? geometry.coordinates
       : [];
 
-  const segmentos = lineas.flatMap((coordinates) => {
-    if (!Array.isArray(coordinates) || coordinates.length < 2) return [];
-    const line = turf.lineString(coordinates, { ...(feature.properties || {}) });
-    return dividirLineaPorFronteras(line, fronteras).filter((segmento) =>
-      segmentoDentroMascara(segmento, mascara),
-    );
-  });
-
+  const segmentos = lineas.flatMap((coordinates) =>
+    recortarLineaSimple(coordinates, feature.properties, mascara, fronteras),
+  );
   if (!segmentos.length) return null;
   if (segmentos.length === 1) {
-    return {
-      ...segmentos[0],
-      properties: { ...(feature.properties || {}) },
-    };
+    return { ...segmentos[0], properties: { ...(feature.properties || {}) } };
   }
-
   return turf.multiLineString(
     segmentos.map((segmento) => segmento.geometry.coordinates),
     { ...(feature.properties || {}) },
@@ -422,12 +396,8 @@ function recortarLinea(feature, mascara, fronteras) {
 
 function recortarFeature(feature, mascara, fronteras) {
   const type = feature?.geometry?.type;
-  if (type === "Polygon" || type === "MultiPolygon") {
-    return recortarPoligono(feature, mascara);
-  }
-  if (type === "LineString" || type === "MultiLineString") {
-    return recortarLinea(feature, mascara, fronteras);
-  }
+  if (type === "Polygon" || type === "MultiPolygon") return recortarPoligono(feature, mascara);
+  if (type === "LineString" || type === "MultiLineString") return recortarLinea(feature, mascara, fronteras);
   if (type === "Point") {
     try {
       return turf.booleanPointInPolygon(feature, mascara, { ignoreBoundary: false }) ? feature : null;
@@ -487,17 +457,22 @@ async function obtenerCapaMunicipioRecortada(capa, cveEnt, municipioFeature) {
   }
 
   const tolerance = thematicTolerance(capa, municipioBbox);
-  const cacheKey = `municipio-clip:${capa}:${cveEnt}:${cvegeo}:${tolerance}`;
+  const cacheKey = `municipio-clip-v2:${capa}:${cveEnt}:${cvegeo}:${tolerance}`;
   const cached = cacheGet(municipioClipCache, cacheKey);
   if (cached) return cached;
 
-  const mascara = repararPoligono(municipioFeature);
-  const fronteras = obtenerFronterasMascara(mascara);
   const source = await cargarFeaturesMunicipio(capa, cveEnt, municipioBbox);
   const simplificadas = simplifyFeatures(source.features, tolerance);
+  const fronteras = obtenerFronterasMascara(municipioFeature);
   const recortadas = simplificadas
-    .map((feature) => recortarFeature(feature, mascara, fronteras))
+    .map((feature) => recortarFeature(feature, municipioFeature, fronteras))
     .filter(Boolean);
+
+  if (source.features.length > 0 && recortadas.length === 0) {
+    const error = new Error(`El recorte municipal de ${capa} no produjo geometrías válidas para ${cvegeo}`);
+    error.statusCode = 502;
+    throw error;
+  }
 
   return cacheSet(municipioClipCache, cacheKey, {
     type: "FeatureCollection",
@@ -508,7 +483,7 @@ async function obtenerCapaMunicipioRecortada(capa, cveEnt, municipioFeature) {
       cve_ent: cveEnt,
       cvegeo,
       bbox_municipio: municipioBbox,
-      recorte: "municipio-exacto-cache",
+      recorte: "municipio-exacto-cache-v2",
       features_antes_recorte: source.features.length,
       features_recortadas: recortadas.length,
       tolerancia_web_grados: tolerance,
@@ -577,12 +552,12 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
           cvegeo,
           bbox: viewportBbox,
           bbox_efectivo: null,
-          recorte: "municipio-exacto-cache",
+          recorte: "municipio-exacto-cache-v2",
         },
       };
     }
 
-    const cacheKey = `viewport-municipio:${capa}:${cveEnt}:${cvegeo}:${bboxCacheKey(effectiveBbox)}`;
+    const cacheKey = `viewport-municipio-v2:${capa}:${cveEnt}:${cvegeo}:${bboxCacheKey(effectiveBbox)}`;
     const cached = cacheGet(responseCache, cacheKey);
     if (cached) return cached;
 
