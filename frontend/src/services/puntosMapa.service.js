@@ -10,12 +10,12 @@ function buildQuery(params = {}) {
   return search.toString();
 }
 
-export function obtenerPuntosFirms(params = {}) {
+export function obtenerPuntosFirms(params = {}, options = {}) {
   const query = buildQuery(params);
-  return apiFetch(`/api/puntos-mapa/firms${query ? `?${query}` : ""}`);
+  return apiFetch(`/api/puntos-mapa/firms${query ? `?${query}` : ""}`, options);
 }
 
-export function obtenerIncendiosConafor(params = {}) {
+export function obtenerIncendiosConafor(params = {}, options = {}) {
   const query = buildQuery(params);
-  return apiFetch(`/api/puntos-mapa/conafor${query ? `?${query}` : ""}`);
+  return apiFetch(`/api/puntos-mapa/conafor${query ? `?${query}` : ""}`, options);
 }
