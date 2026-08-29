@@ -4,7 +4,6 @@ import { GeoJSON, MapContainer, TileLayer, useMap, useMapEvents } from "react-le
 import MapControls from "./MapControls";
 import MapLegend from "./MapLegend";
 import {
-  obtenerCapaTematica,
   obtenerCapaTematicaViewport,
   obtenerEstacionesSmn,
   obtenerGeometriasEstados,
@@ -133,7 +132,7 @@ function escapeHtml(value) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
+    .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
 
@@ -571,87 +570,41 @@ export default function MapView({
   useEffect(() => {
     let active = true;
     const controller = new AbortController();
-
-    if (!cveEntCapas) {
-      setOverlay("fisiografia", EMPTY_FEATURE_COLLECTION);
-      setOverlay("hidrografia", EMPTY_FEATURE_COLLECTION);
-      return () => {
-        active = false;
-        controller.abort();
-      };
-    }
-
-    const tasks = [];
-    if (capasActivas.fisiografiaInegi) {
-      tasks.push(
-        obtenerCapaTematica("fisiografia", cveEntCapas, { signal: controller.signal }).then((data) => {
-          if (active) setOverlay("fisiografia", data);
-        }),
-      );
-    } else {
-      setOverlay("fisiografia", EMPTY_FEATURE_COLLECTION);
-    }
-
-    if (capasActivas.corrientesAguaInegi) {
-      tasks.push(
-        obtenerCapaTematica("hidrografia", cveEntCapas, { signal: controller.signal }).then((data) => {
-          if (active) setOverlay("hidrografia", data);
-        }),
-      );
-    } else {
-      setOverlay("hidrografia", EMPTY_FEATURE_COLLECTION);
-    }
-
-    Promise.allSettled(tasks).then((results) => {
-      if (!active) return;
-      const errors = results
-        .filter((result) => result.status === "rejected" && !isAbortError(result.reason))
-        .map((result) => result.reason?.message)
-        .filter(Boolean);
-      if (errors.length) setLayerError(errors.join(" | "));
-    });
-
-    return () => {
-      active = false;
-      controller.abort();
-    };
-  }, [cveEntCapas, capasActivas.fisiografiaInegi, capasActivas.corrientesAguaInegi]);
-
-  useEffect(() => {
-    let active = true;
-    const controller = new AbortController();
+    const overlayKeys = ["fisiografia", "hidrografia", "edafologia", "usoSueloVegetacion"];
 
     if (!cveEntCapas || !viewportBbox) {
-      setOverlay("edafologia", EMPTY_FEATURE_COLLECTION);
-      setOverlay("usoSueloVegetacion", EMPTY_FEATURE_COLLECTION);
+      overlayKeys.forEach((key) => setOverlay(key, EMPTY_FEATURE_COLLECTION));
       return () => {
         active = false;
         controller.abort();
       };
     }
 
+    const cvegeo = cvegeoSeleccionado || "";
     const tasks = [];
-    if (capasActivas.edafologiaInegi) {
-      tasks.push(
-        obtenerCapaTematicaViewport("edafologia", cveEntCapas, viewportBbox, { signal: controller.signal })
-          .then((data) => {
-            if (active) setOverlay("edafologia", data);
-          }),
-      );
-    } else {
-      setOverlay("edafologia", EMPTY_FEATURE_COLLECTION);
-    }
+    const addTask = (enabled, capa, overlayKey) => {
+      if (!enabled) {
+        setOverlay(overlayKey, EMPTY_FEATURE_COLLECTION);
+        return;
+      }
 
-    if (capasActivas.usoSueloVegetacionInegi) {
       tasks.push(
-        obtenerCapaTematicaViewport("uso_suelo_vegetacion", cveEntCapas, viewportBbox, { signal: controller.signal })
-          .then((data) => {
-            if (active) setOverlay("usoSueloVegetacion", data);
-          }),
+        obtenerCapaTematicaViewport(
+          capa,
+          cveEntCapas,
+          viewportBbox,
+          cvegeo,
+          { signal: controller.signal },
+        ).then((data) => {
+          if (active) setOverlay(overlayKey, data);
+        }),
       );
-    } else {
-      setOverlay("usoSueloVegetacion", EMPTY_FEATURE_COLLECTION);
-    }
+    };
+
+    addTask(capasActivas.fisiografiaInegi, "fisiografia", "fisiografia");
+    addTask(capasActivas.corrientesAguaInegi, "hidrografia", "hidrografia");
+    addTask(capasActivas.edafologiaInegi, "edafologia", "edafologia");
+    addTask(capasActivas.usoSueloVegetacionInegi, "uso_suelo_vegetacion", "usoSueloVegetacion");
 
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
@@ -668,7 +621,10 @@ export default function MapView({
     };
   }, [
     cveEntCapas,
+    cvegeoSeleccionado,
     viewportBbox,
+    capasActivas.fisiografiaInegi,
+    capasActivas.corrientesAguaInegi,
     capasActivas.edafologiaInegi,
     capasActivas.usoSueloVegetacionInegi,
   ]);
@@ -861,6 +817,7 @@ export default function MapView({
   };
 
   const fitKey = `${overlayScope?.nivelAgregacion || "entidad"}-${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}`;
+  const thematicKey = `${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}-${viewportBbox}`;
   const renderKey = `${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${rows.length}-${selectedMlCluster ?? "all"}`;
 
   return (
@@ -933,7 +890,7 @@ export default function MapView({
 
         {overlays.fisiografia?.features?.length ? (
           <GeoJSON
-            key={`fisiografia-${cveEntCapas}`}
+            key={`fisiografia-${thematicKey}`}
             data={overlays.fisiografia}
             style={() => THEMATIC_STYLES.fisiografia}
             onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
@@ -946,7 +903,7 @@ export default function MapView({
 
         {overlays.hidrografia?.features?.length ? (
           <GeoJSON
-            key={`hidrografia-${cveEntCapas}`}
+            key={`hidrografia-${thematicKey}`}
             data={overlays.hidrografia}
             style={() => THEMATIC_STYLES.hidrografia}
             onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
@@ -959,7 +916,7 @@ export default function MapView({
 
         {overlays.edafologia?.features?.length ? (
           <GeoJSON
-            key={`edafologia-${cveEntCapas}-${viewportBbox}`}
+            key={`edafologia-${thematicKey}`}
             data={overlays.edafologia}
             style={() => THEMATIC_STYLES.edafologia}
             onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
@@ -972,7 +929,7 @@ export default function MapView({
 
         {overlays.usoSueloVegetacion?.features?.length ? (
           <GeoJSON
-            key={`usv-${cveEntCapas}-${viewportBbox}`}
+            key={`usv-${thematicKey}`}
             data={overlays.usoSueloVegetacion}
             style={() => THEMATIC_STYLES.uso_suelo_vegetacion}
             onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
