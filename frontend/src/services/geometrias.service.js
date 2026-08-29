@@ -21,10 +21,15 @@ export function obtenerCapaTematica(capa, cveEnt, options = {}) {
   );
 }
 
-export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeo = "", options = {}) {
+export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeoOrOptions = "", options = {}) {
   if (!capa || !cveEnt || !bbox) {
     return Promise.resolve({ type: "FeatureCollection", features: [], metadata: null });
   }
+
+  const cvegeo = typeof cvegeoOrOptions === "string" ? cvegeoOrOptions : "";
+  const fetchOptions = typeof cvegeoOrOptions === "object" && cvegeoOrOptions !== null
+    ? cvegeoOrOptions
+    : options;
 
   const search = new URLSearchParams({
     cve_ent: String(cveEnt),
@@ -34,6 +39,6 @@ export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeo = "", opt
 
   return apiFetch(
     `/api/geometrias/tematicas/${encodeURIComponent(capa)}/viewport?${search.toString()}`,
-    options,
+    fetchOptions,
   );
 }
