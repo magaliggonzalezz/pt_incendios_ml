@@ -29,7 +29,13 @@ app.use("/api/puntos-mapa", puntosMapaRoutes);
 app.use("/api/recursos", recursosRoutes);
 
 async function startServer() {
-  await connectMongo();
+  try {
+    await connectMongo();
+  } catch (error) {
+    console.warn(
+      "MongoDB Atlas no está disponible. La API continuará activa para rutas que no dependen de MongoDB.",
+    );
+  }
 
   app.listen(env.port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${env.port}`);
