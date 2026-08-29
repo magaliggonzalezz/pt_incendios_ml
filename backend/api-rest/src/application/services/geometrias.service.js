@@ -4,6 +4,12 @@ const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
 const SMN_KEY = "capas_web/smn/smn_estaciones.geojson";
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const STATE_SIMPLIFY_TOLERANCE = 0.005;
+const THEMATIC_SIMPLIFY_TOLERANCE = {
+  fisiografia: 0.0015,
+  hidrografia: 0.00075,
+  edafologia: 0.001,
+  uso_suelo_vegetacion: 0.001,
+};
 const CAPAS_TEMATICAS = new Set([
   "fisiografia",
   "edafologia",
@@ -251,6 +257,14 @@ function simplifyFeatureCollection(data, tolerance) {
   };
 }
 
+function simplifyFeatures(features, tolerance) {
+  if (!tolerance) return features;
+  return features.map((feature) => ({
+    ...feature,
+    geometry: simplifyGeometry(feature.geometry, tolerance),
+  }));
+}
+
 function getCvegeo(feature) {
   const props = feature?.properties || {};
   const value = props.cvegeo ?? props.CVEGEO ?? props.cve_geo ?? props.CVE_GEO;
@@ -267,6 +281,11 @@ async function obtenerBboxMunicipio(cveEnt, cvegeo) {
 
 function bboxCacheKey(bbox) {
   return bbox.map((value) => Number(value).toFixed(4)).join(",");
+}
+
+function thematicTolerance(capa, cvegeo) {
+  const base = THEMATIC_SIMPLIFY_TOLERANCE[capa] || 0;
+  return cvegeo ? base * 0.5 : base;
 }
 
 export async function obtenerGeometriasEstados({ completo = false } = {}) {
@@ -320,7 +339,8 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
     };
   }
 
-  const cacheKey = `viewport:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}`;
+  const tolerance = thematicTolerance(capa, cvegeo);
+  const cacheKey = `viewport:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}:${tolerance}`;
   const cached = cacheGet(responseCache, cacheKey);
   if (cached) return cached;
 
@@ -350,7 +370,7 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
     metadata = {
       tiles_usados: tiles.map((tile) => tile.id),
       cantidad_tiles: tiles.length,
-      tolerancia_m: manifest.tolerancia_m,
+      tolerancia_origen_m: manifest.tolerancia_m,
       tile_grados: manifest.tile_grados,
     };
   } else {
@@ -358,16 +378,19 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
     features = data.features.filter((feature) => featureIntersectsBbox(feature, effectiveBbox));
   }
 
+  const simplifiedFeatures = simplifyFeatures(features, tolerance);
+
   return cacheSet(responseCache, cacheKey, {
     type: "FeatureCollection",
-    features,
+    features: simplifiedFeatures,
     metadata: {
       capa,
       cve_ent: cveEnt,
       cvegeo,
       bbox: viewportBbox,
       bbox_efectivo: effectiveBbox,
-      features: features.length,
+      features: simplifiedFeatures.length,
+      tolerancia_web_grados: tolerance,
       ...metadata,
     },
   });
