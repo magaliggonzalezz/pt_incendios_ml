@@ -112,7 +112,19 @@ export default function DashboardPage() {
     };
   }, [consultaActiva.cveEnt]);
 
+  const invalidateExecutedQuery = () => {
+    setConsultaEjecutada(false);
+    setUltimaConsultaEjecutada(null);
+    setResumenConsulta(null);
+    setSelectedMlCluster(null);
+  };
+
   const handleConsultaChange = (campo, valor) => {
+    const changesOnlyVisualization = campo === "capasActivas" || campo === "filtrosSmn";
+    if (!changesOnlyVisualization && consultaEjecutada) {
+      invalidateExecutedQuery();
+    }
+
     setConsultaActiva((prev) => {
       if (campo === "capasActivas") {
         const { capa, activo } = valor;
@@ -147,10 +159,7 @@ export default function DashboardPage() {
 
   const handleResetConsulta = () => {
     setConsultaActiva(getConsultaInicial());
-    setConsultaEjecutada(false);
-    setUltimaConsultaEjecutada(null);
-    setResumenConsulta(null);
-    setSelectedMlCluster(null);
+    invalidateExecutedQuery();
     setError(null);
   };
 
@@ -196,9 +205,7 @@ export default function DashboardPage() {
       setConsultaEjecutada(true);
       setSelectedMlCluster(null);
     } catch (err) {
-      setResumenConsulta(null);
-      setUltimaConsultaEjecutada(null);
-      setConsultaEjecutada(false);
+      invalidateExecutedQuery();
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -274,7 +281,8 @@ export default function DashboardPage() {
         open={rightOpen}
         onToggle={() => setRightOpen((v) => !v)}
         consultaEjecutada={consultaEjecutada}
-        consultaActiva={ultimaConsultaEjecutada}
+        consultaActiva={consultaActiva}
+        consultaResultado={ultimaConsultaEjecutada}
         resumenConsulta={resumenConsulta}
         totalRecords={resumenConsulta?.totalRecords ?? 0}
         availableFormats={["csv", "json"]}
