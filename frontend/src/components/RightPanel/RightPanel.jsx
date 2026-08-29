@@ -59,10 +59,8 @@ function buildTerritorioLabel(consulta, resumen) {
   const municipio = consulta?.municipio || resumen?.municipio || "";
   const nivel = consulta?.nivelAgregacion || resumen?.nivelAgregacion;
 
-  if (nivel === "municipio") {
-    if (estado && municipio) return `${estado} · ${municipio}`;
-    if (estado) return `${estado} · Todos los municipios`;
-    return municipio || "México";
+  if (nivel === "municipio" && municipio) {
+    return estado ? `${estado} · ${municipio}` : municipio;
   }
 
   return estado || resumen?.territorio || "México";
@@ -78,6 +76,7 @@ export default function RightPanel({
   totalRecords = 0,
   availableFormats = ["csv", "json"],
   isExporting = false,
+  isLoading = false,
   error = null,
   onPreviewExport,
   onDownloadExport,
@@ -136,7 +135,9 @@ export default function RightPanel({
               </div>
             </div>
 
-            {error ? (
+            {isLoading ? (
+              <div className="emptyState">Consultando resultados...</div>
+            ) : error ? (
               <div className="emptyState">No fue posible ejecutar la consulta: {error}</div>
             ) : !hasResults ? (
               <div className="emptyState">
@@ -180,11 +181,11 @@ export default function RightPanel({
           </div>
 
           <div className="kpiActions">
-            <button type="button" className="primaryBtn" onClick={() => setOpenCharts(true)} disabled={!hasResults}>
+            <button type="button" className="primaryBtn" onClick={() => setOpenCharts(true)} disabled={!hasResults || isLoading}>
               <BarChart3 size={18} />
               Ver resultados
             </button>
-            <button type="button" className="secondaryBtn" onClick={() => setOpenExport(true)} disabled={!hasResults}>
+            <button type="button" className="secondaryBtn" onClick={() => setOpenExport(true)} disabled={!hasResults || isLoading}>
               <Download size={18} />
               Exportar datos
             </button>
