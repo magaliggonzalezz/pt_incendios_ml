@@ -186,9 +186,10 @@ export default function MapView({
   const activeLayer = BASE_LAYERS[baseLayerId];
   const rows = resumenConsulta?.rows ?? [];
   const mapScope = consultaEjecutada;
+  const overlayScope = mapScope || consultaActiva;
   const nivelMapa = mapScope?.nivelAgregacion || "entidad";
   const capasActivas = consultaActiva?.capasActivas || {};
-  const cveEntCapas = normalizeGeoKey(mapScope?.cveEnt || consultaActiva?.cveEnt, 2);
+  const cveEntCapas = normalizeGeoKey(overlayScope?.cveEnt, 2);
 
   useEffect(() => {
     let active = true;
@@ -299,12 +300,12 @@ export default function MapView({
         clearLayer("usoSueloVegetacion");
       }
 
-      const puntosParams = mapScope?.anio
+      const puntosParams = overlayScope?.anio
         ? {
-            anio: mapScope.anio,
-            mes: mapScope.tipoPeriodo === "anio_mes" ? mapScope.mes : undefined,
-            cve_ent: mapScope.cveEnt || undefined,
-            cvegeo: mapScope.cvegeo || undefined,
+            anio: overlayScope.anio,
+            mes: overlayScope.tipoPeriodo === "anio_mes" ? overlayScope.mes : undefined,
+            cve_ent: overlayScope.cveEnt || undefined,
+            cvegeo: overlayScope.cvegeo || undefined,
             bbox: viewportBbox || undefined,
           }
         : null;
@@ -356,11 +357,11 @@ export default function MapView({
     capasActivas.incendiosConafor,
     cveEntCapas,
     viewportBbox,
-    mapScope?.anio,
-    mapScope?.mes,
-    mapScope?.tipoPeriodo,
-    mapScope?.cveEnt,
-    mapScope?.cvegeo,
+    overlayScope?.anio,
+    overlayScope?.mes,
+    overlayScope?.tipoPeriodo,
+    overlayScope?.cveEnt,
+    overlayScope?.cvegeo,
   ]);
 
   const rowByKey = useMemo(() => {
