@@ -21,13 +21,19 @@ export function obtenerCapaTematica(capa, cveEnt, options = {}) {
   );
 }
 
-export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, options = {}) {
+export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeo = "", options = {}) {
   if (!capa || !cveEnt || !bbox) {
     return Promise.resolve({ type: "FeatureCollection", features: [], metadata: null });
   }
 
+  const search = new URLSearchParams({
+    cve_ent: String(cveEnt),
+    bbox: String(bbox),
+  });
+  if (cvegeo) search.set("cvegeo", String(cvegeo));
+
   return apiFetch(
-    `/api/geometrias/tematicas/${encodeURIComponent(capa)}/viewport?cve_ent=${encodeURIComponent(cveEnt)}&bbox=${encodeURIComponent(bbox)}`,
+    `/api/geometrias/tematicas/${encodeURIComponent(capa)}/viewport?${search.toString()}`,
     options,
   );
 }
