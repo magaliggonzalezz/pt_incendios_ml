@@ -45,10 +45,56 @@ const THEMATIC_STYLES = {
   uso_suelo_vegetacion: { color: "#15803D", weight: 0.7, fillColor: "#22C55E", fillOpacity: 0.16 },
 };
 
+const STATE_BOUNDARY_STYLE = {
+  color: "#F8FAFC",
+  weight: 2,
+  opacity: 0.95,
+  fillOpacity: 0,
+};
+
+const MUNICIPAL_BOUNDARY_STYLE = {
+  color: "#CBD5E1",
+  weight: 1.1,
+  opacity: 0.9,
+  fillOpacity: 0,
+};
+
+const SELECTED_TERRITORY_STYLE = {
+  color: "#0F766E",
+  weight: 3,
+  opacity: 1,
+  fillColor: "#14B8A6",
+  fillOpacity: 0.04,
+};
+
 const FIRMS_CONFIDENCE_COLORS = {
   low: "#FACC15",
   nominal: "#F97316",
   high: "#DC2626",
+};
+
+const PROPERTY_LABELS = {
+  cve_ent: "Clave de entidad",
+  cve_mun: "Clave de municipio",
+  cvegeo: "CVEGEO",
+  nomgeo: "Nombre geográfico",
+  nom_ent: "Entidad",
+  nom_mun: "Municipio",
+  nombre_estacion: "Estación",
+  situacion_operativa: "Situación operativa",
+  fisiografia_nombre: "Provincia fisiográfica",
+  corriente_nombre: "Corriente",
+  orden_corriente: "Orden de corriente",
+  grupo1_nombre: "Grupo de suelo",
+  textura_nombre: "Textura",
+  usv_descripcion: "Uso de suelo / vegetación",
+  fecha_inicio: "Fecha de inicio",
+  fecha_fin: "Fecha de fin",
+  fecha_termino: "Fecha de término",
+  anio_inicio: "Año inicial",
+  anio_fin: "Año final",
+  cobertura_inicio: "Cobertura desde",
+  cobertura_fin: "Cobertura hasta",
 };
 
 function normalizeGeoKey(value, length) {
@@ -68,14 +114,14 @@ function getRowKey(row, nivelAgregacion) {
     : normalizeGeoKey(row?.cve_ent, 2);
 }
 
+function filterFeatureCollection(collection, predicate) {
+  if (!collection?.features) return EMPTY_FEATURE_COLLECTION;
+  return { ...collection, features: collection.features.filter(predicate) };
+}
+
 function bboxToString(bounds) {
   if (!bounds?.isValid?.()) return "";
-  return [
-    bounds.getWest(),
-    bounds.getSouth(),
-    bounds.getEast(),
-    bounds.getNorth(),
-  ].join(",");
+  return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()].join(",");
 }
 
 function escapeHtml(value) {
@@ -89,6 +135,8 @@ function escapeHtml(value) {
 
 function formatMapValue(value, options = {}) {
   if (value === undefined || value === null || value === "") return null;
+  if (Array.isArray(value)) return value.join(", ");
+  if (typeof value === "object") return null;
   if (options.number) {
     const number = Number(value);
     if (Number.isFinite(number)) {
@@ -100,15 +148,43 @@ function formatMapValue(value, options = {}) {
   return String(value);
 }
 
+function friendlyPropertyLabel(key) {
+  if (PROPERTY_LABELS[key]) return PROPERTY_LABELS[key];
+  return String(key)
+    .replace(/^_+/, "")
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function propertyRows(props, preferred = []) {
+  const used = new Set();
+  const rows = [];
+
+  preferred.forEach(([label, key, options]) => {
+    const value = formatMapValue(props?.[key], options);
+    if (value === null) return;
+    used.add(key);
+    rows.push([label, value]);
+  });
+
+  Object.entries(props || {}).forEach(([key, rawValue]) => {
+    if (key.startsWith("__") || used.has(key)) return;
+    const value = formatMapValue(rawValue);
+    if (value === null) return;
+    rows.push([friendlyPropertyLabel(key), value]);
+  });
+
+  return rows;
+}
+
 function infoRowsHtml(rows) {
   return rows
-    .map(([label, value, options]) => [label, formatMapValue(value, options)])
-    .filter(([, value]) => value !== null)
+    .filter(([, value]) => value !== undefined && value !== null && value !== "")
     .map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`)
     .join("");
 }
 
-function bindRichInfo(layer, { title, kind, tooltipRows, popupRows }) {
+function bindRichInfo(layer, { title, kind = "generic", tooltipRows, popupRows }) {
   const tooltipBody = infoRowsHtml(tooltipRows);
   if (tooltipBody) {
     layer.bindTooltip(
@@ -121,15 +197,25 @@ function bindRichInfo(layer, { title, kind, tooltipRows, popupRows }) {
   if (popupBody) {
     layer.bindPopup(
       `<div class="mapFeaturePopupScroll"><div class="mapFeatureTooltipTitle"><span></span>${escapeHtml(title)}</div><dl>${popupBody}</dl></div>`,
-      { className: `mapFeaturePopup mapFeaturePopup-${kind}`, maxWidth: 320 },
+      { className: `mapFeaturePopup mapFeaturePopup-${kind}`, maxWidth: 340 },
     );
   }
+}
+
+function bindGenericLayerInfo(feature, layer, { title, kind, preferred = [], tooltipCount = 5 }) {
+  const props = feature?.properties || {};
+  const rows = propertyRows(props, preferred);
+  bindRichInfo(layer, {
+    title,
+    kind,
+    tooltipRows: rows.slice(0, tooltipCount),
+    popupRows: rows.slice(0, 40),
+  });
 }
 
 function firmsConfidenceCategory(props) {
   const category = String(props?.confidence_category || "").toLowerCase();
   if (FIRMS_CONFIDENCE_COLORS[category]) return category;
-
   const confidence = Number(props?.confidence);
   if (!Number.isFinite(confidence)) return "nominal";
   if (confidence >= 80) return "high";
@@ -176,6 +262,119 @@ function conaforFireIcon(feature) {
   });
 }
 
+function bindFirmsInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const category = firmsConfidenceCategory(props);
+  const confidenceLabel = { low: "Baja", nominal: "Nominal", high: "Alta" }[category];
+  const dayNight = String(props.daynight || "").toUpperCase() === "N" ? "Noche" : "Día";
+
+  bindRichInfo(layer, {
+    title: "Detección FIRMS",
+    kind: "firms",
+    tooltipRows: [
+      ["Fecha", props.fecha],
+      ["Hora adquisición", props.acq_time],
+      ["Confianza", confidenceLabel],
+      ["FRP", formatMapValue(props.frp, { number: true })],
+      ["Satélite", props.satellite],
+      ["Día / noche", dayNight],
+    ],
+    popupRows: propertyRows(
+      { ...props, confianza_interpretada: confidenceLabel, periodo_dia: dayNight },
+      [
+        ["Fecha", "fecha"],
+        ["Hora adquisición", "acq_time"],
+        ["Estado", "estado"],
+        ["Municipio", "municipio"],
+        ["Satélite", "satellite"],
+        ["Instrumento", "instrument"],
+        ["Confianza", "confianza_interpretada"],
+        ["Día / noche", "periodo_dia"],
+      ],
+    ).slice(0, 40),
+  });
+}
+
+function bindConaforInfo(feature, layer) {
+  const props = feature?.properties || {};
+  bindRichInfo(layer, {
+    title: "Incendio CONAFOR",
+    kind: "conafor",
+    tooltipRows: [
+      ["Clave", props.clave_incendio],
+      ["Inicio", props.fecha_inicio],
+      ["Municipio", props.municipio],
+      ["Causa", props.causa],
+      ["Impacto", props.tipo_impacto],
+      ["Superficie (ha)", formatMapValue(props.superficie_total_ha, { number: true })],
+    ],
+    popupRows: propertyRows(props, [
+      ["Clave", "clave_incendio"],
+      ["Inicio", "fecha_inicio"],
+      ["Término", "fecha_termino"],
+      ["Estado", "estado"],
+      ["Municipio", "municipio"],
+      ["Causa", "causa"],
+      ["Causa específica", "causa_especifica"],
+      ["Tipo de incendio", "tipo_incendio"],
+      ["Tipo de impacto", "tipo_impacto"],
+      ["Vegetación", "tipo_vegetacion"],
+    ]).slice(0, 40),
+  });
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+function stationMatchesOperationalFilter(feature, filtros) {
+  const status = normalizeText(feature?.properties?.situacion_operativa);
+  if (!status) return true;
+  if (status.includes("operando") || status.includes("operativa")) return filtros?.operando !== false;
+  if (status.includes("suspend")) return filtros?.suspendida !== false;
+  return true;
+}
+
+function stationMatchesTerritory(feature, cveEnt) {
+  if (!cveEnt) return true;
+  const featureCveEnt = normalizeGeoKey(
+    feature?.properties?.cve_ent ?? feature?.properties?.CVE_ENT,
+    2,
+  );
+  return featureCveEnt ? featureCveEnt === cveEnt : true;
+}
+
+function stationCoversPeriod(feature, scope) {
+  if (!scope?.anio) return true;
+  const props = feature?.properties || {};
+  const targetYear = Number(scope.anio);
+  const targetMonth = scope.tipoPeriodo === "anio_mes" ? Number(scope.mes) : null;
+
+  const start = props.fecha_inicio ?? props.fecha_min ?? props.cobertura_inicio ?? props.inicio_datos;
+  const end = props.fecha_fin ?? props.fecha_max ?? props.cobertura_fin ?? props.fin_datos;
+  if (start || end) {
+    const startText = start ? String(start).slice(0, 10) : `${targetYear}-01-01`;
+    const endText = end ? String(end).slice(0, 10) : `${targetYear}-12-31`;
+    const from = targetMonth ? `${targetYear}-${String(targetMonth).padStart(2, "0")}-01` : `${targetYear}-01-01`;
+    const to = targetMonth ? `${targetYear}-${String(targetMonth).padStart(2, "0")}-31` : `${targetYear}-12-31`;
+    return startText <= to && endText >= from;
+  }
+
+  const startYear = Number(props.anio_inicio ?? props.anio_min ?? props.year_min);
+  const endYear = Number(props.anio_fin ?? props.anio_max ?? props.year_max);
+  if (Number.isFinite(startYear) || Number.isFinite(endYear)) {
+    return (!Number.isFinite(startYear) || targetYear >= startYear) &&
+      (!Number.isFinite(endYear) || targetYear <= endYear);
+  }
+
+  // Si la capa no trae metadatos temporales, no se excluye la estación por inferencia
+  return true;
+}
+
 function MapViewportTracker({ onChange }) {
   const map = useMapEvents({
     moveend() {
@@ -197,13 +396,9 @@ function MapResizeInvalidator({ watchKey }) {
   const map = useMap();
 
   useEffect(() => {
-    const invalidate = () => {
-      window.requestAnimationFrame(() => map.invalidateSize());
-    };
-
+    const invalidate = () => window.requestAnimationFrame(() => map.invalidateSize());
     invalidate();
     window.addEventListener("resize", invalidate);
-
     return () => window.removeEventListener("resize", invalidate);
   }, [map]);
 
@@ -239,112 +434,12 @@ function FitGeoJsonBounds({ geojson, enabled, fitKey }) {
 
   useEffect(() => {
     if (!enabled || !geojson?.features?.length) return;
-
     const layer = L.geoJSON(geojson);
     const bounds = layer.getBounds();
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [24, 24], maxZoom: 9 });
-    }
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [32, 32], maxZoom: 11 });
   }, [map, geojson, enabled, fitKey]);
 
   return null;
-}
-
-function bindSimpleTooltip(feature, layer, fields) {
-  const props = feature?.properties || {};
-  const lines = fields
-    .map(([label, key]) => [label, props[key]])
-    .filter(([, value]) => value !== undefined && value !== null && value !== "")
-    .map(([label, value]) => `<strong>${escapeHtml(label)}:</strong> ${escapeHtml(value)}`);
-
-  if (lines.length) {
-    layer.bindTooltip(lines.join("<br/>"), { sticky: true, direction: "top" });
-  }
-}
-
-function bindFirmsInfo(feature, layer) {
-  const props = feature?.properties || {};
-  const category = firmsConfidenceCategory(props);
-  const confidenceLabel = {
-    low: "Baja",
-    nominal: "Nominal",
-    high: "Alta",
-  }[category];
-  const dayNight = String(props.daynight || "").toUpperCase() === "N" ? "Noche" : "Día";
-
-  bindRichInfo(layer, {
-    title: "Detección FIRMS",
-    kind: "firms",
-    tooltipRows: [
-      ["Fecha", props.fecha],
-      ["Hora adquisición", props.acq_time],
-      ["Confianza", confidenceLabel],
-      ["FRP", props.frp, { number: true }],
-      ["Satélite", props.satellite],
-      ["Día / noche", dayNight],
-    ],
-    popupRows: [
-      ["Fecha", props.fecha],
-      ["Hora adquisición", props.acq_time],
-      ["Estado", props.estado],
-      ["Municipio", props.municipio],
-      ["CVEGEO", props.cvegeo],
-      ["Satélite", props.satellite],
-      ["Instrumento", props.instrument],
-      ["Confianza", confidenceLabel],
-      ["Valor confianza", props.confidence, { number: true }],
-      ["Brillo", props.brightness, { number: true }],
-      ["FRP", props.frp, { number: true }],
-      ["Día / noche", dayNight],
-      ["Tipo", props.type],
-      ["Scan", props.scan, { number: true }],
-      ["Track", props.track, { number: true }],
-      ["Versión", props.version],
-    ],
-  });
-}
-
-function bindConaforInfo(feature, layer) {
-  const props = feature?.properties || {};
-
-  bindRichInfo(layer, {
-    title: "Incendio CONAFOR",
-    kind: "conafor",
-    tooltipRows: [
-      ["Clave", props.clave_incendio],
-      ["Inicio", props.fecha_inicio],
-      ["Municipio", props.municipio],
-      ["Causa", props.causa],
-      ["Impacto", props.tipo_impacto],
-      ["Superficie (ha)", props.superficie_total_ha, { number: true }],
-    ],
-    popupRows: [
-      ["Clave", props.clave_incendio],
-      ["Inicio", props.fecha_inicio],
-      ["Término", props.fecha_termino],
-      ["Estado", props.estado],
-      ["Municipio", props.municipio],
-      ["CVEGEO", props.cvegeo],
-      ["Región", props.region],
-      ["Predio", props.predio],
-      ["Causa", props.causa],
-      ["Causa específica", props.causa_especifica],
-      ["Tipo de incendio", props.tipo_incendio],
-      ["Tipo de impacto", props.tipo_impacto],
-      ["Vegetación", props.tipo_vegetacion],
-      ["Régimen de fuego", props.regimen_fuego],
-      ["Superficie total (ha)", props.superficie_total_ha, { number: true }],
-      ["Categoría superficie", props.superficie_categoria],
-      ["Arbolado adulto", props.arbolado_adulto, { number: true }],
-      ["Arbustivo", props.arbustivo, { number: true }],
-      ["Herbáceo", props.herbaceo, { number: true }],
-      ["Hojarasca", props.hojarasca, { number: true }],
-      ["Renuevo", props.renuevo, { number: true }],
-      ["Duración", props.duracion],
-      ["Detección", props.deteccion],
-      ["Llegada", props.llegada],
-    ],
-  });
 }
 
 export default function MapView({
@@ -358,7 +453,8 @@ export default function MapView({
   selectedMlCluster = null,
 }) {
   const [baseLayerId, setBaseLayerId] = useState("esri");
-  const [geojson, setGeojson] = useState(null);
+  const [estadosGeojson, setEstadosGeojson] = useState(EMPTY_FEATURE_COLLECTION);
+  const [municipiosGeojson, setMunicipiosGeojson] = useState(EMPTY_FEATURE_COLLECTION);
   const [geometryError, setGeometryError] = useState(null);
   const [layerError, setLayerError] = useState(null);
   const [viewportBbox, setViewportBbox] = useState("");
@@ -376,53 +472,54 @@ export default function MapView({
   const rows = resumenConsulta?.rows ?? [];
   const mapScope = consultaEjecutada;
   const overlayScope = mapScope || consultaActiva;
-  const nivelMapa = mapScope?.nivelAgregacion || "entidad";
+  const nivelMapa = mapScope?.nivelAgregacion || overlayScope?.nivelAgregacion || "entidad";
   const capasActivas = consultaActiva?.capasActivas || {};
+  const filtrosSmn = consultaActiva?.filtrosSmn || {};
   const cveEntCapas = normalizeGeoKey(overlayScope?.cveEnt, 2);
+  const cvegeoSeleccionado = normalizeGeoKey(overlayScope?.cvegeo, 5);
 
   useEffect(() => {
     let active = true;
-
-    const load = async () => {
-      try {
-        setGeometryError(null);
-
-        if (!mapScope) {
-          const data = await obtenerGeometriasEstados();
-          if (active) setGeojson(data);
-          return;
-        }
-
-        if (mapScope.nivelAgregacion === "municipio" && mapScope.cveEnt) {
-          const data = await obtenerGeometriasMunicipios(normalizeGeoKey(mapScope.cveEnt, 2));
-          if (active) setGeojson(data);
-          return;
-        }
-
-        const data = await obtenerGeometriasEstados();
-        if (active) setGeojson(data);
-      } catch (error) {
-        if (active) {
-          setGeojson(null);
-          setGeometryError(error.message);
-        }
-      }
-    };
-
-    load();
+    obtenerGeometriasEstados()
+      .then((data) => {
+        if (active) setEstadosGeojson(data || EMPTY_FEATURE_COLLECTION);
+      })
+      .catch((error) => {
+        if (active) setGeometryError(error.message);
+      });
     return () => {
       active = false;
     };
-  }, [mapScope?.nivelAgregacion, mapScope?.cveEnt]);
+  }, []);
 
   useEffect(() => {
     let active = true;
+    if (!cveEntCapas) {
+      setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
+      return () => {
+        active = false;
+      };
+    }
 
+    obtenerGeometriasMunicipios(cveEntCapas)
+      .then((data) => {
+        if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION);
+      })
+      .catch((error) => {
+        if (active) setGeometryError(error.message);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [cveEntCapas]);
+
+  useEffect(() => {
+    let active = true;
     const setLayer = (key, data) => {
       if (!active) return;
       setOverlays((prev) => ({ ...prev, [key]: data || EMPTY_FEATURE_COLLECTION }));
     };
-
     const clearLayer = (key) => setLayer(key, EMPTY_FEATURE_COLLECTION);
 
     const load = async () => {
@@ -437,9 +534,7 @@ export default function MapView({
               throw new Error(`SMN: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("smn");
-      }
+      } else clearLayer("smn");
 
       if (cveEntCapas && capasActivas.fisiografiaInegi) {
         tasks.push(
@@ -449,9 +544,7 @@ export default function MapView({
               throw new Error(`Fisiografía: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("fisiografia");
-      }
+      } else clearLayer("fisiografia");
 
       if (cveEntCapas && capasActivas.corrientesAguaInegi) {
         tasks.push(
@@ -461,9 +554,7 @@ export default function MapView({
               throw new Error(`Hidrografía: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("hidrografia");
-      }
+      } else clearLayer("hidrografia");
 
       if (cveEntCapas && viewportBbox && capasActivas.edafologiaInegi) {
         tasks.push(
@@ -473,9 +564,7 @@ export default function MapView({
               throw new Error(`Edafología: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("edafologia");
-      }
+      } else clearLayer("edafologia");
 
       if (cveEntCapas && viewportBbox && capasActivas.usoSueloVegetacionInegi) {
         tasks.push(
@@ -485,9 +574,7 @@ export default function MapView({
               throw new Error(`Uso de suelo/vegetación: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("usoSueloVegetacion");
-      }
+      } else clearLayer("usoSueloVegetacion");
 
       const puntosParams = overlayScope?.anio
         ? {
@@ -507,9 +594,7 @@ export default function MapView({
               throw new Error(`FIRMS: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("firms");
-      }
+      } else clearLayer("firms");
 
       if (puntosParams && capasActivas.incendiosConafor) {
         tasks.push(
@@ -519,9 +604,7 @@ export default function MapView({
               throw new Error(`CONAFOR: ${error.message}`);
             }),
         );
-      } else {
-        clearLayer("conafor");
-      }
+      } else clearLayer("conafor");
 
       const results = await Promise.allSettled(tasks);
       if (!active) return;
@@ -553,6 +636,41 @@ export default function MapView({
     overlayScope?.cvegeo,
   ]);
 
+  const estadoSeleccionadoGeojson = useMemo(() => {
+    if (!cveEntCapas) return EMPTY_FEATURE_COLLECTION;
+    return filterFeatureCollection(
+      estadosGeojson,
+      (feature) => getFeatureKey(feature, "entidad") === cveEntCapas,
+    );
+  }, [estadosGeojson, cveEntCapas]);
+
+  const municipioSeleccionadoGeojson = useMemo(() => {
+    if (!cvegeoSeleccionado) return EMPTY_FEATURE_COLLECTION;
+    return filterFeatureCollection(
+      municipiosGeojson,
+      (feature) => getFeatureKey(feature, "municipio") === cvegeoSeleccionado,
+    );
+  }, [municipiosGeojson, cvegeoSeleccionado]);
+
+  const territorioSeleccionadoGeojson = cvegeoSeleccionado
+    ? municipioSeleccionadoGeojson
+    : estadoSeleccionadoGeojson;
+
+  const limitesEstatalesGeojson = useMemo(() => {
+    if (!cveEntCapas) return estadosGeojson;
+    return estadoSeleccionadoGeojson;
+  }, [estadosGeojson, estadoSeleccionadoGeojson, cveEntCapas]);
+
+  const smnFiltrado = useMemo(() => {
+    if (!overlays.smn?.features) return EMPTY_FEATURE_COLLECTION;
+    return filterFeatureCollection(overlays.smn, (feature) => {
+      if (!stationMatchesOperationalFilter(feature, filtrosSmn)) return false;
+      if (!stationMatchesTerritory(feature, cveEntCapas)) return false;
+      if (filtrosSmn.alcance === "periodo" && !stationCoversPeriod(feature, overlayScope)) return false;
+      return true;
+    });
+  }, [overlays.smn, filtrosSmn, cveEntCapas, overlayScope]);
+
   const rowByKey = useMemo(() => {
     const map = new Map();
     rows.forEach((row) => {
@@ -562,35 +680,27 @@ export default function MapView({
     return map;
   }, [rows, nivelMapa]);
 
-  const filteredGeojson = useMemo(() => {
-    if (!geojson?.features) return null;
-    if (!mapScope) return geojson;
-
-    if (mapScope.nivelAgregacion === "entidad" && mapScope.cveEnt) {
-      const target = normalizeGeoKey(mapScope.cveEnt, 2);
-      return {
-        ...geojson,
-        features: geojson.features.filter((feature) => getFeatureKey(feature, "entidad") === target),
-      };
-    }
+  const resultadoBaseGeojson = useMemo(() => {
+    if (!mapScope) return EMPTY_FEATURE_COLLECTION;
+    const source = mapScope.nivelAgregacion === "municipio" ? municipiosGeojson : estadosGeojson;
+    if (!source?.features) return EMPTY_FEATURE_COLLECTION;
 
     if (mapScope.nivelAgregacion === "municipio" && mapScope.cvegeo) {
       const target = normalizeGeoKey(mapScope.cvegeo, 5);
-      return {
-        ...geojson,
-        features: geojson.features.filter((feature) => getFeatureKey(feature, "municipio") === target),
-      };
+      return filterFeatureCollection(source, (feature) => getFeatureKey(feature, "municipio") === target);
     }
-
-    return geojson;
-  }, [geojson, mapScope]);
+    if (mapScope.nivelAgregacion === "entidad" && mapScope.cveEnt) {
+      const target = normalizeGeoKey(mapScope.cveEnt, 2);
+      return filterFeatureCollection(source, (feature) => getFeatureKey(feature, "entidad") === target);
+    }
+    return source;
+  }, [mapScope, municipiosGeojson, estadosGeojson]);
 
   const displayGeojson = useMemo(() => {
-    if (!filteredGeojson?.features) return null;
-
+    if (!resultadoBaseGeojson?.features) return EMPTY_FEATURE_COLLECTION;
     return {
-      ...filteredGeojson,
-      features: filteredGeojson.features.map((feature) => {
+      ...resultadoBaseGeojson,
+      features: resultadoBaseGeojson.features.map((feature) => {
         const key = getFeatureKey(feature, nivelMapa);
         const row = rowByKey.get(key) ?? null;
         const clusterMatches =
@@ -608,42 +718,46 @@ export default function MapView({
               color: row ? "#FFFFFF" : "rgba(255,255,255,.65)",
               weight: row ? 1.6 : 0.8,
               fillColor: row?.color_sugerido_app || "#64748B",
-              fillOpacity: row ? (clusterMatches ? 0.72 : 0.16) : 0.08,
+              fillOpacity: row ? (clusterMatches ? 0.72 : 0.16) : 0.05,
             },
           },
         };
       }),
     };
-  }, [filteredGeojson, rowByKey, nivelMapa, selectedMlCluster]);
+  }, [resultadoBaseGeojson, rowByKey, nivelMapa, selectedMlCluster]);
 
   const styleFeature = (feature) => feature?.properties?.__map_style || {
     color: "rgba(255,255,255,.65)",
     weight: 0.8,
     fillColor: "#64748B",
-    fillOpacity: 0.08,
+    fillOpacity: 0.05,
   };
 
-  const onEachFeature = (feature, layer) => {
+  const onEachResultFeature = (feature, layer) => {
     const key = feature?.properties?.__map_key || getFeatureKey(feature, nivelMapa);
     const row = feature?.properties?.__resultado || null;
     const name = feature?.properties?.nomgeo || feature?.properties?.nom_ent || feature?.properties?.nom_mun || row?.nombre_municipio || row?.nombre_entidad || key;
+    if (!row) return;
 
-    layer.bindTooltip(
-      `<strong>${escapeHtml(name)}</strong>${row ? `<br/>Cluster: ${escapeHtml(row.cluster)}<br/>Observaciones: ${escapeHtml(row.observaciones)}` : "<br/>Sin resultado para la consulta"}`,
-      { sticky: true, direction: "top" }
-    );
-
-    if (row) {
-      layer.bindPopup(
-        `<strong>${escapeHtml(name)}</strong><br/>Clave: ${escapeHtml(key)}<br/>Cluster: ${escapeHtml(row.cluster)}<br/>Observaciones: ${escapeHtml(row.observaciones)}<br/>FIRMS: ${escapeHtml(row.firms_detecciones || 0)}<br/>CONAFOR: ${escapeHtml(row.conafor_eventos || 0)}<br/>Hectáreas: ${escapeHtml(Number(row.conafor_ha || 0).toLocaleString("es-MX", { maximumFractionDigits: 2 }))}`
-      );
-    }
+    bindRichInfo(layer, {
+      title: name,
+      kind: "ml",
+      tooltipRows: [
+        ["Cluster", row.cluster],
+        ["Observaciones", row.observaciones],
+        ["FIRMS", row.firms_detecciones ?? 0],
+        ["CONAFOR", row.conafor_eventos ?? 0],
+      ],
+      popupRows: propertyRows(row, [
+        ["Clave", nivelMapa === "municipio" ? "cvegeo" : "cve_ent"],
+        ["Cluster", "cluster"],
+        ["Estado ML", "estado_app"],
+        ["Etiqueta", "etiqueta_final"],
+      ]).slice(0, 40),
+    });
   };
 
-  const fitKey = mapScope
-    ? `${mapScope.nivelAgregacion}-${mapScope.cveEnt || "mx"}-${mapScope.cvegeo || "all"}-${mapScope.anio || ""}-${mapScope.mes || ""}`
-    : "sin-consulta";
-
+  const fitKey = `${overlayScope?.nivelAgregacion || "entidad"}-${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}`;
   const renderKey = `${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${rows.length}-${selectedMlCluster ?? "all"}`;
 
   return (
@@ -667,12 +781,49 @@ export default function MapView({
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
         <MapViewportTracker onChange={setViewportBbox} />
 
+        {capasActivas.limitesEstatales && limitesEstatalesGeojson?.features?.length ? (
+          <GeoJSON
+            key={`lim-est-${cveEntCapas || "mx"}`}
+            data={limitesEstatalesGeojson}
+            style={() => STATE_BOUNDARY_STYLE}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.nomgeo || feature?.properties?.nom_ent || "Entidad federativa",
+              kind: "limites",
+              preferred: [["Entidad", "nomgeo"], ["Clave", "cve_ent"]],
+              tooltipCount: 3,
+            })}
+          />
+        ) : null}
+
+        {capasActivas.limitesMunicipales && municipiosGeojson?.features?.length ? (
+          <GeoJSON
+            key={`lim-mun-${cveEntCapas}`}
+            data={municipiosGeojson}
+            style={() => MUNICIPAL_BOUNDARY_STYLE}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.nomgeo || feature?.properties?.nom_mun || "Municipio",
+              kind: "limites",
+              preferred: [["Municipio", "nomgeo"], ["CVEGEO", "cvegeo"]],
+              tooltipCount: 3,
+            })}
+          />
+        ) : null}
+
+        {territorioSeleccionadoGeojson?.features?.length ? (
+          <GeoJSON
+            key={`territorio-${fitKey}`}
+            data={territorioSeleccionadoGeojson}
+            style={() => SELECTED_TERRITORY_STYLE}
+            interactive={false}
+          />
+        ) : null}
+
         {displayGeojson?.features?.length ? (
           <GeoJSON
             key={renderKey}
             data={displayGeojson}
             style={styleFeature}
-            onEachFeature={onEachFeature}
+            onEachFeature={onEachResultFeature}
           />
         ) : null}
 
@@ -681,7 +832,11 @@ export default function MapView({
             key={`fisiografia-${cveEntCapas}`}
             data={overlays.fisiografia}
             style={() => THEMATIC_STYLES.fisiografia}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Provincia", "fisiografia_nombre"]])}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.fisiografia_nombre || "Fisiografía INEGI",
+              kind: "fisiografia",
+              preferred: [["Provincia", "fisiografia_nombre"]],
+            })}
           />
         ) : null}
 
@@ -690,7 +845,11 @@ export default function MapView({
             key={`hidrografia-${cveEntCapas}`}
             data={overlays.hidrografia}
             style={() => THEMATIC_STYLES.hidrografia}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Corriente", "corriente_nombre"], ["Orden", "orden_corriente"]])}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.corriente_nombre || "Corriente de agua INEGI",
+              kind: "hidrografia",
+              preferred: [["Corriente", "corriente_nombre"], ["Orden", "orden_corriente"]],
+            })}
           />
         ) : null}
 
@@ -699,7 +858,11 @@ export default function MapView({
             key={`edafologia-${cveEntCapas}-${viewportBbox}`}
             data={overlays.edafologia}
             style={() => THEMATIC_STYLES.edafologia}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Suelo", "grupo1_nombre"], ["Textura", "textura_nombre"]])}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.grupo1_nombre || "Edafología INEGI",
+              kind: "edafologia",
+              preferred: [["Suelo", "grupo1_nombre"], ["Textura", "textura_nombre"]],
+            })}
           />
         ) : null}
 
@@ -708,14 +871,18 @@ export default function MapView({
             key={`usv-${cveEntCapas}-${viewportBbox}`}
             data={overlays.usoSueloVegetacion}
             style={() => THEMATIC_STYLES.uso_suelo_vegetacion}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Uso/vegetación", "usv_descripcion"]])}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.usv_descripcion || "Uso de suelo y vegetación INEGI",
+              kind: "uso-suelo",
+              preferred: [["Uso / vegetación", "usv_descripcion"]],
+            })}
           />
         ) : null}
 
-        {overlays.smn?.features?.length ? (
+        {smnFiltrado?.features?.length ? (
           <GeoJSON
-            key="smn-estaciones"
-            data={overlays.smn}
+            key={`smn-${cveEntCapas || "mx"}-${filtrosSmn.alcance || "todas"}-${filtrosSmn.operando}-${filtrosSmn.suspendida}`}
+            data={smnFiltrado}
             pointToLayer={(_, latlng) => L.circleMarker(latlng, {
               radius: 4,
               color: "#0F766E",
@@ -723,7 +890,19 @@ export default function MapView({
               fillColor: "#14B8A6",
               fillOpacity: 0.8,
             })}
-            onEachFeature={(feature, layer) => bindSimpleTooltip(feature, layer, [["Estación", "nombre_estacion"], ["Situación", "situacion_operativa"]])}
+            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
+              title: feature?.properties?.nombre_estacion || "Estación SMN-CONAGUA",
+              kind: "smn",
+              preferred: [
+                ["Estación", "nombre_estacion"],
+                ["Situación", "situacion_operativa"],
+                ["Cobertura desde", "cobertura_inicio"],
+                ["Cobertura hasta", "cobertura_fin"],
+                ["Fecha inicial", "fecha_inicio"],
+                ["Fecha final", "fecha_fin"],
+              ],
+              tooltipCount: 6,
+            })}
           />
         ) : null}
 
@@ -746,8 +925,8 @@ export default function MapView({
         ) : null}
 
         <FitGeoJsonBounds
-          geojson={displayGeojson}
-          enabled={Boolean(mapScope && (mapScope.cveEnt || mapScope.cvegeo))}
+          geojson={territorioSeleccionadoGeojson}
+          enabled={Boolean(cveEntCapas || cvegeoSeleccionado)}
           fitKey={fitKey}
         />
         <MapResizeInvalidator watchKey={`${leftPanelOpen}-${rightPanelOpen}-${baseLayerId}`} />
