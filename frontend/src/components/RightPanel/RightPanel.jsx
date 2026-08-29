@@ -54,6 +54,20 @@ function buildPeriodoLabel(consulta) {
   return String(consulta.anio);
 }
 
+function buildTerritorioLabel(consulta, resumen) {
+  const estado = consulta?.estado || resumen?.estado || "";
+  const municipio = consulta?.municipio || resumen?.municipio || "";
+  const nivel = consulta?.nivelAgregacion || resumen?.nivelAgregacion;
+
+  if (nivel === "municipio") {
+    if (estado && municipio) return `${estado} · ${municipio}`;
+    if (estado) return `${estado} · Todos los municipios`;
+    return municipio || "México";
+  }
+
+  return estado || resumen?.territorio || "México";
+}
+
 export default function RightPanel({
   open,
   onToggle,
@@ -73,7 +87,7 @@ export default function RightPanel({
   const [openCharts, setOpenCharts] = useState(false);
   const hasResults = Boolean(consultaEjecutada && resumenConsulta);
   const resumen = resumenConsulta ?? fallbackResumen;
-  const territorio = consultaActiva?.municipio || consultaActiva?.estado || resumenConsulta?.territorio || "México";
+  const territorio = buildTerritorioLabel(consultaActiva, resumenConsulta);
   const periodoActivo = buildPeriodoLabel(consultaActiva);
   const nivelActivo = getNivelUiLabel(consultaActiva?.nivelAgregacion);
   const mlResult = normalizeMlResult(resumenConsulta);
@@ -122,7 +136,9 @@ export default function RightPanel({
               </div>
             </div>
 
-            {!hasResults ? (
+            {error ? (
+              <div className="emptyState">No fue posible ejecutar la consulta: {error}</div>
+            ) : !hasResults ? (
               <div className="emptyState">
                 Filtros listos. Ejecuta la consulta para calcular y visualizar los resultados ML.
               </div>
