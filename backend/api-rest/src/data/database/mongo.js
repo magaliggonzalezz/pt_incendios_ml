@@ -5,10 +5,12 @@ export async function connectMongo() {
   try {
     await mongoose.connect(env.mongoUri, {
       dbName: env.mongoDbName,
+      serverSelectionTimeoutMS: 5000,
     });
     console.log(`MongoDB Atlas conectado correctamente (${env.mongoDbName})`);
+    return true;
   } catch (error) {
     console.error("Error al conectar con MongoDB Atlas:", error.message);
-    process.exit(1);
+    throw error;
   }
 }
