@@ -1,4 +1,5 @@
 import { apiFetch } from "./api";
+import { enqueueMapRequest, normalizeBbox } from "./mapRequestQueue";
 
 export function obtenerGeometriasEstados(options = {}) {
   return apiFetch("/api/geometrias/estados", options);
@@ -30,15 +31,20 @@ export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeoOrOptions 
   const fetchOptions = typeof cvegeoOrOptions === "object" && cvegeoOrOptions !== null
     ? cvegeoOrOptions
     : options;
+  const normalizedBbox = normalizeBbox(bbox);
 
   const search = new URLSearchParams({
     cve_ent: String(cveEnt),
-    bbox: String(bbox),
+    bbox: normalizedBbox,
   });
   if (cvegeo) search.set("cvegeo", String(cvegeo));
 
-  return apiFetch(
-    `/api/geometrias/tematicas/${encodeURIComponent(capa)}/viewport?${search.toString()}`,
-    fetchOptions,
-  );
+  const endpoint = `/api/geometrias/tematicas/${encodeURIComponent(capa)}/viewport?${search.toString()}`;
+  const key = `tematica:${capa}:${cveEnt}:${cvegeo || "estado"}:${normalizedBbox}`;
+
+  return enqueueMapRequest({
+    key,
+    signal: fetchOptions.signal,
+    request: () => apiFetch(endpoint),
+  });
 }
