@@ -125,12 +125,22 @@ export default function DashboardPage() {
     setIsLoading(false);
   };
 
+  const invalidateForQueryChange = () => {
+    cancelPendingQuery();
+    invalidateExecutedQuery();
+    setError(null);
+  };
+
   const handleConsultaChange = (campo, valor) => {
+    if (campo === "consultaPatch") {
+      invalidateForQueryChange();
+      setConsultaActiva((prev) => ({ ...prev, ...(valor || {}) }));
+      return;
+    }
+
     const changesOnlyVisualization = campo === "capasActivas" || campo === "filtrosSmn";
     if (!changesOnlyVisualization) {
-      cancelPendingQuery();
-      invalidateExecutedQuery();
-      setError(null);
+      invalidateForQueryChange();
     }
 
     setConsultaActiva((prev) => {
