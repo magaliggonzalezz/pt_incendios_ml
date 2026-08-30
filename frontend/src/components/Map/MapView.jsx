@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { GeoJSON, MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import MapControls from "./MapControls";
@@ -116,6 +116,42 @@ function getRowKey(row, nivelAgregacion) {
 function filterFeatureCollection(collection, predicate) {
   if (!collection?.features) return EMPTY_FEATURE_COLLECTION;
   return { ...collection, features: collection.features.filter(predicate) };
+}
+
+function pointInRing(point, ring) {
+  if (!Array.isArray(ring) || ring.length < 3) return false;
+  const [x, y] = point;
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i, i += 1) {
+    const xi = Number(ring[i]?.[0]);
+    const yi = Number(ring[i]?.[1]);
+    const xj = Number(ring[j]?.[0]);
+    const yj = Number(ring[j]?.[1]);
+    if (![xi, yi, xj, yj].every(Number.isFinite)) continue;
+    const intersects = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / ((yj - yi) || Number.EPSILON) + xi;
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInPolygonCoordinates(point, polygon) {
+  if (!Array.isArray(polygon) || !polygon.length) return false;
+  if (!pointInRing(point, polygon[0])) return false;
+  for (let i = 1; i < polygon.length; i += 1) {
+    if (pointInRing(point, polygon[i])) return false;
+  }
+  return true;
+}
+
+function pointInGeometry(point, geometry) {
+  if (!geometry || !Array.isArray(point) || point.length < 2) return false;
+  if (geometry.type === "Polygon") {
+    return pointInPolygonCoordinates(point, geometry.coordinates);
+  }
+  if (geometry.type === "MultiPolygon") {
+    return geometry.coordinates.some((polygon) => pointInPolygonCoordinates(point, polygon));
+  }
+  return false;
 }
 
 function bboxToString(bounds) {
@@ -364,6 +400,13 @@ function stationMatchesTerritory(feature, cveEnt) {
   return featureCveEnt ? featureCveEnt === cveEnt : true;
 }
 
+function stationMatchesMunicipality(feature, municipioGeojson) {
+  if (!municipioGeojson?.features?.length) return true;
+  const coordinates = feature?.geometry?.coordinates;
+  if (!Array.isArray(coordinates) || coordinates.length < 2) return false;
+  return municipioGeojson.features.some((municipio) => pointInGeometry(coordinates, municipio.geometry));
+}
+
 function stationCoversPeriod(feature, scope) {
   if (!scope?.anio) return true;
   const props = feature?.properties || {};
@@ -491,6 +534,7 @@ export default function MapView({
   const [geometryError, setGeometryError] = useState(null);
   const [layerError, setLayerError] = useState(null);
   const [viewportBbox, setViewportBbox] = useState("");
+  const [viewportTerritoryKey, setViewportTerritoryKey] = useState("");
   const [overlays, setOverlays] = useState({
     firms: EMPTY_FEATURE_COLLECTION,
     conafor: EMPTY_FEATURE_COLLECTION,
@@ -510,10 +554,30 @@ export default function MapView({
   const filtrosSmn = consultaActiva?.filtrosSmn || {};
   const cveEntCapas = normalizeGeoKey(overlayScope?.cveEnt, 2);
   const cvegeoSeleccionado = normalizeGeoKey(overlayScope?.cvegeo, 5);
+  const territoryKey = `${overlayScope?.nivelAgregacion || "entidad"}:${cveEntCapas || "mx"}:${cvegeoSeleccionado || "all"}`;
+  const viewportReady = Boolean(viewportBbox && viewportTerritoryKey === territoryKey);
 
   const setOverlay = (key, data) => {
     setOverlays((prev) => ({ ...prev, [key]: data || EMPTY_FEATURE_COLLECTION }));
   };
+
+  const handleViewportChange = useCallback((bbox) => {
+    setViewportBbox(bbox);
+    setViewportTerritoryKey(territoryKey);
+  }, [territoryKey]);
+
+  useEffect(() => {
+    setLayerError(null);
+    setOverlays((prev) => ({
+      ...prev,
+      firms: EMPTY_FEATURE_COLLECTION,
+      conafor: EMPTY_FEATURE_COLLECTION,
+      fisiografia: EMPTY_FEATURE_COLLECTION,
+      hidrografia: EMPTY_FEATURE_COLLECTION,
+      edafologia: EMPTY_FEATURE_COLLECTION,
+      usoSueloVegetacion: EMPTY_FEATURE_COLLECTION,
+    }));
+  }, [territoryKey]);
 
   useEffect(() => {
     let active = true;
@@ -572,7 +636,7 @@ export default function MapView({
     const controller = new AbortController();
     const overlayKeys = ["fisiografia", "hidrografia", "edafologia", "usoSueloVegetacion"];
 
-    if (!cveEntCapas || !viewportBbox) {
+    if (!cveEntCapas || !viewportReady) {
       overlayKeys.forEach((key) => setOverlay(key, EMPTY_FEATURE_COLLECTION));
       return () => {
         active = false;
@@ -623,6 +687,7 @@ export default function MapView({
     cveEntCapas,
     cvegeoSeleccionado,
     viewportBbox,
+    viewportReady,
     capasActivas.fisiografiaInegi,
     capasActivas.corrientesAguaInegi,
     capasActivas.edafologiaInegi,
@@ -633,7 +698,7 @@ export default function MapView({
     let active = true;
     const controller = new AbortController();
 
-    if (!overlayScope?.anio || !viewportBbox) {
+    if (!overlayScope?.anio || !viewportReady) {
       setOverlay("firms", EMPTY_FEATURE_COLLECTION);
       setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
       return () => {
@@ -688,6 +753,7 @@ export default function MapView({
     capasActivas.puntosCalorFirms,
     capasActivas.incendiosConafor,
     viewportBbox,
+    viewportReady,
     overlayScope?.anio,
     overlayScope?.mes,
     overlayScope?.tipoPeriodo,
@@ -725,10 +791,18 @@ export default function MapView({
     return filterFeatureCollection(overlays.smn, (feature) => {
       if (!stationMatchesOperationalFilter(feature, filtrosSmn)) return false;
       if (!stationMatchesTerritory(feature, cveEntCapas)) return false;
+      if (cvegeoSeleccionado && !stationMatchesMunicipality(feature, municipioSeleccionadoGeojson)) return false;
       if (filtrosSmn.alcance === "periodo" && !stationCoversPeriod(feature, overlayScope)) return false;
       return true;
     });
-  }, [overlays.smn, filtrosSmn, cveEntCapas, overlayScope]);
+  }, [
+    overlays.smn,
+    filtrosSmn,
+    cveEntCapas,
+    cvegeoSeleccionado,
+    municipioSeleccionadoGeojson,
+    overlayScope,
+  ]);
 
   const rowByKey = useMemo(() => {
     const map = new Map();
@@ -816,8 +890,8 @@ export default function MapView({
     });
   };
 
-  const fitKey = `${overlayScope?.nivelAgregacion || "entidad"}-${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}`;
-  const thematicKey = `${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}-${viewportBbox}`;
+  const fitKey = territoryKey;
+  const thematicKey = `${territoryKey}-${viewportReady ? viewportBbox : "pending"}`;
   const renderKey = `${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${rows.length}-${selectedMlCluster ?? "all"}`;
 
   return (
@@ -840,7 +914,7 @@ export default function MapView({
         preferCanvas={true}
       >
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
-        <MapViewportTracker onChange={setViewportBbox} />
+        <MapViewportTracker onChange={handleViewportChange} />
 
         {capasActivas.limitesEstatales && limitesEstatalesGeojson?.features?.length ? (
           <GeoJSON
@@ -942,7 +1016,7 @@ export default function MapView({
 
         {smnFiltrado?.features?.length ? (
           <GeoJSON
-            key={`smn-${cveEntCapas || "mx"}-${filtrosSmn.alcance || "todas"}-${filtrosSmn.operando}-${filtrosSmn.suspendida}`}
+            key={`smn-${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}-${filtrosSmn.alcance || "todas"}-${filtrosSmn.operando}-${filtrosSmn.suspendida}`}
             data={smnFiltrado}
             pointToLayer={(_, latlng) => L.circleMarker(latlng, {
               radius: 4,
@@ -969,7 +1043,7 @@ export default function MapView({
 
         {overlays.conafor?.features?.length ? (
           <GeoJSON
-            key={`conafor-${fitKey}-${viewportBbox}`}
+            key={`conafor-${territoryKey}-${viewportReady ? viewportBbox : "pending"}`}
             data={overlays.conafor}
             pointToLayer={(feature, latlng) => L.circleMarker(latlng, conaforMarkerStyle(feature))}
             onEachFeature={bindConaforInfo}
@@ -978,7 +1052,7 @@ export default function MapView({
 
         {overlays.firms?.features?.length ? (
           <GeoJSON
-            key={`firms-${fitKey}-${viewportBbox}`}
+            key={`firms-${territoryKey}-${viewportReady ? viewportBbox : "pending"}`}
             data={overlays.firms}
             pointToLayer={(feature, latlng) => L.circleMarker(latlng, firmsMarkerStyle(feature))}
             onEachFeature={bindFirmsInfo}
