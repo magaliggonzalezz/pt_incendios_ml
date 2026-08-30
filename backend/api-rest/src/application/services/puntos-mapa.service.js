@@ -7,6 +7,7 @@ const FIRMS_YEAR_MIN = 2001;
 const FIRMS_YEAR_MAX = 2025;
 const CONAFOR_KEY = "fuentes/conafor/conafor_incendios_eventos.parquet";
 const ROW_CACHE_TTL_MS = 10 * 60 * 1000;
+const FIRMS_MAX_POINTS = 4000;
 
 const parquetRowsCache = new Map();
 const parquetInFlight = new Map();
@@ -195,6 +196,97 @@ function featureCollection(features, metadata) {
   return { type: "FeatureCollection", features, metadata };
 }
 
+function confidenceRank(value) {
+  const category = String(value || "").toLowerCase();
+  if (category === "high") return 3;
+  if (category === "nominal") return 2;
+  if (category === "low") return 1;
+  return 0;
+}
+
+function aggregateFirms(features, bbox) {
+  if (!bbox || features.length <= FIRMS_MAX_POINTS) {
+    return { features, aggregated: false, originalCount: features.length };
+  }
+
+  const [minx, miny, maxx, maxy] = bbox;
+  const width = Math.max(maxx - minx, 1e-9);
+  const height = Math.max(maxy - miny, 1e-9);
+  const aspect = width / height;
+  const cols = Math.max(8, Math.ceil(Math.sqrt(FIRMS_MAX_POINTS * Math.max(aspect, 0.25))));
+  const rows = Math.max(8, Math.ceil(FIRMS_MAX_POINTS / cols));
+  const cellWidth = width / cols;
+  const cellHeight = height / rows;
+  const cells = new Map();
+
+  features.forEach((feature) => {
+    const [lon, lat] = feature.geometry.coordinates;
+    const col = Math.min(cols - 1, Math.max(0, Math.floor((lon - minx) / cellWidth)));
+    const row = Math.min(rows - 1, Math.max(0, Math.floor((lat - miny) / cellHeight)));
+    const key = `${col}:${row}`;
+    const props = feature.properties || {};
+    const current = cells.get(key) || {
+      count: 0,
+      lonSum: 0,
+      latSum: 0,
+      frpTotal: 0,
+      confidenceCategory: "low",
+      confidenceRank: 0,
+      estado: props.estado || null,
+      municipio: props.municipio || null,
+      cve_ent: props.cve_ent || null,
+      cvegeo: props.cvegeo || null,
+      day: 0,
+      night: 0,
+    };
+
+    current.count += 1;
+    current.lonSum += lon;
+    current.latSum += lat;
+    current.frpTotal += Number(props.frp) || 0;
+    const rank = confidenceRank(props.confidence_category);
+    if (rank > current.confidenceRank) {
+      current.confidenceRank = rank;
+      current.confidenceCategory = props.confidence_category || "nominal";
+    }
+    if (String(props.daynight || "").toUpperCase() === "N") current.night += 1;
+    else current.day += 1;
+    if (current.municipio !== props.municipio) current.municipio = "Varias ubicaciones";
+    if (current.cvegeo !== props.cvegeo) current.cvegeo = null;
+    cells.set(key, current);
+  });
+
+  const aggregatedFeatures = Array.from(cells.values()).map((cell) => ({
+    type: "Feature",
+    geometry: {
+      type: "Point",
+      coordinates: [cell.lonSum / cell.count, cell.latSum / cell.count],
+    },
+    properties: {
+      agregado: true,
+      detecciones: cell.count,
+      fecha: null,
+      acq_time: null,
+      confidence: null,
+      confidence_category: cell.confidenceCategory,
+      frp: Number(cell.frpTotal.toFixed(2)),
+      frp_total: Number(cell.frpTotal.toFixed(2)),
+      daynight: cell.night > cell.day ? "N" : "D",
+      estado: cell.estado,
+      municipio: cell.municipio,
+      cve_ent: cell.cve_ent,
+      cve_mun: null,
+      cvegeo: cell.cvegeo,
+    },
+  }));
+
+  return {
+    features: aggregatedFeatures,
+    aggregated: true,
+    originalCount: features.length,
+  };
+}
+
 export async function obtenerFirmsMapa(params = {}) {
   const anio = validarAnio(params.anio);
   const mes = parseMes(params.mes);
@@ -211,7 +303,7 @@ export async function obtenerFirmsMapa(params = {}) {
   const key = firmsKey(anio);
   const { rows, metadata, estadisticas, cache } = await leerParquetR2(key, FIRMS_COLUMNS);
 
-  const features = [];
+  const rawFeatures = [];
   for (const row of rows) {
     const fecha = fechaIso(row.fecha ?? row.acq_date);
     if (!coincideTerritorio(row, cveEnt, cvegeo)) continue;
@@ -222,7 +314,7 @@ export async function obtenerFirmsMapa(params = {}) {
     const latitude = Number(row.latitude);
     if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) continue;
 
-    features.push({
+    rawFeatures.push({
       type: "Feature",
       geometry: { type: "Point", coordinates: [longitude, latitude] },
       properties: {
@@ -248,7 +340,9 @@ export async function obtenerFirmsMapa(params = {}) {
     });
   }
 
-  return featureCollection(features, {
+  const aggregated = aggregateFirms(rawFeatures, bbox);
+
+  return featureCollection(aggregated.features, {
     fuente: "FIRMS",
     anio,
     mes,
@@ -257,7 +351,10 @@ export async function obtenerFirmsMapa(params = {}) {
     bbox,
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
-    registros: features.length,
+    registros: aggregated.features.length,
+    registros_originales: aggregated.originalCount,
+    agregado_espacial: aggregated.aggregated,
+    limite_visualizacion: FIRMS_MAX_POINTS,
     cache_parquet: cache,
     r2: {
       key,
