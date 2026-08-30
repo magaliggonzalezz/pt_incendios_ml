@@ -32,6 +32,8 @@ function buildMunicipiosLocal(cveEnt) {
     .sort((a, b) => a.cvegeo.localeCompare(b.cvegeo));
 }
 
+const ESTADOS_LOCAL = buildEstadosLocal();
+
 export async function obtenerClusters() {
   try {
     return await apiFetch("/api/catalogos/clusters");
@@ -41,19 +43,9 @@ export async function obtenerClusters() {
 }
 
 export async function obtenerEstados() {
-  try {
-    return await apiFetch("/api/catalogos/estados");
-  } catch {
-    return buildEstadosLocal();
-  }
+  return ESTADOS_LOCAL;
 }
 
 export async function obtenerMunicipios(cveEnt) {
-  const query = cveEnt ? `?cve_ent=${encodeURIComponent(cveEnt)}` : "";
-
-  try {
-    return await apiFetch(`/api/catalogos/municipios${query}`);
-  } catch {
-    return buildMunicipiosLocal(cveEnt);
-  }
+  return buildMunicipiosLocal(cveEnt);
 }
