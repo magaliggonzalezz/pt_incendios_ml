@@ -44,6 +44,7 @@ export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeoOrOptions 
 
   return enqueueMapRequest({
     key,
+    channel: "geometrias",
     signal: fetchOptions.signal,
     request: () => apiFetch(endpoint),
   });
