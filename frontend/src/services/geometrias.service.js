@@ -40,11 +40,14 @@ export function obtenerCapaTematicaViewport(capa, cveEnt, bbox, cvegeoOrOptions 
   if (cvegeo) search.set("cvegeo", String(cvegeo));
 
   const endpoint = `/api/geometrias/tematicas/${encodeURIComponent(capa)}/viewport?${search.toString()}`;
-  const key = `tematica:${capa}:${cveEnt}:${cvegeo || "estado"}:${normalizedBbox}`;
+  const territory = `${cveEnt}:${cvegeo || "estado"}`;
+  const key = `tematica:${capa}:${territory}:${normalizedBbox}`;
 
   return enqueueMapRequest({
     key,
     channel: "geometrias",
+    latestKey: `tematica:${capa}:${territory}`,
+    settleMs: 550,
     signal: fetchOptions.signal,
     request: () => apiFetch(endpoint),
   });
