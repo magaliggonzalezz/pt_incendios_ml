@@ -24,6 +24,7 @@ export function obtenerPuntosFirms(params = {}, options = {}) {
   const endpoint = `/api/puntos-mapa/firms${query ? `?${query}` : ""}`;
   return enqueueMapRequest({
     key: `firms:${query}`,
+    channel: "puntos",
     signal: options.signal,
     request: () => apiFetch(endpoint),
   });
@@ -35,6 +36,7 @@ export function obtenerIncendiosConafor(params = {}, options = {}) {
   const endpoint = `/api/puntos-mapa/conafor${query ? `?${query}` : ""}`;
   return enqueueMapRequest({
     key: `conafor:${query}`,
+    channel: "puntos",
     signal: options.signal,
     request: () => apiFetch(endpoint),
   });
