@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MapView from "../components/Map/MapView";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
 import RightPanel from "../components/RightPanel/RightPanel";
@@ -70,6 +70,7 @@ export default function DashboardPage() {
   const [municipios, setMunicipios] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const queryRunRef = useRef(0);
 
   useEffect(() => {
     let active = true;
@@ -119,10 +120,17 @@ export default function DashboardPage() {
     setSelectedMlCluster(null);
   };
 
+  const cancelPendingQuery = () => {
+    queryRunRef.current += 1;
+    setIsLoading(false);
+  };
+
   const handleConsultaChange = (campo, valor) => {
     const changesOnlyVisualization = campo === "capasActivas" || campo === "filtrosSmn";
-    if (!changesOnlyVisualization && consultaEjecutada) {
+    if (!changesOnlyVisualization) {
+      cancelPendingQuery();
       invalidateExecutedQuery();
+      setError(null);
     }
 
     setConsultaActiva((prev) => {
@@ -158,6 +166,7 @@ export default function DashboardPage() {
   };
 
   const handleResetConsulta = () => {
+    cancelPendingQuery();
     setConsultaActiva(getConsultaInicial());
     invalidateExecutedQuery();
     setError(null);
@@ -167,6 +176,8 @@ export default function DashboardPage() {
     const consulta = consultaOverride ?? consultaActiva;
     if (!isConsultaCompleta(consulta)) return;
 
+    const runId = queryRunRef.current + 1;
+    queryRunRef.current = runId;
     setIsLoading(true);
     setError(null);
 
@@ -192,6 +203,8 @@ export default function DashboardPage() {
           : await obtenerResultadosMunicipioAnio(params);
       }
 
+      if (runId !== queryRunRef.current) return;
+
       const resumen = buildRealDashboardResults({
         consulta,
         rows,
@@ -200,15 +213,17 @@ export default function DashboardPage() {
         municipios,
       });
 
+      if (runId !== queryRunRef.current) return;
       setResumenConsulta(resumen);
       setUltimaConsultaEjecutada(snapshotConsulta(consulta));
       setConsultaEjecutada(true);
       setSelectedMlCluster(null);
     } catch (err) {
+      if (runId !== queryRunRef.current) return;
       invalidateExecutedQuery();
       setError(err.message);
     } finally {
-      setIsLoading(false);
+      if (runId === queryRunRef.current) setIsLoading(false);
     }
   };
 
