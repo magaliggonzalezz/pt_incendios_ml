@@ -1,6 +1,7 @@
 const RESPONSE_CACHE_TTL_MS = 10 * 60 * 1000;
 
 const responseCache = new Map();
+const inFlight = new Map();
 let requestQueue = Promise.resolve();
 
 function createAbortError() {
@@ -27,6 +28,27 @@ function setCached(key, value) {
   return value;
 }
 
+function waitForShared(promise, signal) {
+  if (!signal) return promise;
+  if (signal.aborted) return Promise.reject(createAbortError());
+
+  return new Promise((resolve, reject) => {
+    const onAbort = () => reject(createAbortError());
+    signal.addEventListener("abort", onAbort, { once: true });
+    promise.then(
+      (value) => {
+        signal.removeEventListener("abort", onAbort);
+        if (signal.aborted) reject(createAbortError());
+        else resolve(value);
+      },
+      (error) => {
+        signal.removeEventListener("abort", onAbort);
+        reject(error);
+      },
+    );
+  });
+}
+
 export function normalizeBbox(value, decimals = 4) {
   const parts = String(value || "")
     .split(",")
@@ -41,21 +63,28 @@ export function enqueueMapRequest({ key, request, signal, cache = true }) {
   const cached = cache ? getCached(key) : null;
   if (cached) return Promise.resolve(cached);
 
+  const existing = inFlight.get(key);
+  if (existing) return waitForShared(existing, signal);
+
   const execute = async () => {
     if (signal?.aborted) throw createAbortError();
 
-    // La petición real no recibe AbortSignal a propósito. Si el navegador cancela
-    // una llamada mientras Node ya procesa GeoJSON/Parquet, el trabajo del backend
-    // continúa de todos modos. Mantener esta cola esperando la respuesta evita
-    // arrancar otra operación pesada en paralelo sobre el mismo proceso Node.
+    // No propagamos AbortSignal al fetch real: una vez que Node empieza a procesar
+    // GeoJSON/Parquet, cancelar el navegador no detiene ese CPU. La cola evita que
+    // una nueva operación pesada se ejecute en paralelo y la deduplicación evita
+    // repetir el mismo trabajo mientras ya está en curso.
     const value = await request();
-
     if (cache) setCached(key, value);
-    if (signal?.aborted) throw createAbortError();
     return value;
   };
 
-  const result = requestQueue.then(execute, execute);
-  requestQueue = result.catch(() => undefined);
-  return result;
+  const shared = requestQueue.then(execute, execute);
+  inFlight.set(key, shared);
+  requestQueue = shared.catch(() => undefined);
+
+  shared.finally(() => {
+    if (inFlight.get(key) === shared) inFlight.delete(key);
+  });
+
+  return waitForShared(shared, signal);
 }
