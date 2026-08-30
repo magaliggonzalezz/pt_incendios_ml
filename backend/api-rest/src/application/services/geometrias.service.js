@@ -5,6 +5,9 @@ import { descargarObjetoR2 } from "../../data/storage/r2.js";
 const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
 const SMN_KEY = "capas_web/smn/smn_estaciones.geojson";
 const CACHE_TTL_MS = 10 * 60 * 1000;
+const MAX_BUFFER_CACHE_ENTRIES = 8;
+const MAX_GEOJSON_CACHE_ENTRIES = 16;
+const MAX_RESPONSE_CACHE_ENTRIES = 16;
 const STATE_SIMPLIFY_TOLERANCE = 0.005;
 const THEMATIC_SIMPLIFY_TOLERANCE = {
   fisiografia: 0.0015,
@@ -86,11 +89,18 @@ function cacheGet(map, key) {
     map.delete(key);
     return null;
   }
+  map.delete(key);
+  map.set(key, cached);
   return cached.value;
 }
 
-function cacheSet(map, key, value) {
+function cacheSet(map, key, value, maxEntries) {
+  map.delete(key);
   map.set(key, { creadoEn: Date.now(), value });
+  while (map.size > maxEntries) {
+    const oldestKey = map.keys().next().value;
+    map.delete(oldestKey);
+  }
   return value;
 }
 
@@ -100,7 +110,7 @@ async function obtenerBufferR2Cache(key) {
 
   try {
     const buffer = await descargarObjetoR2(key);
-    return cacheSet(bufferCache, key, buffer);
+    return cacheSet(bufferCache, key, buffer, MAX_BUFFER_CACHE_ENTRIES);
   } catch (error) {
     if (error.statusCode) throw error;
     const wrapped = new Error(`No fue posible obtener ${key} desde R2: ${error.message}`);
@@ -112,8 +122,19 @@ async function obtenerBufferR2Cache(key) {
 async function obtenerGeoJsonR2(key) {
   const cached = cacheGet(geojsonCache, key);
   if (cached) return cached;
-  const data = parseGeoJson(await obtenerBufferR2Cache(key), key);
-  return cacheSet(geojsonCache, key, data);
+
+  try {
+    // No conservamos simultáneamente el Buffer crudo y el objeto parseado: las
+    // geometrías grandes duplicaban el consumo de memoria al cambiar de territorio.
+    const buffer = await descargarObjetoR2(key);
+    const data = parseGeoJson(buffer, key);
+    return cacheSet(geojsonCache, key, data, MAX_GEOJSON_CACHE_ENTRIES);
+  } catch (error) {
+    if (error.statusCode) throw error;
+    const wrapped = new Error(`No fue posible obtener ${key} desde R2: ${error.message}`);
+    wrapped.statusCode = 502;
+    throw wrapped;
+  }
 }
 
 function parseBbox(value) {
@@ -228,21 +249,11 @@ function simplifyRing(ring, tolerance) {
 function simplifyGeometry(geometry, tolerance) {
   if (!geometry?.coordinates) return geometry;
   const { type, coordinates } = geometry;
-
-  if (type === "LineString") {
-    return { ...geometry, coordinates: simplifyLine(coordinates, tolerance) };
-  }
-  if (type === "MultiLineString") {
-    return { ...geometry, coordinates: coordinates.map((line) => simplifyLine(line, tolerance)) };
-  }
-  if (type === "Polygon") {
-    return { ...geometry, coordinates: coordinates.map((ring) => simplifyRing(ring, tolerance)) };
-  }
+  if (type === "LineString") return { ...geometry, coordinates: simplifyLine(coordinates, tolerance) };
+  if (type === "MultiLineString") return { ...geometry, coordinates: coordinates.map((line) => simplifyLine(line, tolerance)) };
+  if (type === "Polygon") return { ...geometry, coordinates: coordinates.map((ring) => simplifyRing(ring, tolerance)) };
   if (type === "MultiPolygon") {
-    return {
-      ...geometry,
-      coordinates: coordinates.map((polygon) => polygon.map((ring) => simplifyRing(ring, tolerance))),
-    };
+    return { ...geometry, coordinates: coordinates.map((polygon) => polygon.map((ring) => simplifyRing(ring, tolerance))) };
   }
   return geometry;
 }
@@ -318,10 +329,8 @@ function recortarPoligono(feature, mascara) {
   const subject = polygonInput(feature?.geometry);
   const clip = polygonInput(mascara?.geometry);
   if (!subject || !clip) return null;
-
   try {
-    const result = polygonClipping.intersection(subject, clip);
-    return polygonResultFeature(result, feature.properties);
+    return polygonResultFeature(polygonClipping.intersection(subject, clip), feature.properties);
   } catch {
     return null;
   }
@@ -354,8 +363,7 @@ function recortarLineaPorSegmentos(feature, mascara) {
     for (let i = 0; i < coords.length - 1; i += 1) {
       const a = coords[i];
       const b = coords[i + 1];
-      const dentro = midpointInsideSegment(a, b, mascara);
-      if (dentro) {
+      if (midpointInsideSegment(a, b, mascara)) {
         if (!actual.length) actual.push(a);
         actual.push(b);
       } else if (actual.length >= 2) {
@@ -369,9 +377,7 @@ function recortarLineaPorSegmentos(feature, mascara) {
   });
 
   if (!segmentos.length) return null;
-  if (segmentos.length === 1) {
-    return turf.lineString(segmentos[0], { ...(feature.properties || {}) });
-  }
+  if (segmentos.length === 1) return turf.lineString(segmentos[0], { ...(feature.properties || {}) });
   return turf.multiLineString(segmentos, { ...(feature.properties || {}) });
 }
 
@@ -394,7 +400,6 @@ async function cargarFeaturesViewport(capa, cveEnt, effectiveBbox) {
     const prefix = tiledPrefix(capa, cveEnt);
     const manifestKey = `${prefix}/manifest.json`;
     const manifest = parseJson(await obtenerBufferR2Cache(manifestKey), manifestKey);
-
     if (!Array.isArray(manifest?.tiles)) {
       const error = new Error("manifest de tiles inválido");
       error.statusCode = 502;
@@ -404,14 +409,18 @@ async function cargarFeaturesViewport(capa, cveEnt, effectiveBbox) {
     const tiles = manifest.tiles.filter((tile) =>
       Array.isArray(tile.bbox) && tile.bbox.length === 4 && bboxIntersects(tile.bbox, effectiveBbox),
     );
-    const geojsons = await Promise.all(
-      tiles.map((tile) => obtenerGeoJsonR2(`${prefix}/${tile.archivo}`)),
-    );
+
+    const features = [];
+    // Carga secuencial para evitar picos de memoria al parsear varios GeoJSON grandes a la vez.
+    for (const tile of tiles) {
+      const data = await obtenerGeoJsonR2(`${prefix}/${tile.archivo}`);
+      data.features.forEach((feature) => {
+        if (featureIntersectsBbox(feature, effectiveBbox)) features.push(feature);
+      });
+    }
 
     return {
-      features: geojsons
-        .flatMap((data) => data.features)
-        .filter((feature) => featureIntersectsBbox(feature, effectiveBbox)),
+      features,
       metadata: {
         tiles_usados: tiles.map((tile) => tile.id),
         cantidad_tiles: tiles.length,
@@ -431,11 +440,15 @@ async function cargarFeaturesViewport(capa, cveEnt, effectiveBbox) {
 export async function obtenerGeometriasEstados({ completo = false } = {}) {
   const data = await obtenerGeoJsonR2(ESTADOS_KEY);
   if (completo) return data;
-
   const cacheKey = `estados:web:${STATE_SIMPLIFY_TOLERANCE}`;
   const cached = cacheGet(responseCache, cacheKey);
   if (cached) return cached;
-  return cacheSet(responseCache, cacheKey, simplifyFeatureCollection(data, STATE_SIMPLIFY_TOLERANCE));
+  return cacheSet(
+    responseCache,
+    cacheKey,
+    simplifyFeatureCollection(data, STATE_SIMPLIFY_TOLERANCE),
+    MAX_RESPONSE_CACHE_ENTRIES,
+  );
 }
 
 export async function obtenerGeometriasMunicipios(cveEnt) {
@@ -453,7 +466,6 @@ export async function obtenerCapaTematica(capa, cveEnt) {
     error.statusCode = 400;
     throw error;
   }
-
   validarCveEnt(cveEnt);
   return obtenerGeoJsonR2(tematicaKey(capa, cveEnt));
 }
@@ -498,7 +510,7 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
   }
 
   const tolerance = thematicTolerance(capa, effectiveBbox);
-  const cacheKey = `${cvegeo ? "viewport-municipio-v3" : "viewport-estado-v3"}:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}:${tolerance}`;
+  const cacheKey = `${cvegeo ? "viewport-municipio-v4" : "viewport-estado-v4"}:${capa}:${cveEnt}:${cvegeo || "estado"}:${bboxCacheKey(effectiveBbox)}:${tolerance}`;
   const cached = cacheGet(responseCache, cacheKey);
   if (cached) return cached;
 
@@ -514,20 +526,25 @@ export async function obtenerCapaTematicaViewport(capa, cveEnt, bboxRaw, cvegeoR
     throw error;
   }
 
-  return cacheSet(responseCache, cacheKey, {
-    type: "FeatureCollection",
-    features,
-    metadata: {
-      ...source.metadata,
-      capa,
-      cve_ent: cveEnt,
-      cvegeo: cvegeo || null,
-      bbox: viewportBbox,
-      bbox_efectivo: effectiveBbox,
-      features: features.length,
-      features_antes_recorte: source.features.length,
-      recorte: municipioFeature ? "municipio-exacto-viewport" : "viewport",
-      tolerancia_web_grados: tolerance,
+  return cacheSet(
+    responseCache,
+    cacheKey,
+    {
+      type: "FeatureCollection",
+      features,
+      metadata: {
+        ...source.metadata,
+        capa,
+        cve_ent: cveEnt,
+        cvegeo: cvegeo || null,
+        bbox: viewportBbox,
+        bbox_efectivo: effectiveBbox,
+        features: features.length,
+        features_antes_recorte: source.features.length,
+        recorte: municipioFeature ? "municipio-exacto-viewport" : "viewport",
+        tolerancia_web_grados: tolerance,
+      },
     },
-  });
+    MAX_RESPONSE_CACHE_ENTRIES,
+  );
 }
