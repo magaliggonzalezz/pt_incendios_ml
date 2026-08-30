@@ -216,6 +216,12 @@ function propertyRows(props, preferred = []) {
   return rows;
 }
 
+function orderedRows(props, order = []) {
+  return order
+    .map(([label, key, options]) => [label, formatMapValue(props?.[key], options)])
+    .filter(([, value]) => value !== null);
+}
+
 function infoRowsHtml(rows) {
   return rows
     .filter(([, value]) => value !== undefined && value !== null && value !== "")
@@ -306,37 +312,43 @@ function bindFirmsInfo(feature, layer) {
   const category = firmsConfidenceCategory(props);
   const confidenceLabel = { low: "Baja", nominal: "Nominal", high: "Alta" }[category];
   const dayNight = String(props.daynight || "").toUpperCase() === "N" ? "Noche" : "Día";
+  const displayProps = {
+    ...props,
+    confianza_interpretada: confidenceLabel,
+    periodo_dia: dayNight,
+  };
 
   bindRichInfo(layer, {
     title: "Detección FIRMS",
     kind: "firms",
-    tooltipRows: [
-      ["Fecha", props.fecha],
-      ["Hora", props.acq_time],
-      ["Municipio", props.municipio],
-      ["Confianza", confidenceLabel],
-      ["FRP", formatMapValue(props.frp, { number: true })],
-      ["Día / noche", dayNight],
-    ],
-    popupRows: propertyRows(
-      { ...props, confianza_interpretada: confidenceLabel, periodo_dia: dayNight },
-      [
-        ["Fecha", "fecha"],
-        ["Hora de adquisición", "acq_time"],
-        ["Estado", "estado"],
-        ["Municipio", "municipio"],
-        ["Confianza", "confianza_interpretada"],
-        ["FRP", "frp", { number: true }],
-        ["Día / noche", "periodo_dia"],
-        ["Satélite", "satellite"],
-        ["Instrumento", "instrument"],
-        ["Brillo", "brightness", { number: true }],
-        ["Tipo", "type"],
-        ["Scan", "scan", { number: true }],
-        ["Track", "track", { number: true }],
-        ["Versión", "version"],
-      ],
-    ).slice(0, 40),
+    tooltipRows: orderedRows(displayProps, [
+      ["Fecha", "fecha"],
+      ["Hora", "acq_time"],
+      ["Estado", "estado"],
+      ["Municipio", "municipio"],
+      ["Categoría de confianza", "confianza_interpretada"],
+      ["FRP", "frp", { number: true }],
+    ]),
+    popupRows: orderedRows(displayProps, [
+      ["Fecha", "fecha"],
+      ["Hora de adquisición", "acq_time"],
+      ["Estado", "estado"],
+      ["Municipio", "municipio"],
+      ["CVEGEO", "cvegeo"],
+      ["Clave de entidad", "cve_ent"],
+      ["Clave de municipio", "cve_mun"],
+      ["Confianza", "confidence", { number: true }],
+      ["Categoría de confianza", "confianza_interpretada"],
+      ["FRP", "frp", { number: true }],
+      ["Día / noche", "periodo_dia"],
+      ["Satélite", "satellite"],
+      ["Instrumento", "instrument"],
+      ["Brillo", "brightness", { number: true }],
+      ["Tipo", "type"],
+      ["Scan", "scan", { number: true }],
+      ["Track", "track", { number: true }],
+      ["Versión", "version"],
+    ]),
   });
 }
 
@@ -345,21 +357,25 @@ function bindConaforInfo(feature, layer) {
   bindRichInfo(layer, {
     title: "Incendio CONAFOR",
     kind: "conafor",
-    tooltipRows: [
-      ["Inicio", props.fecha_inicio],
-      ["Municipio", props.municipio],
-      ["Superficie (ha)", formatMapValue(props.superficie_total_ha, { number: true })],
-      ["Impacto", props.tipo_impacto],
-      ["Tipo", props.tipo_incendio],
-      ["Causa", props.causa],
-    ],
-    popupRows: propertyRows(props, [
+    tooltipRows: orderedRows(props, [
+      ["Inicio", "fecha_inicio"],
+      ["Estado", "estado"],
+      ["Municipio", "municipio"],
+      ["Superficie (ha)", "superficie_total_ha", { number: true }],
+      ["Tipo", "tipo_incendio"],
+      ["Causa", "causa"],
+    ]),
+    popupRows: orderedRows(props, [
       ["Inicio", "fecha_inicio"],
       ["Término", "fecha_termino"],
       ["Estado", "estado"],
       ["Municipio", "municipio"],
-      ["Clave", "clave_incendio"],
+      ["CVEGEO", "cvegeo"],
+      ["Clave de entidad", "cve_ent"],
+      ["Clave de municipio", "cve_mun"],
+      ["Clave del incendio", "clave_incendio"],
       ["Superficie total (ha)", "superficie_total_ha", { number: true }],
+      ["Categoría de superficie", "superficie_categoria"],
       ["Tipo de impacto", "tipo_impacto"],
       ["Tipo de incendio", "tipo_incendio"],
       ["Causa", "causa"],
@@ -368,10 +384,15 @@ function bindConaforInfo(feature, layer) {
       ["Régimen de fuego", "regimen_fuego"],
       ["Región", "region"],
       ["Predio", "predio"],
+      ["Arbolado adulto", "arbolado_adulto", { number: true }],
+      ["Arbustivo", "arbustivo", { number: true }],
+      ["Herbáceo", "herbaceo", { number: true }],
+      ["Hojarasca", "hojarasca", { number: true }],
+      ["Renuevo", "renuevo", { number: true }],
       ["Duración", "duracion"],
       ["Detección", "deteccion"],
       ["Llegada", "llegada"],
-    ]).slice(0, 40),
+    ]),
   });
 }
 
