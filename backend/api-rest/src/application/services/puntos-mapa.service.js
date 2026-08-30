@@ -8,7 +8,6 @@ const FIRMS_YEAR_MAX = 2025;
 const CONAFOR_KEY = "fuentes/conafor/conafor_incendios_eventos.parquet";
 const ROW_CACHE_TTL_MS = 10 * 60 * 1000;
 const MAX_PARQUET_CACHE_ENTRIES = 2;
-const FIRMS_MAX_POINTS = 4000;
 
 const parquetRowsCache = new Map();
 const parquetInFlight = new Map();
@@ -166,14 +165,6 @@ function featureCollection(features, metadata) {
   return { type: "FeatureCollection", features, metadata };
 }
 
-function confidenceRank(value) {
-  const category = String(value || "").toLowerCase();
-  if (category === "high") return 3;
-  if (category === "nominal") return 2;
-  if (category === "low") return 1;
-  return 0;
-}
-
 function crearFirmsFeature(row, fecha, longitude, latitude) {
   return {
     type: "Feature",
@@ -181,106 +172,24 @@ function crearFirmsFeature(row, fecha, longitude, latitude) {
     properties: {
       fecha,
       acq_time: valorJson(row.acq_time),
-      satellite: valorJson(row.satellite),
-      instrument: valorJson(row.instrument),
-      confidence: valorJson(row.confidence),
-      confidence_category: valorJson(row.confidence_category),
-      version: valorJson(row.version),
-      brightness: valorJson(row.brightness),
-      scan: valorJson(row.scan),
-      track: valorJson(row.track),
-      frp: valorJson(row.frp),
-      daynight: valorJson(row.daynight),
-      type: valorJson(row.type),
       estado: valorJson(row.estado),
       municipio: valorJson(row.municipio),
       cve_ent: normalizarCve(row.cve_ent, 2),
       cve_mun: normalizarCve(row.cve_mun, 3),
       cvegeo: normalizarCve(row.cvegeo, 5),
+      confidence: valorJson(row.confidence),
+      confidence_category: valorJson(row.confidence_category),
+      frp: valorJson(row.frp),
+      daynight: valorJson(row.daynight),
+      satellite: valorJson(row.satellite),
+      instrument: valorJson(row.instrument),
+      brightness: valorJson(row.brightness),
+      type: valorJson(row.type),
+      scan: valorJson(row.scan),
+      track: valorJson(row.track),
+      version: valorJson(row.version),
     },
   };
-}
-
-function createFirmsGrid(bbox) {
-  if (!bbox) return null;
-  const [minx, miny, maxx, maxy] = bbox;
-  const width = Math.max(maxx - minx, 1e-9);
-  const height = Math.max(maxy - miny, 1e-9);
-  const aspect = width / height;
-  const cols = Math.max(8, Math.ceil(Math.sqrt(FIRMS_MAX_POINTS * Math.max(aspect, 0.25))));
-  const rows = Math.max(8, Math.ceil(FIRMS_MAX_POINTS / cols));
-  return {
-    minx,
-    miny,
-    cols,
-    rows,
-    cellWidth: width / cols,
-    cellHeight: height / rows,
-    cells: new Map(),
-  };
-}
-
-function addFirmsFeatureToGrid(grid, feature) {
-  const [lon, lat] = feature.geometry.coordinates;
-  const col = Math.min(grid.cols - 1, Math.max(0, Math.floor((lon - grid.minx) / grid.cellWidth)));
-  const row = Math.min(grid.rows - 1, Math.max(0, Math.floor((lat - grid.miny) / grid.cellHeight)));
-  const key = `${col}:${row}`;
-  const props = feature.properties || {};
-  const current = grid.cells.get(key) || {
-    count: 0,
-    lonSum: 0,
-    latSum: 0,
-    frpTotal: 0,
-    confidenceCategory: "low",
-    confidenceRank: 0,
-    estado: props.estado || null,
-    municipio: props.municipio || null,
-    cve_ent: props.cve_ent || null,
-    cvegeo: props.cvegeo || null,
-    day: 0,
-    night: 0,
-  };
-
-  current.count += 1;
-  current.lonSum += lon;
-  current.latSum += lat;
-  current.frpTotal += Number(props.frp) || 0;
-  const rank = confidenceRank(props.confidence_category);
-  if (rank > current.confidenceRank) {
-    current.confidenceRank = rank;
-    current.confidenceCategory = props.confidence_category || "nominal";
-  }
-  if (String(props.daynight || "").toUpperCase() === "N") current.night += 1;
-  else current.day += 1;
-  if (current.municipio !== props.municipio) current.municipio = "Varias ubicaciones";
-  if (current.cvegeo !== props.cvegeo) current.cvegeo = null;
-  grid.cells.set(key, current);
-}
-
-function gridToFeatures(grid) {
-  return Array.from(grid.cells.values()).map((cell) => ({
-    type: "Feature",
-    geometry: {
-      type: "Point",
-      coordinates: [cell.lonSum / cell.count, cell.latSum / cell.count],
-    },
-    properties: {
-      agregado: true,
-      detecciones: cell.count,
-      fecha: null,
-      acq_time: null,
-      confidence: null,
-      confidence_category: cell.confidenceCategory,
-      frp: Number(cell.frpTotal.toFixed(2)),
-      frp_total: Number(cell.frpTotal.toFixed(2)),
-      daynight: cell.night > cell.day ? "N" : "D",
-      estado: cell.estado,
-      municipio: cell.municipio,
-      cve_ent: cell.cve_ent,
-      cve_mun: null,
-      cvegeo: cell.cvegeo,
-    },
-  }));
 }
 
 export async function obtenerFirmsMapa(params = {}) {
@@ -298,10 +207,7 @@ export async function obtenerFirmsMapa(params = {}) {
 
   const key = firmsKey(anio);
   const { rows, metadata, estadisticas, cache } = await leerParquetR2(key, FIRMS_COLUMNS);
-
-  let features = [];
-  let grid = null;
-  let originalCount = 0;
+  const features = [];
 
   for (const row of rows) {
     const fecha = fechaIso(row.fecha ?? row.acq_date);
@@ -313,20 +219,8 @@ export async function obtenerFirmsMapa(params = {}) {
     const latitude = Number(row.latitude);
     if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) continue;
 
-    originalCount += 1;
-    const feature = crearFirmsFeature(row, fecha, longitude, latitude);
-
-    if (!grid && bbox && originalCount > FIRMS_MAX_POINTS) {
-      grid = createFirmsGrid(bbox);
-      features.forEach((item) => addFirmsFeatureToGrid(grid, item));
-      features = [];
-    }
-
-    if (grid) addFirmsFeatureToGrid(grid, feature);
-    else features.push(feature);
+    features.push(crearFirmsFeature(row, fecha, longitude, latitude));
   }
-
-  if (grid) features = gridToFeatures(grid);
 
   return featureCollection(features, {
     fuente: "FIRMS",
@@ -338,9 +232,7 @@ export async function obtenerFirmsMapa(params = {}) {
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
     registros: features.length,
-    registros_originales: originalCount,
-    agregado_espacial: Boolean(grid),
-    limite_visualizacion: FIRMS_MAX_POINTS,
+    representacion: "detecciones-originales",
     cache_parquet: cache,
     r2: {
       key,
@@ -382,7 +274,6 @@ export async function obtenerConaforMapa(params = {}) {
       type: "Feature",
       geometry: { type: "Point", coordinates: [longitude, latitude] },
       properties: {
-        clave_incendio: valorJson(row.clave_incendio),
         fecha_inicio: fecha,
         fecha_termino: fechaIso(row.fecha_termino),
         estado: valorJson(row.estado),
@@ -390,15 +281,16 @@ export async function obtenerConaforMapa(params = {}) {
         cve_ent: normalizarCve(row.cve_ent, 2),
         cve_mun: normalizarCve(row.cve_mun, 3),
         cvegeo: normalizarCve(row.cvegeo, 5),
-        region: valorJson(row.region),
-        predio: valorJson(row.predio),
+        clave_incendio: valorJson(row.clave_incendio),
+        superficie_total_ha: valorJson(row.superficie_total_ha),
+        tipo_impacto: valorJson(row.tipo_impacto),
+        tipo_incendio: valorJson(row.tipo_incendio),
         causa: valorJson(row.causa),
         causa_especifica: valorJson(row.causa_especifica),
-        tipo_incendio: valorJson(row.tipo_incendio),
-        tipo_impacto: valorJson(row.tipo_impacto),
         tipo_vegetacion: valorJson(row.tipo_vegetacion),
         regimen_fuego: valorJson(row.regimen_fuego),
-        superficie_total_ha: valorJson(row.superficie_total_ha),
+        region: valorJson(row.region),
+        predio: valorJson(row.predio),
         superficie_categoria: valorJson(row.superficie_categoria),
         arbolado_adulto: valorJson(row.arbolado_adulto),
         arbustivo: valorJson(row.arbustivo),
