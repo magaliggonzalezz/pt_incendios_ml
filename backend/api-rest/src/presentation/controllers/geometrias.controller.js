@@ -1,10 +1,10 @@
 import {
   obtenerCapaTematica,
-  obtenerCapaTematicaViewport,
   obtenerEstacionesSmn,
   obtenerGeometriasEstados,
   obtenerGeometriasMunicipios,
 } from "../../application/services/geometrias.service.js";
+import { obtenerCapaTematicaViewportLigera } from "../../application/services/geometrias-viewport.service.js";
 
 export class GeometriasController {
   async estados(req, res) {
@@ -45,7 +45,7 @@ export class GeometriasController {
 
   async tematicaViewport(req, res) {
     try {
-      const data = await obtenerCapaTematicaViewport(
+      const data = await obtenerCapaTematicaViewportLigera(
         req.params.capa,
         req.query.cve_ent,
         req.query.bbox,
