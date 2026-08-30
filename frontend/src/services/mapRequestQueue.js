@@ -2,7 +2,7 @@ const RESPONSE_CACHE_TTL_MS = 10 * 60 * 1000;
 
 const responseCache = new Map();
 const inFlight = new Map();
-let requestQueue = Promise.resolve();
+const queues = new Map();
 
 function createAbortError() {
   if (typeof DOMException !== "undefined") {
@@ -59,7 +59,7 @@ export function normalizeBbox(value, decimals = 4) {
   return parts.map((part) => part.toFixed(decimals)).join(",");
 }
 
-export function enqueueMapRequest({ key, request, signal, cache = true }) {
+export function enqueueMapRequest({ key, request, signal, cache = true, channel = "default" }) {
   const cached = cache ? getCached(key) : null;
   if (cached) return Promise.resolve(cached);
 
@@ -68,19 +68,15 @@ export function enqueueMapRequest({ key, request, signal, cache = true }) {
 
   const execute = async () => {
     if (signal?.aborted) throw createAbortError();
-
-    // No propagamos AbortSignal al fetch real: una vez que Node empieza a procesar
-    // GeoJSON/Parquet, cancelar el navegador no detiene ese CPU. La cola evita que
-    // una nueva operación pesada se ejecute en paralelo y la deduplicación evita
-    // repetir el mismo trabajo mientras ya está en curso.
     const value = await request();
     if (cache) setCached(key, value);
     return value;
   };
 
-  const shared = requestQueue.then(execute, execute);
+  const queue = queues.get(channel) || Promise.resolve();
+  const shared = queue.then(execute, execute);
   inFlight.set(key, shared);
-  requestQueue = shared.catch(() => undefined);
+  queues.set(channel, shared.catch(() => undefined));
 
   shared.finally(() => {
     if (inFlight.get(key) === shared) inFlight.delete(key);
