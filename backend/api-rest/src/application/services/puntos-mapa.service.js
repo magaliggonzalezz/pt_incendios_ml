@@ -6,6 +6,10 @@ import { crearAsyncBufferR2 } from "../../data/storage/r2.js";
 const FIRMS_YEAR_MIN = 2001;
 const FIRMS_YEAR_MAX = 2025;
 const CONAFOR_KEY = "fuentes/conafor/conafor_incendios_eventos.parquet";
+const ROW_CACHE_TTL_MS = 10 * 60 * 1000;
+
+const parquetRowsCache = new Map();
+const parquetInFlight = new Map();
 
 const FIRMS_COLUMNS = [
   "latitude",
@@ -154,10 +158,37 @@ function parseMes(value) {
   return mes;
 }
 
+function getParquetCache(key) {
+  const cached = parquetRowsCache.get(key);
+  if (!cached) return null;
+  if (Date.now() - cached.createdAt >= ROW_CACHE_TTL_MS) {
+    parquetRowsCache.delete(key);
+    return null;
+  }
+  return cached.value;
+}
+
 async function leerParquetR2(key, columns) {
-  const { file, metadata, obtenerEstadisticas } = await crearAsyncBufferR2(key);
-  const rows = await parquetReadObjects({ file, columns, compressors });
-  return { rows, metadata, estadisticas: obtenerEstadisticas() };
+  const cached = getParquetCache(key);
+  if (cached) return { ...cached, cache: true };
+
+  const existing = parquetInFlight.get(key);
+  if (existing) return existing;
+
+  const promise = (async () => {
+    const { file, metadata, obtenerEstadisticas } = await crearAsyncBufferR2(key);
+    const rows = await parquetReadObjects({ file, columns, compressors });
+    const value = { rows, metadata, estadisticas: obtenerEstadisticas(), cache: false };
+    parquetRowsCache.set(key, { createdAt: Date.now(), value });
+    return value;
+  })();
+
+  parquetInFlight.set(key, promise);
+  try {
+    return await promise;
+  } finally {
+    if (parquetInFlight.get(key) === promise) parquetInFlight.delete(key);
+  }
 }
 
 function featureCollection(features, metadata) {
@@ -178,7 +209,7 @@ export async function obtenerFirmsMapa(params = {}) {
   }
 
   const key = firmsKey(anio);
-  const { rows, metadata, estadisticas } = await leerParquetR2(key, FIRMS_COLUMNS);
+  const { rows, metadata, estadisticas, cache } = await leerParquetR2(key, FIRMS_COLUMNS);
 
   const features = [];
   for (const row of rows) {
@@ -227,6 +258,7 @@ export async function obtenerFirmsMapa(params = {}) {
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
     registros: features.length,
+    cache_parquet: cache,
     r2: {
       key,
       bytes_objeto: valorJson(metadata.bytes),
@@ -249,7 +281,7 @@ export async function obtenerConaforMapa(params = {}) {
     throw error400("fecha_inicio no puede ser posterior a fecha_fin");
   }
 
-  const { rows, metadata, estadisticas } = await leerParquetR2(CONAFOR_KEY, CONAFOR_COLUMNS);
+  const { rows, metadata, estadisticas, cache } = await leerParquetR2(CONAFOR_KEY, CONAFOR_COLUMNS);
   const features = [];
 
   for (const row of rows) {
@@ -307,6 +339,7 @@ export async function obtenerConaforMapa(params = {}) {
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
     registros: features.length,
+    cache_parquet: cache,
     r2: {
       key: CONAFOR_KEY,
       bytes_objeto: valorJson(metadata.bytes),
