@@ -94,18 +94,22 @@ export default function LeftPanel({
 
   const onChangeState = (cveEnt) => {
     const state = estados.find((item) => item.cve_ent === cveEnt);
-    onConsultaChange?.("cveEnt", cveEnt);
-    onConsultaChange?.("estado", state?.nombre || "");
-    onConsultaChange?.("municipio", "");
-    onConsultaChange?.("cveMun", "");
-    onConsultaChange?.("cvegeo", "");
+    onConsultaChange?.("consultaPatch", {
+      cveEnt,
+      estado: state?.nombre || "",
+      municipio: "",
+      cveMun: "",
+      cvegeo: "",
+    });
   };
 
   const onChangeMunicipio = (cvegeo) => {
     const municipality = municipios.find((item) => item.cvegeo === cvegeo);
-    onConsultaChange?.("cvegeo", cvegeo);
-    onConsultaChange?.("cveMun", municipality?.cve_mun || "");
-    onConsultaChange?.("municipio", municipality?.nombre || "");
+    onConsultaChange?.("consultaPatch", {
+      cvegeo,
+      cveMun: municipality?.cve_mun || "",
+      municipio: municipality?.nombre || "",
+    });
   };
 
   return (
