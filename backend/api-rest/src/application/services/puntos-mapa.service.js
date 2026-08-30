@@ -7,66 +7,25 @@ const FIRMS_YEAR_MIN = 2001;
 const FIRMS_YEAR_MAX = 2025;
 const CONAFOR_KEY = "fuentes/conafor/conafor_incendios_eventos.parquet";
 const ROW_CACHE_TTL_MS = 10 * 60 * 1000;
+const MAX_PARQUET_CACHE_ENTRIES = 2;
 const FIRMS_MAX_POINTS = 4000;
 
 const parquetRowsCache = new Map();
 const parquetInFlight = new Map();
 
 const FIRMS_COLUMNS = [
-  "latitude",
-  "longitude",
-  "fecha",
-  "acq_date",
-  "acq_time",
-  "satellite",
-  "instrument",
-  "confidence",
-  "confidence_category",
-  "version",
-  "brightness",
-  "scan",
-  "track",
-  "frp",
-  "daynight",
-  "type",
-  "anio",
-  "estado",
-  "municipio",
-  "cve_ent",
-  "cve_mun",
-  "cvegeo",
+  "latitude", "longitude", "fecha", "acq_date", "acq_time", "satellite",
+  "instrument", "confidence", "confidence_category", "version", "brightness",
+  "scan", "track", "frp", "daynight", "type", "anio", "estado", "municipio",
+  "cve_ent", "cve_mun", "cvegeo",
 ];
 
 const CONAFOR_COLUMNS = [
-  "clave_incendio",
-  "anio",
-  "fecha_inicio",
-  "fecha_termino",
-  "estado",
-  "municipio",
-  "cve_ent",
-  "cve_mun",
-  "cvegeo",
-  "latitud",
-  "longitud",
-  "region",
-  "predio",
-  "causa",
-  "causa_especifica",
-  "tipo_incendio",
-  "tipo_impacto",
-  "tipo_vegetacion",
-  "regimen_fuego",
-  "superficie_total_ha",
-  "superficie_categoria",
-  "arbolado_adulto",
-  "arbustivo",
-  "herbaceo",
-  "hojarasca",
-  "renuevo",
-  "duracion",
-  "deteccion",
-  "llegada",
+  "clave_incendio", "anio", "fecha_inicio", "fecha_termino", "estado", "municipio",
+  "cve_ent", "cve_mun", "cvegeo", "latitud", "longitud", "region", "predio",
+  "causa", "causa_especifica", "tipo_incendio", "tipo_impacto", "tipo_vegetacion",
+  "regimen_fuego", "superficie_total_ha", "superficie_categoria", "arbolado_adulto",
+  "arbustivo", "herbaceo", "hojarasca", "renuevo", "duracion", "deteccion", "llegada",
 ];
 
 function firmsKey(anio) {
@@ -166,7 +125,18 @@ function getParquetCache(key) {
     parquetRowsCache.delete(key);
     return null;
   }
+  parquetRowsCache.delete(key);
+  parquetRowsCache.set(key, cached);
   return cached.value;
+}
+
+function setParquetCache(key, value) {
+  parquetRowsCache.delete(key);
+  parquetRowsCache.set(key, { createdAt: Date.now(), value });
+  while (parquetRowsCache.size > MAX_PARQUET_CACHE_ENTRIES) {
+    const oldestKey = parquetRowsCache.keys().next().value;
+    parquetRowsCache.delete(oldestKey);
+  }
 }
 
 async function leerParquetR2(key, columns) {
@@ -180,7 +150,7 @@ async function leerParquetR2(key, columns) {
     const { file, metadata, obtenerEstadisticas } = await crearAsyncBufferR2(key);
     const rows = await parquetReadObjects({ file, columns, compressors });
     const value = { rows, metadata, estadisticas: obtenerEstadisticas(), cache: false };
-    parquetRowsCache.set(key, { createdAt: Date.now(), value });
+    setParquetCache(key, value);
     return value;
   })();
 
@@ -204,59 +174,91 @@ function confidenceRank(value) {
   return 0;
 }
 
-function aggregateFirms(features, bbox) {
-  if (!bbox || features.length <= FIRMS_MAX_POINTS) {
-    return { features, aggregated: false, originalCount: features.length };
-  }
+function crearFirmsFeature(row, fecha, longitude, latitude) {
+  return {
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [longitude, latitude] },
+    properties: {
+      fecha,
+      acq_time: valorJson(row.acq_time),
+      satellite: valorJson(row.satellite),
+      instrument: valorJson(row.instrument),
+      confidence: valorJson(row.confidence),
+      confidence_category: valorJson(row.confidence_category),
+      version: valorJson(row.version),
+      brightness: valorJson(row.brightness),
+      scan: valorJson(row.scan),
+      track: valorJson(row.track),
+      frp: valorJson(row.frp),
+      daynight: valorJson(row.daynight),
+      type: valorJson(row.type),
+      estado: valorJson(row.estado),
+      municipio: valorJson(row.municipio),
+      cve_ent: normalizarCve(row.cve_ent, 2),
+      cve_mun: normalizarCve(row.cve_mun, 3),
+      cvegeo: normalizarCve(row.cvegeo, 5),
+    },
+  };
+}
 
+function createFirmsGrid(bbox) {
+  if (!bbox) return null;
   const [minx, miny, maxx, maxy] = bbox;
   const width = Math.max(maxx - minx, 1e-9);
   const height = Math.max(maxy - miny, 1e-9);
   const aspect = width / height;
   const cols = Math.max(8, Math.ceil(Math.sqrt(FIRMS_MAX_POINTS * Math.max(aspect, 0.25))));
   const rows = Math.max(8, Math.ceil(FIRMS_MAX_POINTS / cols));
-  const cellWidth = width / cols;
-  const cellHeight = height / rows;
-  const cells = new Map();
+  return {
+    minx,
+    miny,
+    cols,
+    rows,
+    cellWidth: width / cols,
+    cellHeight: height / rows,
+    cells: new Map(),
+  };
+}
 
-  features.forEach((feature) => {
-    const [lon, lat] = feature.geometry.coordinates;
-    const col = Math.min(cols - 1, Math.max(0, Math.floor((lon - minx) / cellWidth)));
-    const row = Math.min(rows - 1, Math.max(0, Math.floor((lat - miny) / cellHeight)));
-    const key = `${col}:${row}`;
-    const props = feature.properties || {};
-    const current = cells.get(key) || {
-      count: 0,
-      lonSum: 0,
-      latSum: 0,
-      frpTotal: 0,
-      confidenceCategory: "low",
-      confidenceRank: 0,
-      estado: props.estado || null,
-      municipio: props.municipio || null,
-      cve_ent: props.cve_ent || null,
-      cvegeo: props.cvegeo || null,
-      day: 0,
-      night: 0,
-    };
+function addFirmsFeatureToGrid(grid, feature) {
+  const [lon, lat] = feature.geometry.coordinates;
+  const col = Math.min(grid.cols - 1, Math.max(0, Math.floor((lon - grid.minx) / grid.cellWidth)));
+  const row = Math.min(grid.rows - 1, Math.max(0, Math.floor((lat - grid.miny) / grid.cellHeight)));
+  const key = `${col}:${row}`;
+  const props = feature.properties || {};
+  const current = grid.cells.get(key) || {
+    count: 0,
+    lonSum: 0,
+    latSum: 0,
+    frpTotal: 0,
+    confidenceCategory: "low",
+    confidenceRank: 0,
+    estado: props.estado || null,
+    municipio: props.municipio || null,
+    cve_ent: props.cve_ent || null,
+    cvegeo: props.cvegeo || null,
+    day: 0,
+    night: 0,
+  };
 
-    current.count += 1;
-    current.lonSum += lon;
-    current.latSum += lat;
-    current.frpTotal += Number(props.frp) || 0;
-    const rank = confidenceRank(props.confidence_category);
-    if (rank > current.confidenceRank) {
-      current.confidenceRank = rank;
-      current.confidenceCategory = props.confidence_category || "nominal";
-    }
-    if (String(props.daynight || "").toUpperCase() === "N") current.night += 1;
-    else current.day += 1;
-    if (current.municipio !== props.municipio) current.municipio = "Varias ubicaciones";
-    if (current.cvegeo !== props.cvegeo) current.cvegeo = null;
-    cells.set(key, current);
-  });
+  current.count += 1;
+  current.lonSum += lon;
+  current.latSum += lat;
+  current.frpTotal += Number(props.frp) || 0;
+  const rank = confidenceRank(props.confidence_category);
+  if (rank > current.confidenceRank) {
+    current.confidenceRank = rank;
+    current.confidenceCategory = props.confidence_category || "nominal";
+  }
+  if (String(props.daynight || "").toUpperCase() === "N") current.night += 1;
+  else current.day += 1;
+  if (current.municipio !== props.municipio) current.municipio = "Varias ubicaciones";
+  if (current.cvegeo !== props.cvegeo) current.cvegeo = null;
+  grid.cells.set(key, current);
+}
 
-  const aggregatedFeatures = Array.from(cells.values()).map((cell) => ({
+function gridToFeatures(grid) {
+  return Array.from(grid.cells.values()).map((cell) => ({
     type: "Feature",
     geometry: {
       type: "Point",
@@ -279,12 +281,6 @@ function aggregateFirms(features, bbox) {
       cvegeo: cell.cvegeo,
     },
   }));
-
-  return {
-    features: aggregatedFeatures,
-    aggregated: true,
-    originalCount: features.length,
-  };
 }
 
 export async function obtenerFirmsMapa(params = {}) {
@@ -303,7 +299,10 @@ export async function obtenerFirmsMapa(params = {}) {
   const key = firmsKey(anio);
   const { rows, metadata, estadisticas, cache } = await leerParquetR2(key, FIRMS_COLUMNS);
 
-  const rawFeatures = [];
+  let features = [];
+  let grid = null;
+  let originalCount = 0;
+
   for (const row of rows) {
     const fecha = fechaIso(row.fecha ?? row.acq_date);
     if (!coincideTerritorio(row, cveEnt, cvegeo)) continue;
@@ -314,35 +313,22 @@ export async function obtenerFirmsMapa(params = {}) {
     const latitude = Number(row.latitude);
     if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) continue;
 
-    rawFeatures.push({
-      type: "Feature",
-      geometry: { type: "Point", coordinates: [longitude, latitude] },
-      properties: {
-        fecha,
-        acq_time: valorJson(row.acq_time),
-        satellite: valorJson(row.satellite),
-        instrument: valorJson(row.instrument),
-        confidence: valorJson(row.confidence),
-        confidence_category: valorJson(row.confidence_category),
-        version: valorJson(row.version),
-        brightness: valorJson(row.brightness),
-        scan: valorJson(row.scan),
-        track: valorJson(row.track),
-        frp: valorJson(row.frp),
-        daynight: valorJson(row.daynight),
-        type: valorJson(row.type),
-        estado: valorJson(row.estado),
-        municipio: valorJson(row.municipio),
-        cve_ent: normalizarCve(row.cve_ent, 2),
-        cve_mun: normalizarCve(row.cve_mun, 3),
-        cvegeo: normalizarCve(row.cvegeo, 5),
-      },
-    });
+    originalCount += 1;
+    const feature = crearFirmsFeature(row, fecha, longitude, latitude);
+
+    if (!grid && bbox && originalCount > FIRMS_MAX_POINTS) {
+      grid = createFirmsGrid(bbox);
+      features.forEach((item) => addFirmsFeatureToGrid(grid, item));
+      features = [];
+    }
+
+    if (grid) addFirmsFeatureToGrid(grid, feature);
+    else features.push(feature);
   }
 
-  const aggregated = aggregateFirms(rawFeatures, bbox);
+  if (grid) features = gridToFeatures(grid);
 
-  return featureCollection(aggregated.features, {
+  return featureCollection(features, {
     fuente: "FIRMS",
     anio,
     mes,
@@ -351,9 +337,9 @@ export async function obtenerFirmsMapa(params = {}) {
     bbox,
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
-    registros: aggregated.features.length,
-    registros_originales: aggregated.originalCount,
-    agregado_espacial: aggregated.aggregated,
+    registros: features.length,
+    registros_originales: originalCount,
+    agregado_espacial: Boolean(grid),
     limite_visualizacion: FIRMS_MAX_POINTS,
     cache_parquet: cache,
     r2: {
