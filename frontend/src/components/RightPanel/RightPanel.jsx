@@ -36,53 +36,80 @@ function buildTerritorioLabel(consulta, resumen) {
   return estado || resumen?.territorio || "México";
 }
 
-function activeLayerCards(consulta, resumen, hasResults) {
+function formatCoverage(coverage) {
+  if (!coverage?.from && !coverage?.to) return null;
+  if (coverage.from && coverage.to) return `${coverage.from} → ${coverage.to}`;
+  return coverage.from || coverage.to;
+}
+
+function activeLayerCards(consulta, layerSummary) {
   const active = consulta?.capasActivas || {};
   const cards = [];
+  const summary = layerSummary || {};
+
   if (active.puntosCalorFirms) {
+    const firms = summary.firms || {};
+    const instrument = firms.satelliteInstrument?.value;
     cards.push({
       id: "firms",
       icon: Satellite,
-      title: "FIRMS",
-      value: hasResults ? `${formatNumber(resumen?.firms_detecciones)} detecciones` : "Capa activa",
-      detail: hasResults ? `FRP acumulado: ${formatNumber(resumen?.firms_frp, 2)}` : "Detecciones originales del período y territorio visibles en el mapa.",
+      title: "FIRMS · área visible",
+      value: `${formatNumber(firms.count)} detecciones`,
+      details: [
+        `${formatNumber(firms.day)} diurnas · ${formatNumber(firms.night)} nocturnas`,
+        instrument ? `Satélite / instrumento predominante: ${instrument}` : null,
+      ].filter(Boolean),
     });
   }
+
   if (active.incendiosConafor) {
+    const conafor = summary.conafor || {};
     cards.push({
       id: "conafor",
       icon: Flame,
-      title: "CONAFOR",
-      value: hasResults ? `${formatNumber(resumen?.conafor_eventos)} incendios` : "Capa activa",
-      detail: hasResults ? `${formatNumber(resumen?.conafor_ha, 2)} ha registradas` : "Registros originales de incendios disponibles para la selección.",
+      title: "CONAFOR · área visible",
+      value: `${formatNumber(conafor.count)} incendios`,
+      details: [
+        `${formatNumber(conafor.hectares, 2)} ha registradas`,
+        conafor.vegetation?.value ? `Vegetación más frecuente: ${conafor.vegetation.value}` : null,
+        conafor.cause?.value ? `Causa más frecuente: ${conafor.cause.value}` : null,
+      ].filter(Boolean),
     });
   }
+
   if (active.estacionesSmn) {
+    const smn = summary.smn || {};
     cards.push({
       id: "smn",
       icon: CloudSun,
       title: "SMN-CONAGUA",
-      value: "Estaciones meteorológicas",
-      detail: consulta?.filtrosSmn?.alcance === "periodo" ? "Filtradas por cobertura del período seleccionado." : "Inventario filtrado por territorio y situación operativa.",
+      value: `${formatNumber(smn.count)} estaciones meteorológicas`,
+      details: [
+        `${formatNumber(smn.operando)} operando · ${formatNumber(smn.suspendida)} suspendidas`,
+        formatCoverage(smn.coverage) ? `Cobertura disponible: ${formatCoverage(smn.coverage)}` : null,
+        consulta?.filtrosSmn?.alcance === "periodo" ? "Conteo filtrado por el período seleccionado." : "Conteo según territorio y situación operativa seleccionados.",
+      ].filter(Boolean),
     });
   }
-  const thematicCount = [
-    active.fisiografiaInegi,
-    active.edafologiaInegi,
-    active.usoSueloVegetacionInegi,
-    active.corrientesAguaInegi,
-    active.limitesEstatales,
-    active.limitesMunicipales,
-  ].filter(Boolean).length;
-  if (thematicCount) {
+
+  const inegi = summary.inegi || {};
+  const inegiDetails = [];
+  if (active.fisiografiaInegi) inegiDetails.push(`Provincias fisiográficas: ${formatNumber(inegi.fisiografia)} features visibles`);
+  if (active.edafologiaInegi) inegiDetails.push(`Edafología: ${formatNumber(inegi.edafologia)} features visibles`);
+  if (active.usoSueloVegetacionInegi) inegiDetails.push(`Uso de suelo y vegetación: ${formatNumber(inegi.usoSueloVegetacion)} features visibles`);
+  if (active.corrientesAguaInegi) inegiDetails.push(`Corrientes de agua: ${formatNumber(inegi.hidrografia)} features visibles`);
+  if (active.limitesEstatales) inegiDetails.push("Límites estatales activos");
+  if (active.limitesMunicipales) inegiDetails.push("Límites municipales activos");
+  if (inegiDetails.length) {
     cards.push({
       id: "inegi",
       icon: Map,
       title: "INEGI",
-      value: `${thematicCount} capa${thematicCount === 1 ? "" : "s"} activa${thematicCount === 1 ? "" : "s"}`,
-      detail: "Límites y capas temáticas del marco geoestadístico visibles según la selección.",
+      value: "Capas geográficas activas",
+      details: inegiDetails,
     });
   }
+
   return cards;
 }
 
@@ -93,6 +120,7 @@ export default function RightPanel({
   consultaActiva = null,
   consultaResultado = null,
   resumenConsulta = null,
+  layerSummary = null,
   totalRecords = 0,
   availableFormats = ["csv", "json"],
   isExporting = false,
@@ -109,7 +137,7 @@ export default function RightPanel({
   const territorio = buildTerritorioLabel(consultaActiva, resumenConsulta);
   const periodoActivo = buildPeriodoLabel(consultaActiva);
   const nivelActivo = getNivelUiLabel(consultaActiva?.nivelAgregacion);
-  const layerCards = useMemo(() => activeLayerCards(consultaActiva, resumenConsulta, hasResults), [consultaActiva, resumenConsulta, hasResults]);
+  const layerCards = useMemo(() => activeLayerCards(consultaActiva, layerSummary), [consultaActiva, layerSummary]);
 
   return (
     <>
@@ -138,6 +166,7 @@ export default function RightPanel({
 
             <section className="mapSummarySection">
               <div className="mapSummaryTitle">Resumen de capas activas</div>
+              <div className="mapSummaryScope">Las métricas de FIRMS, CONAFOR e INEGI corresponden a los registros/features actualmente cargados en el área visible del mapa.</div>
               {layerCards.length ? (
                 <div className="layerSummaryList">
                   {layerCards.map((card) => {
@@ -148,7 +177,7 @@ export default function RightPanel({
                         <div>
                           <span>{card.title}</span>
                           <strong>{card.value}</strong>
-                          <small>{card.detail}</small>
+                          {card.details.map((detail) => <small key={detail}>{detail}</small>)}
                         </div>
                       </div>
                     );
@@ -163,7 +192,7 @@ export default function RightPanel({
               <div className="querySummaryBox">
                 <span>Consulta ML disponible</span>
                 <strong>{formatNumber(resumen.observaciones)} observaciones evaluadas</strong>
-                <small>El detalle, gráficas y datos de la consulta se muestran en “Ver resultados”.</small>
+                <small>El detalle, las gráficas y los datos de la consulta se muestran en “Ver resultados”.</small>
               </div>
             ) : null}
             {!isLoading && !error && !hasResults ? (
