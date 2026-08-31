@@ -17,14 +17,19 @@ export default function SearchableSelect({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  const selected = options.find((option) => String(option.value) === String(value));
+  const availableOptions = useMemo(() => {
+    if (options.some((option) => String(option.value) === "")) return options;
+    return [{ value: "", label: placeholder }, ...options];
+  }, [options, placeholder]);
+
+  const selected = availableOptions.find((option) => String(option.value) === String(value));
   const normalizedQuery = query.trim().toLocaleLowerCase("es-MX");
   const filtered = useMemo(() => {
-    if (!normalizedQuery) return options;
-    return options.filter((option) =>
+    if (!normalizedQuery) return availableOptions;
+    return availableOptions.filter((option) =>
       `${option.label} ${option.meta || ""}`.toLocaleLowerCase("es-MX").includes(normalizedQuery)
     );
-  }, [options, normalizedQuery]);
+  }, [availableOptions, normalizedQuery]);
 
   useEffect(() => {
     const handleOutside = (event) => {
@@ -57,7 +62,7 @@ export default function SearchableSelect({
           aria-expanded={open}
           onClick={() => setOpen((current) => !current)}
         >
-          <span className={selected ? "" : "placeholder"}>{selected?.label || placeholder}</span>
+          <span className={value ? "" : "placeholder"}>{selected?.label || placeholder}</span>
           <ChevronDown size={16} aria-hidden="true" />
         </button>
 
@@ -78,18 +83,14 @@ export default function SearchableSelect({
                 </button>
               ) : null}
             </div>
-            <div
-              className="searchableSelectList"
-              role="listbox"
-              style={{ "--visible-options": Math.max(3, Math.min(maxVisible, 9)) }}
-            >
+            <div className="searchableSelectList" role="listbox" style={{ "--visible-options": Math.max(3, Math.min(maxVisible, 9)) }}>
               {filtered.map((option) => (
                 <button
                   type="button"
                   role="option"
                   aria-selected={String(option.value) === String(value)}
                   className={`searchableSelectOption ${String(option.value) === String(value) ? "isSelected" : ""}`}
-                  key={`${id}-${option.value}`}
+                  key={`${id}-${option.value || "empty"}`}
                   onClick={() => choose(option)}
                 >
                   <span>{option.label}</span>
