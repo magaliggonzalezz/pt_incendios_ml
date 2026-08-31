@@ -2,6 +2,9 @@ const sum = (rows, field) => rows.reduce((total, row) => total + Number(row?.[fi
 
 function getPeriodoLabel(consulta) {
   if (consulta.tipoPeriodo === "anio_mes") return `${String(consulta.mes).padStart(2, "0")}/${consulta.anio}`;
+  if (consulta.tipoPeriodo === "comparar_anios") return `${consulta.anioInicio} vs ${consulta.anioFin}`;
+  if (consulta.tipoPeriodo === "fecha") return String(consulta.fechaInicio || "");
+  if (consulta.tipoPeriodo === "rango_fechas") return `${consulta.fechaInicio || ""} a ${consulta.fechaFin || ""}`;
   return String(consulta.anio || "");
 }
 
@@ -11,7 +14,6 @@ function getDominantCluster(rows) {
     const id = Number(row.cluster);
     totals.set(id, (totals.get(id) || 0) + Number(row.observaciones || 0));
   });
-
   let selected = null;
   let max = -1;
   totals.forEach((value, id) => {
@@ -58,7 +60,6 @@ function decorateRow(row, { clusters, estados, municipios }) {
 function buildSummaryRows(rows, clusters) {
   const metaMap = clusterMetaById(clusters);
   const grouped = new Map();
-
   rows.forEach((row) => {
     const clusterId = Number(row.cluster);
     const current = grouped.get(clusterId) ?? {
@@ -73,7 +74,6 @@ function buildSummaryRows(rows, clusters) {
       conafor_event_count_total: 0,
       conafor_total_hectareas_total: 0,
     };
-
     current.n_observaciones += Number(row.observaciones || 0);
     current.dias += Number(row.observaciones || 0);
     current.dias_con_firms += Number(row.dias_firms || 0);
@@ -108,15 +108,40 @@ function buildCatalogRows(clusters = []) {
   }));
 }
 
-function buildTemporalRows(consulta, rows) {
-  if (consulta.tipoPeriodo !== "anio_mes" || !rows.length) return [];
-
-  return [{
-    anio: Number(consulta.anio),
-    mes: Number(consulta.mes),
-    label: `${String(consulta.mes).padStart(2, "0")}/${consulta.anio}`,
+function temporalRow(label, year, rows) {
+  return {
+    anio: Number(year),
+    label,
+    observaciones: sum(rows, "observaciones"),
     firms_detection_count_total: sum(rows, "firms_detecciones"),
-  }];
+    firms_frp_total: sum(rows, "firms_frp"),
+    conafor_event_count_total: sum(rows, "conafor_eventos"),
+    conafor_total_hectareas_total: sum(rows, "conafor_ha"),
+  };
+}
+
+function buildTemporalRows(consulta, rows) {
+  if (!rows.length) return [];
+  if (consulta.tipoPeriodo === "anio_mes") {
+    return [{
+      anio: Number(consulta.anio),
+      mes: Number(consulta.mes),
+      label: `${String(consulta.mes).padStart(2, "0")}/${consulta.anio}`,
+      firms_detection_count_total: sum(rows, "firms_detecciones"),
+      firms_frp_total: sum(rows, "firms_frp"),
+      conafor_event_count_total: sum(rows, "conafor_eventos"),
+      conafor_total_hectareas_total: sum(rows, "conafor_ha"),
+    }];
+  }
+  if (consulta.tipoPeriodo === "comparar_anios") {
+    const yearA = rows.filter((row) => Number(row.anio_comparacion) === Number(consulta.anioInicio));
+    const yearB = rows.filter((row) => Number(row.anio_comparacion) === Number(consulta.anioFin));
+    return [
+      temporalRow(String(consulta.anioInicio), consulta.anioInicio, yearA),
+      temporalRow(String(consulta.anioFin), consulta.anioFin, yearB),
+    ];
+  }
+  return [];
 }
 
 export function buildRealDashboardResults({ consulta, rows, clusters, estados, municipios }) {
