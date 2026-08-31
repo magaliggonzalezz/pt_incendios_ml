@@ -155,19 +155,18 @@ export default function RightPanel({
           <div className="kpiBody">
             <div className="metaGrid">
               <div className="metaBox">
-                <span className="metaIcon" aria-hidden="true"><CalendarDays size={16} /></span>
-                <div><span>Período</span><strong>{hasResults ? (resumen.periodo || periodoActivo) : periodoActivo}</strong></div>
+                <span className="metaIcon" aria-hidden="true"><CalendarDays size={17} /></span>
+                <div className="metaText"><span>Período</span><strong>{hasResults ? (resumen.periodo || periodoActivo) : periodoActivo}</strong></div>
               </div>
               <div className="metaBox">
-                <span className="metaIcon" aria-hidden="true"><Layers3 size={16} /></span>
-                <div><span>Nivel de análisis</span><strong>{hasResults ? getNivelUiLabel(resumen.nivelAgregacion) : nivelActivo}</strong></div>
+                <span className="metaIcon" aria-hidden="true"><Layers3 size={17} /></span>
+                <div className="metaText"><span>Nivel de análisis</span><strong>{hasResults ? getNivelUiLabel(resumen.nivelAgregacion) : nivelActivo}</strong></div>
               </div>
             </div>
 
-            <section className="mapSummarySection">
-              <div className="mapSummaryTitle">Resumen de capas activas</div>
-              <div className="mapSummaryScope">Las métricas de FIRMS, CONAFOR e INEGI corresponden a los registros/features actualmente cargados en el área visible del mapa.</div>
-              {layerCards.length ? (
+            {layerCards.length ? (
+              <section className="mapSummarySection">
+                <div className="mapSummaryTitle">Resumen de capas activas</div>
                 <div className="layerSummaryList">
                   {layerCards.map((card) => {
                     const Icon = card.icon;
@@ -183,8 +182,11 @@ export default function RightPanel({
                     );
                   })}
                 </div>
-              ) : <div className="emptyState compact">Activa una o más capas para ver su resumen.</div>}
-            </section>
+                <div className="mapSummaryDisclaimer">
+                  Los conteos corresponden a los registros o features cargados actualmente en el área visible del mapa.
+                </div>
+              </section>
+            ) : null}
 
             {isLoading ? <div className="emptyState">Consultando resultados...</div> : null}
             {error ? <div className="emptyState">No fue posible ejecutar la consulta: {error}</div> : null}
