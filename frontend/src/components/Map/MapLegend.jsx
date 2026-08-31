@@ -1,8 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import "./MapLegend.css";
 
-export default function MapLegend({ resumenConsulta = null, rightPanelOpen = false, selectedMlCluster = null }) {
+export default function MapLegend({
+  resumenConsulta = null,
+  rightPanelOpen = false,
+  selectedMlCluster = null,
+  capasActivas = {},
+}) {
   const [collapsed, setCollapsed] = useState(true);
 
   const mlItems = useMemo(() => {
@@ -21,6 +26,25 @@ export default function MapLegend({ resumenConsulta = null, rightPanelOpen = fal
       }));
   }, [resumenConsulta]);
 
+  const showFirms = Boolean(capasActivas.puntosCalorFirms);
+  const showConafor = Boolean(capasActivas.incendiosConafor);
+  const showSmn = Boolean(capasActivas.estacionesSmn);
+  const showInegi = Boolean(
+    capasActivas.limitesEstatales ||
+    capasActivas.limitesMunicipales ||
+    capasActivas.fisiografiaInegi ||
+    capasActivas.edafologiaInegi ||
+    capasActivas.usoSueloVegetacionInegi ||
+    capasActivas.corrientesAguaInegi
+  );
+  const hasSymbology = showFirms || showConafor || showSmn || showInegi || mlItems.length > 0;
+
+  useEffect(() => {
+    if (hasSymbology) setCollapsed(false);
+  }, [hasSymbology]);
+
+  if (!hasSymbology) return null;
+
   return (
     <aside className={`mapLegend ${rightPanelOpen ? "rightPanelOpen" : ""} ${collapsed ? "isCollapsed" : ""}`} aria-label="Simbología del mapa">
       <div className="mapLegendHeader">
@@ -32,35 +56,43 @@ export default function MapLegend({ resumenConsulta = null, rightPanelOpen = fal
 
       {!collapsed ? (
         <div className="mapLegendBody">
-          <section className="mapLegendSection">
-            <div className="mapLegendSectionTitle">FIRMS</div>
-            <div className="mapLegendItems">
-              <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsLow"/><div><strong>Confianza baja</strong><span>Detección FIRMS original</span></div></div>
-              <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsNominal"/><div><strong>Confianza nominal</strong><span>Detección FIRMS original</span></div></div>
-              <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsHigh"/><div><strong>Confianza alta</strong><span>Detección FIRMS original</span></div></div>
-            </div>
-            <p className="legendNote"><strong>Archive:</strong> la aplicación presenta únicamente el archivo histórico consolidado de FIRMS; no utiliza productos NRT/RT.</p>
-            <p className="legendNote"><strong>Tipo FIRMS:</strong> 0 incendio de vegetación presunto · 1 volcán activo · 2 otra fuente terrestre estática · 3 detección offshore.</p>
-          </section>
+          {showFirms ? (
+            <section className="mapLegendSection">
+              <div className="mapLegendSectionTitle">FIRMS</div>
+              <div className="mapLegendItems">
+                <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsLow"/><div><strong>Confianza baja</strong><span>Detección FIRMS original</span></div></div>
+                <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsNominal"/><div><strong>Confianza nominal</strong><span>Detección FIRMS original</span></div></div>
+                <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsHigh"/><div><strong>Confianza alta</strong><span>Detección FIRMS original</span></div></div>
+              </div>
+              <p className="legendNote"><strong>Archive:</strong> se muestran únicamente datos del archivo histórico consolidado de FIRMS. No se utilizan productos NRT ni RT.</p>
+              <p className="legendNote"><strong>Tipo:</strong> 0 incendio de vegetación presunto · 1 volcán activo · 2 otra fuente terrestre estática · 3 detección offshore.</p>
+            </section>
+          ) : null}
 
-          <section className="mapLegendSection">
-            <div className="mapLegendSectionTitle">CONAFOR y SMN-CONAGUA</div>
-            <div className="mapLegendItems">
-              <div className="mapLegendItem"><span className="mapLegendSymbol dot conafor"/><div><strong>Incendio CONAFOR</strong><span>Registro original; tamaño según superficie cuando existe.</span></div></div>
-              <div className="mapLegendItem"><span className="mapLegendSymbol station"/><div><strong>Estación meteorológica</strong><span>Inventario SMN-CONAGUA filtrado por territorio/período.</span></div></div>
-            </div>
-          </section>
+          {(showConafor || showSmn) ? (
+            <section className="mapLegendSection">
+              <div className="mapLegendSectionTitle">CONAFOR y SMN-CONAGUA</div>
+              <div className="mapLegendItems">
+                {showConafor ? <div className="mapLegendItem"><span className="mapLegendSymbol dot conafor"/><div><strong>Incendio CONAFOR</strong><span>Registro original; tamaño según superficie cuando existe.</span></div></div> : null}
+                {showSmn ? <div className="mapLegendItem"><span className="mapLegendSymbol station"/><div><strong>Estación meteorológica</strong><span>Inventario SMN-CONAGUA filtrado por territorio, período y situación operativa.</span></div></div> : null}
+              </div>
+            </section>
+          ) : null}
 
-          <section className="mapLegendSection">
-            <div className="mapLegendSectionTitle">INEGI</div>
-            <div className="mapLegendItems">
-              <div className="mapLegendItem"><span className="mapLegendSymbol line physiography"/><div><strong>Provincias fisiográficas</strong></div></div>
-              <div className="mapLegendItem"><span className="mapLegendSymbol line soil"/><div><strong>Edafología</strong></div></div>
-              <div className="mapLegendItem"><span className="mapLegendSymbol line landUse"/><div><strong>Uso de suelo y vegetación</strong></div></div>
-              <div className="mapLegendItem"><span className="mapLegendSymbol line water"/><div><strong>Corrientes de agua</strong></div></div>
-            </div>
-            <p className="legendNote">Las geometrías temáticas pueden simplificarse para visualización web; los atributos de las features no se agregan ni sustituyen por registros sintéticos.</p>
-          </section>
+          {showInegi ? (
+            <section className="mapLegendSection">
+              <div className="mapLegendSectionTitle">INEGI</div>
+              <div className="mapLegendItems">
+                {capasActivas.fisiografiaInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line physiography"/><div><strong>Provincias fisiográficas</strong></div></div> : null}
+                {capasActivas.edafologiaInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line soil"/><div><strong>Edafología</strong></div></div> : null}
+                {capasActivas.usoSueloVegetacionInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line landUse"/><div><strong>Uso de suelo y vegetación</strong></div></div> : null}
+                {capasActivas.corrientesAguaInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line water"/><div><strong>Corrientes de agua</strong></div></div> : null}
+                {capasActivas.limitesEstatales ? <div className="mapLegendItem"><span className="mapLegendSymbol line boundary"/><div><strong>Límite estatal</strong><span>El color se adapta al mapa base.</span></div></div> : null}
+                {capasActivas.limitesMunicipales ? <div className="mapLegendItem"><span className="mapLegendSymbol line boundaryMunicipal"/><div><strong>Límite municipal</strong><span>El color se adapta al mapa base.</span></div></div> : null}
+              </div>
+              <p className="legendNote">Las geometrías temáticas pueden simplificarse para visualización web; no se crean registros sintéticos ni se sustituyen los atributos originales.</p>
+            </section>
+          ) : null}
 
           {mlItems.length ? (
             <section className="mapLegendSection">
@@ -79,7 +111,7 @@ export default function MapLegend({ resumenConsulta = null, rightPanelOpen = fal
             </section>
           ) : null}
 
-          <div className="mapLegendFooter">La simbología explica la representación del mapa; “Fuentes de datos” permanece reservado para atribución y enlaces de origen.</div>
+          <div className="mapLegendFooter">La simbología explica la representación del mapa; “Fuentes de datos” queda reservado para atribución y enlaces de origen.</div>
         </div>
       ) : null}
     </aside>
