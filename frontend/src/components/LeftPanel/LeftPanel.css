@@ -2,7 +2,7 @@
     position: absolute;
     top: 60px;
     left: 16px;
-    width: 260px;
+    width: 286px;
     max-height: calc(100vh - 132px);
     display: flex;
     flex-direction: column;
@@ -10,9 +10,7 @@
     z-index: 10;
 }
 
-.leftPanel.closed{  
-    transform: translateX(calc(-290px + 12px)); 
-}
+.leftPanel.closed{ transform: translateX(calc(-316px + 12px)); }
 
 .toggleBtn{    
     position: absolute;
@@ -41,18 +39,9 @@
     scrollbar-color: #8A8A8A transparent;
 }
 
-.panelContent::-webkit-scrollbar{
-    width: 6px;
-}
-
-.panelContent::-webkit-scrollbar-track{
-    background: transparent;
-}
-
-.panelContent::-webkit-scrollbar-thumb{
-    background: #8A8A8A;
-    border-radius: 999px;
-}
+.panelContent::-webkit-scrollbar{ width: 6px; }
+.panelContent::-webkit-scrollbar-track{ background: transparent; }
+.panelContent::-webkit-scrollbar-thumb{ background: #8A8A8A; border-radius: 999px; }
 
 .panelCard{
     background: var(--panel);
@@ -65,9 +54,8 @@
     font-family: Arimo, system-ui, Arial, sans-serif;
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 10px;
     color: var(--panel-title);
-    margin: 0 0 12px 0
+    margin: 0 0 12px 0;
 }
 
 .row{
@@ -88,10 +76,7 @@
   margin-top: 1px;
 }
 
-.row span{
-    min-width: 0;
-}
-
+.row span{ min-width: 0; }
 .row small{
     display: block;
     margin-top: 2px;
@@ -100,41 +85,13 @@
     line-height: 14px;
 }
 
-.layersCard{
-    flex: 0 0 auto;
-}
-
-.layerGroups{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.layerGroup{
-    border-top: 1px solid rgba(0,0,0,.08);
-    padding-top: 9px;
-}
-
-.layerGroup:first-child{
-    border-top: 0;
-    padding-top: 0;
-}
-
-.layerGroupTitle{
-    color: #0B4F4A;
-    font-size: 12px;
-    line-height: 15px;
-    font-weight: 800;
-    margin-bottom: 5px;
-}
-
-.layerRow{
-    margin: 7px 0;
-}
-
-.layerRow.isDisabled{
-    opacity: .52;
-}
+.layersCard{ flex: 0 0 auto; }
+.layerGroups{ display: flex; flex-direction: column; gap: 10px; }
+.layerGroup{ border-top: 1px solid rgba(0,0,0,.08); padding-top: 9px; }
+.layerGroup:first-child{ border-top: 0; padding-top: 0; }
+.layerGroupTitle{ color: #0B4F4A; font-size: 12px; line-height: 15px; font-weight: 800; margin-bottom: 5px; }
+.layerRow{ margin: 7px 0; }
+.layerRow.isDisabled{ opacity: .52; }
 
 .smnFilters{
     margin: 8px 0 2px 24px;
@@ -143,29 +100,10 @@
     background: rgba(11,79,74,.07);
     border: 1px solid rgba(11,79,74,.10);
 }
-
-.smnFilters.isDisabled{
-    opacity: .55;
-}
-
-.smnFiltersTitle{
-    margin-bottom: 5px;
-    color: rgba(0,0,0,.62);
-    font-size: 11px;
-    line-height: 14px;
-    font-weight: 700;
-}
-
-.smnFilterBlock + .smnFilterBlock{
-    margin-top: 9px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(11,79,74,.12);
-}
-
-.smnFilterRow{
-    margin: 5px 0;
-    font-size: 12px;
-}
+.smnFilters.isDisabled{ opacity: .55; }
+.smnFiltersTitle{ margin-bottom: 5px; color: rgba(0,0,0,.62); font-size: 11px; line-height: 14px; font-weight: 700; }
+.smnFilterBlock + .smnFilterBlock{ margin-top: 9px; padding-top: 8px; border-top: 1px solid rgba(11,79,74,.12); }
+.smnFilterRow{ margin: 5px 0; font-size: 12px; }
 
 .field{
     display: flex;
@@ -185,42 +123,20 @@
     outline: none;
 }
 
-.field .textInput{
-    height: 40px;
-    border-radius: 10px;
-    border: 0;
-    background: #F3F3F5;
-    padding: 0 12px;
-    outline: none;
-    font: inherit;
-    color: var(--text-field);
-}
-
-.field .textInput:focus{
-    box-shadow: 0 0 0 3px rgba(11,79,74,.18);
-}
-
 .field input[type="date"]{
     height: 40px;
     border-radius: 10px;
-    border: 0;
+    border: 1px solid rgba(11,79,74,.08);
     background: #F3F3F5;
-    padding: 0 12px;
+    padding: 0 10px;
     outline: none;
     font: inherit;
     color: var(--text-field);
+    color-scheme: light;
 }
 
-.field input[type="date"]:focus{
-    box-shadow: 0 0 0 3px rgba(11,79,74,.18);
-}
-
-.field input[type="date"]::-webkit-calendar-picker-indicator{
-    height: 16px;
-    width: 16px;
-    opacity: .75;
-    cursor: pointer;
-}
+.field input[type="date"]:focus{ box-shadow: 0 0 0 3px rgba(11,79,74,.18); }
+.field input[type="date"]::-webkit-calendar-picker-indicator{ height: 17px; width: 17px; opacity: .78; cursor: pointer; }
 
 .selectInput{
     height: 40px;
@@ -231,9 +147,31 @@
     outline: none;
     font: inherit;
 }
+.selectInput:focus{ box-shadow: 0 0 0 3px rgba(11,79,74,.18); }
+.selectInput:disabled{ opacity: .55; cursor: not-allowed; }
 
-.selectInput:focus{
-    box-shadow: 0 0 0 3px rgba(11,79,74,.18);
+.comparisonGrid,
+.dateGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.comparisonGrid .field,
+.dateGrid .field{ min-width: 0; }
+
+.helperText{
+    margin: -2px 0 10px;
+    font-size: 11px;
+    line-height: 15px;
+    color: rgba(0,0,0,.58);
+}
+.pendingNote{
+    padding: 8px 9px;
+    border-radius: 9px;
+    background: #FFF7E6;
+    color: #7A4A00;
+    border: 1px solid #F3D6A0;
 }
 
 .toggleBtn:focus-visible,
@@ -245,20 +183,9 @@
     outline-offset: 2px;
 }
 
-.selectInput:disabled{
-    opacity: .55;
-    cursor: not-allowed;
-}
-
-.helperText{
-    margin-top: 6px;
-    font-size: 12px;
-    color: rgba(0,0,0,.55);
-}
-
 .primaryBtn{
     width: 100%;
-    height: 36px;
+    height: 40px;
     border: 0;
     border-radius: var(--radius);
     background: var(--accent);
@@ -266,14 +193,12 @@
     cursor: pointer;
     font-weight: 700;
 }
-
-.primaryBtn:hover{
-    filter: brightness(0.97);
-}
+.primaryBtn:hover{ filter: brightness(0.97); }
+.primaryBtn:disabled{ opacity:.55; cursor:not-allowed; }
 
 .ghostBtn{
     width: 100%;
-    height: 36px;
+    height: 40px;
     border-radius: var(--radius);
     border: 1px solid var(--bg);
     cursor: pointer;
@@ -282,12 +207,11 @@
     color: var(--bg);
     font-weight: 600;
 }
+.ghostBtn:hover:not(:disabled){ background: rgba(62,124,89,.10); }
+.ghostBtn:disabled{ opacity: .55; cursor: not-allowed; }
 
-.ghostBtn:hover:not(:disabled){
-    background: rgba(62,124,89,.10);
-}
-
-.ghostBtn:disabled{
-    opacity: .55;
-    cursor: not-allowed;
+@media (max-width: 720px){
+  .leftPanel{ width: min(286px, calc(100vw - 72px)); }
+  .comparisonGrid,
+  .dateGrid{ grid-template-columns: 1fr; }
 }
