@@ -3,7 +3,7 @@
   top: 76px;
   left: var(--left-safe, 312px);
   z-index: 650;
-  width: min(320px, calc(100vw - var(--left-safe, 312px) - var(--right-safe, 8px) - 24px));
+  width: min(330px, calc(100vw - var(--left-safe, 312px) - var(--right-safe, 8px) - 24px));
   min-width: 240px;
   max-height: calc(100dvh - 160px);
   border-radius: 10px;
@@ -16,11 +16,11 @@
 }
 
 .mapLegend.rightPanelOpen{
-  width: min(300px, calc(100vw - var(--left-safe, 312px) - var(--right-safe, 8px) - 24px));
+  width: min(310px, calc(100vw - var(--left-safe, 312px) - var(--right-safe, 8px) - 24px));
 }
 
 .mapLegend.isCollapsed{
-  width: 210px;
+  width: 118px;
   min-width: 0;
 }
 
@@ -62,19 +62,6 @@
   scrollbar-color: #8A8A8A transparent;
 }
 
-.mapLegendBody::-webkit-scrollbar{
-  width: 6px;
-}
-
-.mapLegendBody::-webkit-scrollbar-track{
-  background: transparent;
-}
-
-.mapLegendBody::-webkit-scrollbar-thumb{
-  background: #8A8A8A;
-  border-radius: 999px;
-}
-
 .mapLegendSection{
   border-top: 1px solid rgba(0,0,0,.08);
   padding-top: 10px;
@@ -96,7 +83,6 @@
 }
 
 .mapLegendSection p,
-.mapLegendSection em,
 .mapLegendFooter{
   display: block;
   margin: 0;
@@ -105,10 +91,8 @@
   line-height: 15px;
 }
 
-.mapLegendSection em{
-  margin-top: 7px;
-  font-style: italic;
-}
+.legendNote{ margin-top: 8px !important; }
+.legendNote strong{ color: #344054; }
 
 .mapLegendItems{
   display: grid;
@@ -130,14 +114,8 @@
   line-height: 14px;
 }
 
-.mapLegendItem strong{
-  color: #101828;
-  font-weight: 700;
-}
-
-.mapLegendItem span{
-  color: #667085;
-}
+.mapLegendItem strong{ color: #101828; font-weight: 700; }
+.mapLegendItem span{ color: #667085; }
 
 .mapLegendSymbol{
   --symbol-color: #0F766E;
@@ -153,24 +131,15 @@
   box-shadow: 0 0 0 2px rgba(255,255,255,.92), 0 0 0 3px rgba(0,0,0,.12);
 }
 
-.mapLegendSymbol.ring{
-  border-radius: 999px;
-  border: 3px solid var(--symbol-color);
-  background: rgba(255,255,255,.88);
-}
-
-.mapLegendSymbol.flame{
-  width: 12px;
-  height: 15px;
-  border-radius: 8px 8px 8px 2px;
-  background: var(--symbol-color);
-  transform: rotate(45deg);
-}
+.mapLegendSymbol.firmsLow{ --symbol-color:#FACC15; }
+.mapLegendSymbol.firmsNominal{ --symbol-color:#F97316; }
+.mapLegendSymbol.firmsHigh{ --symbol-color:#DC2626; }
+.mapLegendSymbol.conafor{ --symbol-color:#B91C1C; }
 
 .mapLegendSymbol.station{
-  border-radius: 4px;
-  background: var(--symbol-color);
-  box-shadow: inset 0 0 0 3px rgba(255,255,255,.35);
+  border-radius: 999px;
+  background: #14B8A6;
+  border: 1px solid #0F766E;
 }
 
 .mapLegendSymbol.line{
@@ -179,6 +148,11 @@
   border-radius: 999px;
   background: var(--symbol-color);
 }
+
+.mapLegendSymbol.physiography{ --symbol-color:#8B5CF6; }
+.mapLegendSymbol.soil{ --symbol-color:#CA8A04; }
+.mapLegendSymbol.landUse{ --symbol-color:#22C55E; }
+.mapLegendSymbol.water{ --symbol-color:#38BDF8; }
 
 .mapLegendSymbol.fill{
   border-radius: 4px;
@@ -213,7 +187,10 @@
     max-height: 45dvh;
   }
 
-  .mapLegendBody{
-    max-height: calc(45dvh - 38px);
+  .mapLegend.isCollapsed{
+    right: auto;
+    width: 118px;
   }
+
+  .mapLegendBody{ max-height: calc(45dvh - 38px); }
 }
