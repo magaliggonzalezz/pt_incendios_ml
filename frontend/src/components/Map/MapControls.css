@@ -25,43 +25,73 @@
     display: grid;
     place-items: center;
     cursor: pointer;
+    position: relative;
 }
 
 .ctl:active{ transform: translateY(1px); }
+.ctl:focus-visible{ outline: 3px solid rgba(11,79,74,.25); outline-offset: 2px; }
 
-.searchPanel{
+.hasTooltip::after{
+    content: attr(data-tooltip);
+    position: absolute;
+    right: calc(100% + 9px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px 7px;
+    border-radius: 7px;
+    background: rgba(18,29,28,.94);
+    color: #fff;
+    font-size: 11px;
+    line-height: 14px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,.18);
+}
+
+.hasTooltip:hover::after,
+.hasTooltip:focus-visible::after{
+    opacity: 1;
+}
+
+.searchPanel,
+.boxZoomHint{
     position: absolute;
     top: 0;
     right: calc(100% + 8px);
-    width: min(240px, calc(100vw - var(--right-safe, 8px) - 72px));
+    width: min(280px, calc(100vw - var(--right-safe, 8px) - 72px));
     background: #FFFFFF;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     z-index: 860;
-    padding: 10px;
 }
+
+.searchPanel{ padding: 10px; }
 
 .searchInput{
     width: 100%;
-    height: 34px;
+    height: 36px;
     border-radius: 10px;
     border: 1px solid rgba(11,79,74,.25);
     padding: 0 10px;
     outline: none;
     color: #0B4F4A;
+    font: inherit;
 }
 
 .searchInput:focus{
     border-color: rgba(11,79,74,.55);
+    box-shadow: 0 0 0 3px rgba(11,79,74,.10);
 }
 
 .searchList{
     margin-top: 8px;
     display: flex;
     flex-direction: column;
-    max-height: 220px;
+    max-height: 280px;
     overflow: auto;
-    min-height: 60px;
+    overscroll-behavior: contain;
 }
 
 .searchItem{
@@ -76,8 +106,10 @@
     gap: 2px;
 }
 
-.searchItem:hover{
+.searchItem:hover,
+.searchItem:focus-visible{
     background: rgba(11,79,74,.08);
+    outline: none;
 }
 
 .searchItemTitle{
@@ -89,20 +121,26 @@
 .searchItemMeta{
     color: rgba(11,79,74,.70);
     font-size: 12px;
-    text-transform: capitalize;
 }
 
 .searchEmpty{
-    padding: 8px 10px;
+    padding: 10px;
     color: rgba(11,79,74,.70);
     font-size: 12px;
+}
+
+.boxZoomHint{
+    padding: 10px 12px;
+    color: #344054;
+    font-size: 12px;
+    line-height: 17px;
 }
 
 .layersMenu{
     position: absolute;
     bottom: 0;
     right: calc(100% + 8px);
-    min-width: 168px;
+    min-width: 176px;
     background: #FFFFFF;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -123,15 +161,15 @@
 }
 
 .layersItem:hover{ background: rgba(11,79,74,.08); }
-
-.layersItem.isActive{ background: rgba(11,79,74,.12); }
+.layersItem.isActive{ background: rgba(11,79,74,.12); font-weight: 700; }
 
 @media (max-width: 1024px){
     .mapControls.rightPanelOpen{
         right: calc(var(--right-panel-w, 260px) + var(--right-panel-offset, 8px) + 4px);
     }
 
-    .searchPanel{
-        width: min(220px, calc(100vw - var(--right-safe, 8px) - 60px));
+    .searchPanel,
+    .boxZoomHint{
+        width: min(240px, calc(100vw - var(--right-safe, 8px) - 60px));
     }
 }
