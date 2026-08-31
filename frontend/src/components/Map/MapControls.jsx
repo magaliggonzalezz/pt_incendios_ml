@@ -1,29 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMap } from "react-leaflet";
-import { Search, ZoomIn, ZoomOut, Home, Layers } from "lucide-react";
+import { Search, ZoomIn, ZoomOut, Home, Layers, ScanSearch } from "lucide-react";
+import { GEO_CATALOG } from "../../data/geoCatalog";
 import "./MapControls.css";
 
 const DEFAULT_VIEW = { center: [23.6345, -102.5528], zoom: 5 };
 const ICON_COLOR = "#0B4F4A";
 const ICON_SIZE = 18;
 
-const PLACES = [
-  { id: "mx", label: "México (vista general)", type: "default", center: [23.6345, -102.5528], zoom: 5 },
-  { id: "cdmx", label: "Ciudad de México", type: "estado", center: [19.4326, -99.1332], zoom: 10 },
-  { id: "jalisco", label: "Jalisco", type: "estado", center: [20.6597, -103.3496], zoom: 8 },
-  { id: "nuevoleon", label: "Nuevo León", type: "estado", center: [25.6866, -100.3161], zoom: 9 },
-  { id: "gdl", label: "Guadalajara, Jalisco", type: "municipio", center: [20.6736, -103.344], zoom: 12 },
-  { id: "mty", label: "Monterrey, Nuevo León", type: "municipio", center: [25.6866, -100.3161], zoom: 12 },
-];
+function normalize(value, width) {
+  if (value === undefined || value === null || value === "") return "";
+  return String(value).padStart(width, "0");
+}
 
-const PLACE_QUERY = {
-  mx: { nivelAgregacion: "entidad", estado: "", municipio: "" },
-  cdmx: { nivelAgregacion: "entidad", estado: "Ciudad de México", municipio: "" },
-  jalisco: { nivelAgregacion: "entidad", estado: "Jalisco", municipio: "" },
-  nuevoleon: { nivelAgregacion: "entidad", estado: "Nuevo León", municipio: "" },
-  gdl: { nivelAgregacion: "municipio", estado: "Jalisco", municipio: "Guadalajara" },
-  mty: { nivelAgregacion: "municipio", estado: "Nuevo León", municipio: "Monterrey" },
-};
+const PLACE_OPTIONS = (() => {
+  const states = new Map();
+  const municipalities = [];
+
+  GEO_CATALOG.forEach((row) => {
+    const cveEnt = normalize(row.CVE_ENT, 2);
+    const cveMun = normalize(row.CVE_MUN, 3);
+    const cvegeo = normalize(row.CVEGEO, 5);
+    if (cveEnt && !states.has(cveEnt)) {
+      states.set(cveEnt, {
+        id: `e-${cveEnt}`,
+        label: row.NOM_ENT,
+        type: "Estado",
+        cveEnt,
+        estado: row.NOM_ENT,
+        municipio: "",
+        cveMun: "",
+        cvegeo: "",
+        nivelAgregacion: "entidad",
+      });
+    }
+    if (cvegeo) {
+      municipalities.push({
+        id: `m-${cvegeo}`,
+        label: `${row.NOM_MUN}, ${row.NOM_ENT}`,
+        type: "Municipio",
+        cveEnt,
+        estado: row.NOM_ENT,
+        municipio: row.NOM_MUN,
+        cveMun,
+        cvegeo,
+        nivelAgregacion: "municipio",
+      });
+    }
+  });
+
+  return [
+    { id: "mx", label: "México", type: "Vista nacional", nivelAgregacion: "entidad", cveEnt: "", estado: "", municipio: "", cveMun: "", cvegeo: "" },
+    ...states.values(),
+    ...municipalities,
+  ];
+})();
 
 export default function MapControls({
   defaultView = DEFAULT_VIEW,
@@ -32,72 +63,67 @@ export default function MapControls({
   layers,
   consultaActiva = null,
   onConsultaChange,
-  onConsultar,
   rightPanelOpen = false,
 }) {
   const map = useMap();
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [boxZoomHint, setBoxZoomHint] = useState(false);
+
+  const suggestions = useMemo(() => {
+    const normalizedQuery = query.trim().toLocaleLowerCase("es-MX");
+    if (!normalizedQuery) return [];
+    return PLACE_OPTIONS.filter((place) =>
+      place.label.toLocaleLowerCase("es-MX").includes(normalizedQuery)
+    ).slice(0, 8);
+  }, [query]);
 
   const toggleSearch = () => {
-    setSearchOpen((v) => !v);
+    setSearchOpen((value) => !value);
     setLayersOpen(false);
-  };
-
-  const suggestions = PLACES.filter((p) =>
-    p.label.toLowerCase().includes(query.trim().toLowerCase())
-  ).slice(0, 6);
-
-  const buildConsultaForPlace = (place) => {
-    const placeQuery = PLACE_QUERY[place.id] ?? PLACE_QUERY.mx;
-    return {
-      ...(consultaActiva ?? {}),
-      ...placeQuery,
-      cveEnt: "",
-      cveMun: "",
-      cvegeo: "",
-    };
-  };
-
-  const updateConsultaForPlace = (place) => {
-    const nextConsulta = buildConsultaForPlace(place);
-    onConsultaChange?.("nivelAgregacion", nextConsulta.nivelAgregacion);
-    onConsultaChange?.("estado", nextConsulta.estado);
-    onConsultaChange?.("municipio", nextConsulta.municipio);
-    onConsultaChange?.("cveEnt", "");
-    onConsultaChange?.("cveMun", "");
-    onConsultaChange?.("cvegeo", "");
-    onConsultar?.(nextConsulta);
+    setBoxZoomHint(false);
   };
 
   const goToPlace = (place) => {
-    map?.setView(place.center, place.zoom);
-    window.setTimeout(() => map?.invalidateSize(), 220);
-    updateConsultaForPlace(place);
+    if (place.id === "mx") {
+      map?.setView(defaultView.center, defaultView.zoom);
+    }
+
+    onConsultaChange?.("consultaPatch", {
+      nivelAgregacion: place.nivelAgregacion,
+      cveEnt: place.cveEnt,
+      estado: place.estado,
+      municipio: place.municipio,
+      cveMun: place.cveMun,
+      cvegeo: place.cvegeo,
+    });
+
     setSearchOpen(false);
     setQuery("");
+    window.setTimeout(() => map?.invalidateSize(), 220);
   };
 
-  const zoomIn = () => map?.zoomIn();
-  const zoomOut = () => map?.zoomOut();
-  const resetView = () => map?.setView(defaultView.center, defaultView.zoom);
-  const toggleLayers = () => setLayersOpen((v) => !v);
-
-  const selectLayer = (layerId) => {
-    if (typeof onChangeLayer === "function") onChangeLayer(layerId);
-    setLayersOpen(false);
+  const resetView = () => {
+    map?.setView(defaultView.center, defaultView.zoom);
+    onConsultaChange?.("consultaPatch", {
+      nivelAgregacion: consultaActiva?.nivelAgregacion || "entidad",
+      cveEnt: "",
+      estado: "",
+      municipio: "",
+      cveMun: "",
+      cvegeo: "",
+    });
   };
 
-  const stop = (e) => {
-    e.stopPropagation();
-  };
+  const stop = (event) => event.stopPropagation();
 
   useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") {
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
         setLayersOpen(false);
         setSearchOpen(false);
+        setBoxZoomHint(false);
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -112,80 +138,85 @@ export default function MapControls({
       onDoubleClick={stop}
       onTouchStart={stop}
     >
-      <button
-        className="ctl"
-        type="button"
-        aria-label="Buscar"
-        aria-expanded={searchOpen}
-        aria-controls="map-search-panel"
-        onClick={toggleSearch}
-      >
+      <button className="ctl hasTooltip" data-tooltip="Buscar territorio" type="button" aria-label="Buscar territorio" aria-expanded={searchOpen} onClick={toggleSearch}>
         <Search size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-
-      <button className="ctl" type="button" aria-label="Acercar" onClick={zoomIn}>
+      <button className="ctl hasTooltip" data-tooltip="Acercar" type="button" aria-label="Acercar" onClick={() => map?.zoomIn()}>
         <ZoomIn size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-
-      <button className="ctl" type="button" aria-label="Alejar" onClick={zoomOut}>
+      <button className="ctl hasTooltip" data-tooltip="Alejar" type="button" aria-label="Alejar" onClick={() => map?.zoomOut()}>
         <ZoomOut size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-
-      <button className="ctl" type="button" aria-label="Restablecer vista" onClick={resetView}>
+      <button className="ctl hasTooltip" data-tooltip="Vista nacional" type="button" aria-label="Restablecer vista nacional" onClick={resetView}>
         <Home size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-
       <button
-        className="ctl"
+        className="ctl hasTooltip"
+        data-tooltip="Zoom por área"
         type="button"
-        aria-label="Capas"
-        aria-expanded={layersOpen}
-        aria-controls="map-layers-menu"
-        onClick={toggleLayers}
+        aria-label="Zoom por área"
+        aria-expanded={boxZoomHint}
+        onClick={() => {
+          setBoxZoomHint((value) => !value);
+          setLayersOpen(false);
+          setSearchOpen(false);
+        }}
       >
+        <ScanSearch size={ICON_SIZE} color={ICON_COLOR} />
+      </button>
+      <button className="ctl hasTooltip" data-tooltip="Mapa base" type="button" aria-label="Mapa base" aria-expanded={layersOpen} onClick={() => {
+        setLayersOpen((value) => !value);
+        setSearchOpen(false);
+        setBoxZoomHint(false);
+      }}>
         <Layers size={ICON_SIZE} color={ICON_COLOR} />
       </button>
 
-      {searchOpen && (
-        <div className="searchPanel" role="dialog" aria-label="Búsqueda por estado o municipio">
+      {searchOpen ? (
+        <div className="searchPanel" role="dialog" aria-label="Búsqueda en el marco geoestadístico">
           <input
             className="searchInput"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar estado o municipio..."
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Estado o municipio..."
             autoFocus
           />
-
-          {query.trim().length > 0 && (
-            <div className="searchList" role="listbox" aria-label="Sugerencias">
-              {suggestions.map((p) => (
-                <button key={p.id} className="searchItem" type="button" onClick={() => goToPlace(p)}>
-                  <span className="searchItemTitle">{p.label}</span>
-                  <span className="searchItemMeta">{p.type}</span>
-                </button>
-              ))}
-
-              {suggestions.length === 0 && <div className="searchEmpty">Sin coincidencias.</div>}
-            </div>
-          )}
+          <div className="searchList" role="listbox" aria-label="Resultados de búsqueda">
+            {query.trim() ? suggestions.map((place) => (
+              <button key={place.id} className="searchItem" type="button" onClick={() => goToPlace(place)}>
+                <span className="searchItemTitle">{place.label}</span>
+                <span className="searchItemMeta">{place.type}</span>
+              </button>
+            )) : <div className="searchEmpty">Escribe un estado o municipio.</div>}
+            {query.trim() && !suggestions.length ? <div className="searchEmpty">Sin coincidencias.</div> : null}
+          </div>
         </div>
-      )}
+      ) : null}
 
-      {layersOpen && (
-        <div id="map-layers-menu" className="layersMenu" role="dialog" aria-label="Capas del mapa">
+      {boxZoomHint ? (
+        <div className="boxZoomHint" role="status">
+          Mantén <strong>Shift</strong> y arrastra un rectángulo sobre el mapa para acercarte a un área.
+        </div>
+      ) : null}
+
+      {layersOpen ? (
+        <div className="layersMenu" role="dialog" aria-label="Mapa base">
           {Object.entries(layers).map(([id, layer]) => (
             <button
               key={id}
               className={`layersItem ${baseLayerId === id ? "isActive" : ""}`}
               type="button"
               aria-pressed={baseLayerId === id}
-              onClick={() => selectLayer(id)}
+              onClick={() => {
+                onChangeLayer?.(id);
+                setLayersOpen(false);
+              }}
             >
               {layer.name}
             </button>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
