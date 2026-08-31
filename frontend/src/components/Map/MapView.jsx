@@ -45,18 +45,19 @@ const THEMATIC_STYLES = {
   uso_suelo_vegetacion: { color: "#15803D", weight: 0.7, fillColor: "#22C55E", fillOpacity: 0.16 },
 };
 
-const STATE_BOUNDARY_STYLE = {
-  color: "#F8FAFC",
-  weight: 2,
-  opacity: 0.95,
-  fillOpacity: 0,
-};
-
-const MUNICIPAL_BOUNDARY_STYLE = {
-  color: "#CBD5E1",
-  weight: 1.1,
-  opacity: 0.9,
-  fillOpacity: 0,
+const BOUNDARY_STYLES = {
+  esri: {
+    state: { color: "#F8FAFC", weight: 2.2, opacity: 0.98, fillOpacity: 0 },
+    municipality: { color: "#E2E8F0", weight: 1.15, opacity: 0.92, fillOpacity: 0 },
+  },
+  osm: {
+    state: { color: "#172B2A", weight: 2.2, opacity: 0.95, fillOpacity: 0 },
+    municipality: { color: "#475569", weight: 1.2, opacity: 0.9, fillOpacity: 0 },
+  },
+  topo: {
+    state: { color: "#111827", weight: 2.2, opacity: 0.95, fillOpacity: 0 },
+    municipality: { color: "#334155", weight: 1.2, opacity: 0.9, fillOpacity: 0 },
+  },
 };
 
 const SELECTED_TERRITORY_STYLE = {
@@ -72,28 +73,11 @@ const FIRMS_CONFIDENCE_COLORS = {
   high: "#DC2626",
 };
 
-const PROPERTY_LABELS = {
-  cve_ent: "Clave de entidad",
-  cve_mun: "Clave de municipio",
-  cvegeo: "CVEGEO",
-  nomgeo: "Nombre geográfico",
-  nom_ent: "Entidad",
-  nom_mun: "Municipio",
-  nombre_estacion: "Estación",
-  situacion_operativa: "Situación operativa",
-  fisiografia_nombre: "Provincia fisiográfica",
-  corriente_nombre: "Corriente",
-  orden_corriente: "Orden de corriente",
-  grupo1_nombre: "Grupo de suelo",
-  textura_nombre: "Textura",
-  usv_descripcion: "Uso de suelo / vegetación",
-  fecha_inicio: "Fecha de inicio",
-  fecha_fin: "Fecha de fin",
-  fecha_termino: "Fecha de término",
-  anio_inicio: "Año inicial",
-  anio_fin: "Año final",
-  cobertura_inicio: "Cobertura desde",
-  cobertura_fin: "Cobertura hasta",
+const FIRMS_TYPE_LABELS = {
+  0: "0 · Incendio de vegetación presunto",
+  1: "1 · Volcán activo",
+  2: "2 · Otra fuente terrestre estática",
+  3: "3 · Detección offshore",
 };
 
 function normalizeGeoKey(value, length) {
@@ -145,12 +129,8 @@ function pointInPolygonCoordinates(point, polygon) {
 
 function pointInGeometry(point, geometry) {
   if (!geometry || !Array.isArray(point) || point.length < 2) return false;
-  if (geometry.type === "Polygon") {
-    return pointInPolygonCoordinates(point, geometry.coordinates);
-  }
-  if (geometry.type === "MultiPolygon") {
-    return geometry.coordinates.some((polygon) => pointInPolygonCoordinates(point, polygon));
-  }
+  if (geometry.type === "Polygon") return pointInPolygonCoordinates(point, geometry.coordinates);
+  if (geometry.type === "MultiPolygon") return geometry.coordinates.some((polygon) => pointInPolygonCoordinates(point, polygon));
   return false;
 }
 
@@ -179,46 +159,26 @@ function formatMapValue(value, options = {}) {
   if (options.number) {
     const number = Number(value);
     if (Number.isFinite(number)) {
-      return number.toLocaleString("es-MX", {
-        maximumFractionDigits: options.maximumFractionDigits ?? 2,
-      });
+      return number.toLocaleString("es-MX", { maximumFractionDigits: options.maximumFractionDigits ?? 2 });
     }
   }
   return String(value);
 }
 
-function friendlyPropertyLabel(key) {
-  if (PROPERTY_LABELS[key]) return PROPERTY_LABELS[key];
-  return String(key)
-    .replace(/^_+/, "")
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
-function propertyRows(props, preferred = []) {
-  const used = new Set();
-  const rows = [];
-
-  preferred.forEach(([label, key, options]) => {
-    const value = formatMapValue(props?.[key], options);
-    if (value === null) return;
-    used.add(key);
-    rows.push([label, value]);
-  });
-
-  Object.entries(props || {}).forEach(([key, rawValue]) => {
-    if (key.startsWith("__") || used.has(key)) return;
-    const value = formatMapValue(rawValue);
-    if (value === null) return;
-    rows.push([friendlyPropertyLabel(key), value]);
-  });
-
-  return rows;
+function firstProp(props, keys = []) {
+  for (const key of keys) {
+    const value = props?.[key];
+    if (value !== undefined && value !== null && value !== "") return value;
+  }
+  return null;
 }
 
 function orderedRows(props, order = []) {
   return order
-    .map(([label, key, options]) => [label, formatMapValue(props?.[key], options)])
+    .map(([label, keyOrGetter, options]) => {
+      const raw = typeof keyOrGetter === "function" ? keyOrGetter(props) : props?.[keyOrGetter];
+      return [label, formatMapValue(raw, options)];
+    })
     .filter(([, value]) => value !== null);
 }
 
@@ -242,20 +202,9 @@ function bindRichInfo(layer, { title, kind = "generic", tooltipRows, popupRows }
   if (popupBody) {
     layer.bindPopup(
       `<div class="mapFeaturePopupScroll"><div class="mapFeatureTooltipTitle"><span></span>${escapeHtml(title)}</div><dl>${popupBody}</dl></div>`,
-      { className: `mapFeaturePopup mapFeaturePopup-${kind}`, maxWidth: 340 },
+      { className: `mapFeaturePopup mapFeaturePopup-${kind}`, maxWidth: 350 },
     );
   }
-}
-
-function bindGenericLayerInfo(feature, layer, { title, kind, preferred = [], tooltipCount = 5 }) {
-  const props = feature?.properties || {};
-  const rows = propertyRows(props, preferred);
-  bindRichInfo(layer, {
-    title,
-    kind,
-    tooltipRows: rows.slice(0, tooltipCount),
-    popupRows: rows.slice(0, 40),
-  });
 }
 
 function firmsConfidenceCategory(props) {
@@ -274,7 +223,6 @@ function firmsMarkerStyle(feature) {
   const frp = Math.max(0, Number(props.frp) || 0);
   const radius = Math.min(8, Math.max(3.5, 3.5 + Math.log10(frp + 1) * 1.8));
   const isNight = String(props.daynight || "").toUpperCase() === "N";
-
   return {
     radius,
     color: isNight ? "#111827" : "#FFF7ED",
@@ -312,42 +260,38 @@ function bindFirmsInfo(feature, layer) {
   const category = firmsConfidenceCategory(props);
   const confidenceLabel = { low: "Baja", nominal: "Nominal", high: "Alta" }[category];
   const dayNight = String(props.daynight || "").toUpperCase() === "N" ? "Noche" : "Día";
-  const displayProps = {
-    ...props,
-    confianza_interpretada: confidenceLabel,
-    periodo_dia: dayNight,
-  };
+  const typeLabel = FIRMS_TYPE_LABELS[Number(props.type)] || props.type;
+  const displayProps = { ...props, confianza_interpretada: confidenceLabel, periodo_dia: dayNight, tipo_interpretado: typeLabel };
 
   bindRichInfo(layer, {
     title: "Detección FIRMS",
     kind: "firms",
     tooltipRows: orderedRows(displayProps, [
-      ["Fecha", "fecha"],
-      ["Hora", "acq_time"],
       ["Estado", "estado"],
       ["Municipio", "municipio"],
+      ["Fecha", "fecha"],
+      ["Hora", "acq_time"],
       ["Categoría de confianza", "confianza_interpretada"],
       ["FRP", "frp", { number: true }],
     ]),
     popupRows: orderedRows(displayProps, [
-      ["Fecha", "fecha"],
-      ["Hora de adquisición", "acq_time"],
       ["Estado", "estado"],
       ["Municipio", "municipio"],
       ["CVEGEO", "cvegeo"],
       ["Clave de entidad", "cve_ent"],
       ["Clave de municipio", "cve_mun"],
+      ["Fecha", "fecha"],
+      ["Hora de adquisición", "acq_time"],
+      ["Satélite", "satellite"],
+      ["Instrumento", "instrument"],
       ["Confianza", "confidence", { number: true }],
       ["Categoría de confianza", "confianza_interpretada"],
       ["FRP", "frp", { number: true }],
       ["Día / noche", "periodo_dia"],
-      ["Satélite", "satellite"],
-      ["Instrumento", "instrument"],
       ["Brillo", "brightness", { number: true }],
-      ["Tipo", "type"],
+      ["Tipo", "tipo_interpretado"],
       ["Scan", "scan", { number: true }],
       ["Track", "track", { number: true }],
-      ["Versión", "version"],
     ]),
   });
 }
@@ -358,21 +302,21 @@ function bindConaforInfo(feature, layer) {
     title: "Incendio CONAFOR",
     kind: "conafor",
     tooltipRows: orderedRows(props, [
-      ["Inicio", "fecha_inicio"],
       ["Estado", "estado"],
       ["Municipio", "municipio"],
+      ["Inicio", "fecha_inicio"],
       ["Superficie (ha)", "superficie_total_ha", { number: true }],
       ["Tipo", "tipo_incendio"],
       ["Causa", "causa"],
     ]),
     popupRows: orderedRows(props, [
-      ["Inicio", "fecha_inicio"],
-      ["Término", "fecha_termino"],
       ["Estado", "estado"],
       ["Municipio", "municipio"],
       ["CVEGEO", "cvegeo"],
       ["Clave de entidad", "cve_ent"],
       ["Clave de municipio", "cve_mun"],
+      ["Inicio", "fecha_inicio"],
+      ["Término", "fecha_termino"],
       ["Clave del incendio", "clave_incendio"],
       ["Superficie total (ha)", "superficie_total_ha", { number: true }],
       ["Categoría de superficie", "superficie_categoria"],
@@ -396,6 +340,155 @@ function bindConaforInfo(feature, layer) {
   });
 }
 
+function bindStateInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const estado = firstProp(props, ["nomgeo", "nom_ent", "NOM_ENT"]);
+  bindRichInfo(layer, {
+    title: estado || "Entidad federativa",
+    kind: "limites",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent", "CVE_ENT", "cvegeo", "CVEGEO"])],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent", "CVE_ENT", "cvegeo", "CVEGEO"])],
+    ]),
+  });
+}
+
+function bindMunicipalityInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const municipio = firstProp(props, ["nomgeo", "nom_mun", "NOM_MUN"]);
+  const estado = firstProp(props, ["nom_ent", "NOM_ENT"]);
+  bindRichInfo(layer, {
+    title: municipio || "Municipio",
+    kind: "limites",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Municipio", () => municipio],
+      ["CVEGEO", () => firstProp(props, ["cvegeo", "CVEGEO"])],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Municipio", () => municipio],
+      ["CVEGEO", () => firstProp(props, ["cvegeo", "CVEGEO"])],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent", "CVE_ENT"])],
+      ["Clave de municipio", () => firstProp(props, ["cve_mun", "CVE_MUN"])],
+    ]),
+  });
+}
+
+function bindPhysiographyInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
+  const provincia = firstProp(props, ["fisiografia_nombre", "provincia", "PROVINCIA"]);
+  bindRichInfo(layer, {
+    title: provincia || "Provincia fisiográfica INEGI",
+    kind: "fisiografia",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Provincia fisiográfica", () => provincia],
+      ["Clave", () => firstProp(props, ["fisiografia_clave", "clave", "CLAVE"])],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])],
+      ["Provincia fisiográfica", () => provincia],
+      ["Clave de provincia", () => firstProp(props, ["fisiografia_clave", "clave", "CLAVE"])],
+      ["Entidad fisiográfica", () => firstProp(props, ["fisiografia_entidad", "entidad", "ENTIDAD"])],
+    ]),
+  });
+}
+
+function bindHydrologyInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
+  const corriente = firstProp(props, ["corriente_nombre", "nombre", "NOMBRE"]);
+  bindRichInfo(layer, {
+    title: corriente || "Corriente de agua INEGI",
+    kind: "hidrografia",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Corriente", () => corriente],
+      ["Orden", () => firstProp(props, ["orden_corriente", "orden", "ORDEN"])],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])],
+      ["Corriente", () => corriente],
+      ["Orden de corriente", () => firstProp(props, ["orden_corriente", "orden", "ORDEN"])],
+    ]),
+  });
+}
+
+function bindSoilInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
+  const suelo = firstProp(props, ["grupo1_nombre", "grupo1", "GRUPO1"]);
+  bindRichInfo(layer, {
+    title: suelo || "Edafología INEGI",
+    kind: "edafologia",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Grupo de suelo", () => suelo],
+      ["Textura", () => firstProp(props, ["textura_nombre", "textura", "TEXTURA"])],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])],
+      ["Grupo de suelo", () => suelo],
+      ["Textura", () => firstProp(props, ["textura_nombre", "textura", "TEXTURA"])],
+    ]),
+  });
+}
+
+function bindLandUseInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
+  const descripcion = firstProp(props, ["usv_descripcion", "descripcion", "DESCRIPCION"]);
+  bindRichInfo(layer, {
+    title: descripcion || "Uso de suelo y vegetación INEGI",
+    kind: "uso-suelo",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Uso de suelo / vegetación", () => descripcion],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])],
+      ["Uso de suelo / vegetación", () => descripcion],
+    ]),
+  });
+}
+
+function bindSmnInfo(feature, layer) {
+  const props = feature?.properties || {};
+  const estado = firstProp(props, ["estado", "nom_ent", "NOM_ENT"]);
+  const municipio = firstProp(props, ["municipio", "nom_mun", "NOM_MUN"]);
+  const estacion = firstProp(props, ["nombre_estacion", "estacion", "nombre", "NOMBRE"]);
+  bindRichInfo(layer, {
+    title: estacion || "Estación meteorológica SMN-CONAGUA",
+    kind: "smn",
+    tooltipRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Municipio", () => municipio],
+      ["Estación meteorológica", () => estacion],
+      ["Situación operativa", () => firstProp(props, ["situacion_operativa", "situacion", "estatus"])],
+    ]),
+    popupRows: orderedRows(props, [
+      ["Estado", () => estado],
+      ["Municipio", () => municipio],
+      ["Clave de entidad", () => firstProp(props, ["cve_ent", "CVE_ENT"])],
+      ["CVEGEO", () => firstProp(props, ["cvegeo", "CVEGEO"])],
+      ["Estación meteorológica", () => estacion],
+      ["Situación operativa", () => firstProp(props, ["situacion_operativa", "situacion", "estatus"])],
+      ["Cobertura desde", () => firstProp(props, ["cobertura_inicio", "fecha_inicio", "fecha_min"])],
+      ["Cobertura hasta", () => firstProp(props, ["cobertura_fin", "fecha_fin", "fecha_max"])],
+    ]),
+  });
+}
+
 function normalizeText(value) {
   return String(value || "")
     .normalize("NFD")
@@ -414,10 +507,7 @@ function stationMatchesOperationalFilter(feature, filtros) {
 
 function stationMatchesTerritory(feature, cveEnt) {
   if (!cveEnt) return true;
-  const featureCveEnt = normalizeGeoKey(
-    feature?.properties?.cve_ent ?? feature?.properties?.CVE_ENT,
-    2,
-  );
+  const featureCveEnt = normalizeGeoKey(feature?.properties?.cve_ent ?? feature?.properties?.CVE_ENT, 2);
   return featureCveEnt ? featureCveEnt === cveEnt : true;
 }
 
@@ -429,42 +519,90 @@ function stationMatchesMunicipality(feature, municipioGeojson) {
 }
 
 function stationCoversPeriod(feature, scope) {
-  if (!scope?.anio) return true;
+  if (!scope) return true;
   const props = feature?.properties || {};
-  const targetYear = Number(scope.anio);
-  const targetMonth = scope.tipoPeriodo === "anio_mes" ? Number(scope.mes) : null;
-
   const start = props.fecha_inicio ?? props.fecha_min ?? props.cobertura_inicio ?? props.inicio_datos;
   const end = props.fecha_fin ?? props.fecha_max ?? props.cobertura_fin ?? props.fin_datos;
+
+  let from = null;
+  let to = null;
+  if (scope.tipoPeriodo === "anio" && scope.anio) {
+    from = `${scope.anio}-01-01`;
+    to = `${scope.anio}-12-31`;
+  } else if (scope.tipoPeriodo === "anio_mes" && scope.anio && scope.mes) {
+    from = `${scope.anio}-${String(scope.mes).padStart(2, "0")}-01`;
+    to = `${scope.anio}-${String(scope.mes).padStart(2, "0")}-31`;
+  } else if (scope.tipoPeriodo === "fecha" && scope.fechaInicio) {
+    from = scope.fechaInicio;
+    to = scope.fechaInicio;
+  } else if (scope.tipoPeriodo === "rango_fechas" && scope.fechaInicio && scope.fechaFin) {
+    from = scope.fechaInicio;
+    to = scope.fechaFin;
+  } else if (scope.tipoPeriodo === "comparar_anios" && scope.anioInicio && scope.anioFin) {
+    const minYear = Math.min(Number(scope.anioInicio), Number(scope.anioFin));
+    const maxYear = Math.max(Number(scope.anioInicio), Number(scope.anioFin));
+    from = `${minYear}-01-01`;
+    to = `${maxYear}-12-31`;
+  }
+
+  if (!from || !to) return true;
   if (start || end) {
-    const startText = start ? String(start).slice(0, 10) : `${targetYear}-01-01`;
-    const endText = end ? String(end).slice(0, 10) : `${targetYear}-12-31`;
-    const from = targetMonth ? `${targetYear}-${String(targetMonth).padStart(2, "0")}-01` : `${targetYear}-01-01`;
-    const to = targetMonth ? `${targetYear}-${String(targetMonth).padStart(2, "0")}-31` : `${targetYear}-12-31`;
+    const startText = start ? String(start).slice(0, 10) : from;
+    const endText = end ? String(end).slice(0, 10) : to;
     return startText <= to && endText >= from;
   }
 
+  const targetStartYear = Number(from.slice(0, 4));
+  const targetEndYear = Number(to.slice(0, 4));
   const startYear = Number(props.anio_inicio ?? props.anio_min ?? props.year_min);
   const endYear = Number(props.anio_fin ?? props.anio_max ?? props.year_max);
   if (Number.isFinite(startYear) || Number.isFinite(endYear)) {
-    return (!Number.isFinite(startYear) || targetYear >= startYear) &&
-      (!Number.isFinite(endYear) || targetYear <= endYear);
+    return (!Number.isFinite(startYear) || targetEndYear >= startYear) && (!Number.isFinite(endYear) || targetStartYear <= endYear);
   }
-
   return true;
+}
+
+function topFrequency(features, getter) {
+  const counts = new Map();
+  features.forEach((feature) => {
+    const value = getter(feature?.properties || {});
+    if (!value) return;
+    const key = String(value);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+  let best = null;
+  let max = 0;
+  counts.forEach((count, value) => {
+    if (count > max) {
+      best = value;
+      max = count;
+    }
+  });
+  return best ? { value: best, count: max } : null;
+}
+
+function coverageRange(features) {
+  const starts = [];
+  const ends = [];
+  features.forEach((feature) => {
+    const props = feature?.properties || {};
+    const start = firstProp(props, ["cobertura_inicio", "fecha_inicio", "fecha_min"]);
+    const end = firstProp(props, ["cobertura_fin", "fecha_fin", "fecha_max"]);
+    if (start) starts.push(String(start).slice(0, 10));
+    if (end) ends.push(String(end).slice(0, 10));
+  });
+  if (!starts.length && !ends.length) return null;
+  starts.sort();
+  ends.sort();
+  return { from: starts[0] || null, to: ends[ends.length - 1] || null };
 }
 
 function MapViewportTracker({ onChange }) {
   const timerRef = useRef(null);
   const lastBboxRef = useRef("");
-
   const map = useMapEvents({
-    moveend() {
-      scheduleViewportUpdate();
-    },
-    zoomend() {
-      scheduleViewportUpdate();
-    },
+    moveend() { scheduleViewportUpdate(); },
+    zoomend() { scheduleViewportUpdate(); },
   });
 
   const emitViewport = () => {
@@ -491,25 +629,21 @@ function MapViewportTracker({ onChange }) {
 
 function MapResizeInvalidator({ watchKey }) {
   const map = useMap();
-
   useEffect(() => {
     const invalidate = () => window.requestAnimationFrame(() => map.invalidateSize());
     invalidate();
     window.addEventListener("resize", invalidate);
     return () => window.removeEventListener("resize", invalidate);
   }, [map]);
-
   useEffect(() => {
     const timeoutId = window.setTimeout(() => map.invalidateSize(), 220);
     return () => window.clearTimeout(timeoutId);
   }, [map, watchKey]);
-
   return null;
 }
 
 function MapPopupCloser() {
   const map = useMap();
-
   useEffect(() => {
     const closePopupFromOutside = (event) => {
       const target = event.target;
@@ -518,24 +652,20 @@ function MapPopupCloser() {
       if (target.closest(".leaflet-interactive")) return;
       map.closePopup();
     };
-
     document.addEventListener("pointerdown", closePopupFromOutside, true);
     return () => document.removeEventListener("pointerdown", closePopupFromOutside, true);
   }, [map]);
-
   return null;
 }
 
 function FitGeoJsonBounds({ geojson, enabled, fitKey }) {
   const map = useMap();
-
   useEffect(() => {
     if (!enabled || !geojson?.features?.length) return;
     const layer = L.geoJSON(geojson);
     const bounds = layer.getBounds();
     if (bounds.isValid()) map.fitBounds(bounds, { padding: [32, 32], maxZoom: 11 });
   }, [map, geojson, enabled, fitKey]);
-
   return null;
 }
 
@@ -545,6 +675,7 @@ export default function MapView({
   resumenConsulta = null,
   onConsultaChange,
   onConsultar,
+  onLayerSummaryChange,
   leftPanelOpen = false,
   rightPanelOpen = false,
   selectedMlCluster = null,
@@ -567,6 +698,7 @@ export default function MapView({
   });
 
   const activeLayer = BASE_LAYERS[baseLayerId];
+  const boundaryStyle = BOUNDARY_STYLES[baseLayerId] || BOUNDARY_STYLES.esri;
   const rows = resumenConsulta?.rows ?? [];
   const mapScope = consultaEjecutada;
   const overlayScope = mapScope || consultaActiva;
@@ -603,33 +735,19 @@ export default function MapView({
   useEffect(() => {
     let active = true;
     obtenerGeometriasEstados()
-      .then((data) => {
-        if (active) setEstadosGeojson(data || EMPTY_FEATURE_COLLECTION);
-      })
-      .catch((error) => {
-        if (active) setGeometryError(error.message);
-      });
-    return () => {
-      active = false;
-    };
+      .then((data) => { if (active) setEstadosGeojson(data || EMPTY_FEATURE_COLLECTION); })
+      .catch((error) => { if (active) setGeometryError(error.message); });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
     let active = true;
     setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
     if (!cveEntCapas) return () => { active = false; };
-
     obtenerGeometriasMunicipios(cveEntCapas)
-      .then((data) => {
-        if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION);
-      })
-      .catch((error) => {
-        if (active) setGeometryError(error.message);
-      });
-
-    return () => {
-      active = false;
-    };
+      .then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
+      .catch((error) => { if (active) setGeometryError(error.message); });
+    return () => { active = false; };
   }, [cveEntCapas]);
 
   useEffect(() => {
@@ -638,31 +756,19 @@ export default function MapView({
       setOverlay("smn", EMPTY_FEATURE_COLLECTION);
       return () => { active = false; };
     }
-
     obtenerEstacionesSmn()
-      .then((data) => {
-        if (active) setOverlay("smn", data);
-      })
-      .catch((error) => {
-        if (active && !isAbortError(error)) setLayerError(`SMN: ${error.message}`);
-      });
-
-    return () => {
-      active = false;
-    };
+      .then((data) => { if (active) setOverlay("smn", data); })
+      .catch((error) => { if (active && !isAbortError(error)) setLayerError(`SMN: ${error.message}`); });
+    return () => { active = false; };
   }, [capasActivas.estacionesSmn]);
 
   useEffect(() => {
     let active = true;
     const controller = new AbortController();
     const overlayKeys = ["fisiografia", "hidrografia", "edafologia", "usoSueloVegetacion"];
-
     if (!cveEntCapas || !viewportReady) {
       overlayKeys.forEach((key) => setOverlay(key, EMPTY_FEATURE_COLLECTION));
-      return () => {
-        active = false;
-        controller.abort();
-      };
+      return () => { active = false; controller.abort(); };
     }
 
     const cvegeo = cvegeoSeleccionado || "";
@@ -672,17 +778,9 @@ export default function MapView({
         setOverlay(overlayKey, EMPTY_FEATURE_COLLECTION);
         return;
       }
-
       tasks.push(
-        obtenerCapaTematicaViewport(
-          capa,
-          cveEntCapas,
-          viewportBbox,
-          cvegeo,
-          { signal: controller.signal },
-        ).then((data) => {
-          if (active) setOverlay(overlayKey, data);
-        }),
+        obtenerCapaTematicaViewport(capa, cveEntCapas, viewportBbox, cvegeo, { signal: controller.signal })
+          .then((data) => { if (active) setOverlay(overlayKey, data); }),
       );
     };
 
@@ -693,17 +791,11 @@ export default function MapView({
 
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
-      const errors = results
-        .filter((result) => result.status === "rejected" && !isAbortError(result.reason))
-        .map((result) => result.reason?.message)
-        .filter(Boolean);
+      const errors = results.filter((result) => result.status === "rejected" && !isAbortError(result.reason)).map((result) => result.reason?.message).filter(Boolean);
       if (errors.length) setLayerError(errors.join(" | "));
     });
 
-    return () => {
-      active = false;
-      controller.abort();
-    };
+    return () => { active = false; controller.abort(); };
   }, [
     cveEntCapas,
     cvegeoSeleccionado,
@@ -718,18 +810,15 @@ export default function MapView({
   useEffect(() => {
     let active = true;
     const controller = new AbortController();
-
-    if (!overlayScope?.anio || !viewportReady) {
+    const pointYear = overlayScope?.tipoPeriodo === "comparar_anios" ? null : overlayScope?.anio;
+    if (!pointYear || !viewportReady) {
       setOverlay("firms", EMPTY_FEATURE_COLLECTION);
       setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
-      return () => {
-        active = false;
-        controller.abort();
-      };
+      return () => { active = false; controller.abort(); };
     }
 
     const puntosParams = {
-      anio: overlayScope.anio,
+      anio: pointYear,
       mes: overlayScope.tipoPeriodo === "anio_mes" ? overlayScope.mes : undefined,
       cve_ent: overlayScope.cveEnt || undefined,
       cvegeo: overlayScope.cvegeo || undefined,
@@ -738,38 +827,20 @@ export default function MapView({
 
     const tasks = [];
     if (capasActivas.puntosCalorFirms) {
-      tasks.push(
-        obtenerPuntosFirms(puntosParams, { signal: controller.signal }).then((data) => {
-          if (active) setOverlay("firms", data);
-        }),
-      );
-    } else {
-      setOverlay("firms", EMPTY_FEATURE_COLLECTION);
-    }
+      tasks.push(obtenerPuntosFirms(puntosParams, { signal: controller.signal }).then((data) => { if (active) setOverlay("firms", data); }));
+    } else setOverlay("firms", EMPTY_FEATURE_COLLECTION);
 
     if (capasActivas.incendiosConafor) {
-      tasks.push(
-        obtenerIncendiosConafor(puntosParams, { signal: controller.signal }).then((data) => {
-          if (active) setOverlay("conafor", data);
-        }),
-      );
-    } else {
-      setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
-    }
+      tasks.push(obtenerIncendiosConafor(puntosParams, { signal: controller.signal }).then((data) => { if (active) setOverlay("conafor", data); }));
+    } else setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
 
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
-      const errors = results
-        .filter((result) => result.status === "rejected" && !isAbortError(result.reason))
-        .map((result) => result.reason?.message)
-        .filter(Boolean);
+      const errors = results.filter((result) => result.status === "rejected" && !isAbortError(result.reason)).map((result) => result.reason?.message).filter(Boolean);
       if (errors.length) setLayerError(errors.join(" | "));
     });
 
-    return () => {
-      active = false;
-      controller.abort();
-    };
+    return () => { active = false; controller.abort(); };
   }, [
     capasActivas.puntosCalorFirms,
     capasActivas.incendiosConafor,
@@ -784,28 +855,16 @@ export default function MapView({
 
   const estadoSeleccionadoGeojson = useMemo(() => {
     if (!cveEntCapas) return EMPTY_FEATURE_COLLECTION;
-    return filterFeatureCollection(
-      estadosGeojson,
-      (feature) => getFeatureKey(feature, "entidad") === cveEntCapas,
-    );
+    return filterFeatureCollection(estadosGeojson, (feature) => getFeatureKey(feature, "entidad") === cveEntCapas);
   }, [estadosGeojson, cveEntCapas]);
 
   const municipioSeleccionadoGeojson = useMemo(() => {
     if (!cvegeoSeleccionado) return EMPTY_FEATURE_COLLECTION;
-    return filterFeatureCollection(
-      municipiosGeojson,
-      (feature) => getFeatureKey(feature, "municipio") === cvegeoSeleccionado,
-    );
+    return filterFeatureCollection(municipiosGeojson, (feature) => getFeatureKey(feature, "municipio") === cvegeoSeleccionado);
   }, [municipiosGeojson, cvegeoSeleccionado]);
 
-  const territorioSeleccionadoGeojson = cvegeoSeleccionado
-    ? municipioSeleccionadoGeojson
-    : estadoSeleccionadoGeojson;
-
-  const limitesEstatalesGeojson = useMemo(() => {
-    if (!cveEntCapas) return estadosGeojson;
-    return estadoSeleccionadoGeojson;
-  }, [estadosGeojson, estadoSeleccionadoGeojson, cveEntCapas]);
+  const territorioSeleccionadoGeojson = cvegeoSeleccionado ? municipioSeleccionadoGeojson : estadoSeleccionadoGeojson;
+  const limitesEstatalesGeojson = useMemo(() => cveEntCapas ? estadoSeleccionadoGeojson : estadosGeojson, [estadosGeojson, estadoSeleccionadoGeojson, cveEntCapas]);
 
   const smnFiltrado = useMemo(() => {
     if (!overlays.smn?.features) return EMPTY_FEATURE_COLLECTION;
@@ -816,14 +875,37 @@ export default function MapView({
       if (filtrosSmn.alcance === "periodo" && !stationCoversPeriod(feature, overlayScope)) return false;
       return true;
     });
-  }, [
-    overlays.smn,
-    filtrosSmn,
-    cveEntCapas,
-    cvegeoSeleccionado,
-    municipioSeleccionadoGeojson,
-    overlayScope,
-  ]);
+  }, [overlays.smn, filtrosSmn, cveEntCapas, cvegeoSeleccionado, municipioSeleccionadoGeojson, overlayScope]);
+
+  const layerSummary = useMemo(() => {
+    const firms = overlays.firms?.features || [];
+    const conafor = overlays.conafor?.features || [];
+    const smn = smnFiltrado?.features || [];
+    const day = firms.filter((feature) => String(feature?.properties?.daynight || "").toUpperCase() === "D").length;
+    const night = firms.filter((feature) => String(feature?.properties?.daynight || "").toUpperCase() === "N").length;
+    const satelliteInstrument = topFrequency(firms, (props) => [props.satellite, props.instrument].filter(Boolean).join(" · "));
+    const conaforHa = conafor.reduce((total, feature) => total + Number(feature?.properties?.superficie_total_ha || 0), 0);
+    const vegetation = topFrequency(conafor, (props) => props.tipo_vegetacion);
+    const cause = topFrequency(conafor, (props) => props.causa);
+    const operando = smn.filter((feature) => normalizeText(feature?.properties?.situacion_operativa).includes("operando") || normalizeText(feature?.properties?.situacion_operativa).includes("operativa")).length;
+    const suspendida = smn.filter((feature) => normalizeText(feature?.properties?.situacion_operativa).includes("suspend")).length;
+    return {
+      firms: { count: firms.length, day, night, satelliteInstrument },
+      conafor: { count: conafor.length, hectares: conaforHa, vegetation, cause },
+      smn: { count: smn.length, operando, suspendida, coverage: coverageRange(smn) },
+      inegi: {
+        fisiografia: overlays.fisiografia?.features?.length || 0,
+        edafologia: overlays.edafologia?.features?.length || 0,
+        usoSueloVegetacion: overlays.usoSueloVegetacion?.features?.length || 0,
+        hidrografia: overlays.hidrografia?.features?.length || 0,
+      },
+      scope: { territoryKey, viewportBbox, viewportReady },
+    };
+  }, [overlays, smnFiltrado, territoryKey, viewportBbox, viewportReady]);
+
+  useEffect(() => {
+    onLayerSummaryChange?.(layerSummary);
+  }, [layerSummary, onLayerSummaryChange]);
 
   const rowByKey = useMemo(() => {
     const map = new Map();
@@ -838,7 +920,6 @@ export default function MapView({
     if (!mapScope) return EMPTY_FEATURE_COLLECTION;
     const source = mapScope.nivelAgregacion === "municipio" ? municipiosGeojson : estadosGeojson;
     if (!source?.features) return EMPTY_FEATURE_COLLECTION;
-
     if (mapScope.nivelAgregacion === "municipio" && mapScope.cvegeo) {
       const target = normalizeGeoKey(mapScope.cvegeo, 5);
       return filterFeatureCollection(source, (feature) => getFeatureKey(feature, "municipio") === target);
@@ -857,11 +938,7 @@ export default function MapView({
       features: resultadoBaseGeojson.features.map((feature) => {
         const key = getFeatureKey(feature, nivelMapa);
         const row = rowByKey.get(key) ?? null;
-        const clusterMatches =
-          selectedMlCluster === null ||
-          selectedMlCluster === "" ||
-          Number(row?.cluster) === Number(selectedMlCluster);
-
+        const clusterMatches = selectedMlCluster === null || selectedMlCluster === "" || Number(row?.cluster) === Number(selectedMlCluster);
         return {
           ...feature,
           properties: {
@@ -892,22 +969,26 @@ export default function MapView({
     const row = feature?.properties?.__resultado || null;
     const name = feature?.properties?.nomgeo || feature?.properties?.nom_ent || feature?.properties?.nom_mun || row?.nombre_municipio || row?.nombre_entidad || key;
     if (!row) return;
-
     bindRichInfo(layer, {
       title: name,
       kind: "ml",
-      tooltipRows: [
-        ["Cluster", row.cluster],
-        ["Observaciones", row.observaciones],
-        ["FIRMS", row.firms_detecciones ?? 0],
-        ["CONAFOR", row.conafor_eventos ?? 0],
-      ],
-      popupRows: propertyRows(row, [
+      tooltipRows: orderedRows(row, [
+        ["Estado", "nombre_entidad"],
+        ["Municipio", "nombre_municipio"],
+        ["Cluster", "cluster"],
+        ["Observaciones", "observaciones", { number: true }],
+      ]),
+      popupRows: orderedRows(row, [
+        ["Estado", "nombre_entidad"],
+        ["Municipio", "nombre_municipio"],
         ["Clave", nivelMapa === "municipio" ? "cvegeo" : "cve_ent"],
         ["Cluster", "cluster"],
         ["Estado ML", "estado_app"],
         ["Etiqueta", "etiqueta_final"],
-      ]).slice(0, 40),
+        ["Observaciones", "observaciones", { number: true }],
+        ["Detecciones FIRMS", "firms_detecciones", { number: true }],
+        ["Eventos CONAFOR", "conafor_eventos", { number: true }],
+      ]),
     });
   };
 
@@ -916,175 +997,62 @@ export default function MapView({
   const renderKey = `${fitKey}-${resumenConsulta?.periodo || "sin-resultados"}-${rows.length}-${selectedMlCluster ?? "all"}`;
 
   return (
-    <div
-      className="mapWrap"
-      role="region"
-      aria-label="Mapa interactivo de incendios forestales en México"
-      aria-describedby="map-accessible-summary"
-    >
-      <p id="map-accessible-summary" className="srOnly">
-        Mapa interactivo de México con resultados ML y capas geográficas seleccionables.
-      </p>
-      <MapContainer
-        center={DEFAULT_VIEW.center}
-        zoom={DEFAULT_VIEW.zoom}
-        minZoom={3}
-        className="leafletMap"
-        zoomControl={false}
-        keyboard={true}
-        preferCanvas={true}
-      >
+    <div className="mapWrap" role="region" aria-label="Mapa interactivo de incendios forestales en México" aria-describedby="map-accessible-summary">
+      <p id="map-accessible-summary" className="srOnly">Mapa interactivo de México con resultados ML y capas geográficas seleccionables.</p>
+      <MapContainer center={DEFAULT_VIEW.center} zoom={DEFAULT_VIEW.zoom} minZoom={3} className="leafletMap" zoomControl={false} keyboard={true} preferCanvas={true}>
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
         <MapViewportTracker onChange={handleViewportChange} />
 
         {capasActivas.limitesEstatales && limitesEstatalesGeojson?.features?.length ? (
-          <GeoJSON
-            key={`lim-est-${cveEntCapas || "mx"}`}
-            data={limitesEstatalesGeojson}
-            style={() => STATE_BOUNDARY_STYLE}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.nomgeo || feature?.properties?.nom_ent || "Entidad federativa",
-              kind: "limites",
-              preferred: [["Entidad", "nomgeo"], ["Clave", "cve_ent"]],
-              tooltipCount: 3,
-            })}
-          />
+          <GeoJSON key={`lim-est-${cveEntCapas || "mx"}-${baseLayerId}`} data={limitesEstatalesGeojson} style={() => boundaryStyle.state} onEachFeature={bindStateInfo} />
         ) : null}
 
         {capasActivas.limitesMunicipales && municipiosGeojson?.features?.length ? (
-          <GeoJSON
-            key={`lim-mun-${cveEntCapas}`}
-            data={municipiosGeojson}
-            style={() => MUNICIPAL_BOUNDARY_STYLE}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.nomgeo || feature?.properties?.nom_mun || "Municipio",
-              kind: "limites",
-              preferred: [["Municipio", "nomgeo"], ["CVEGEO", "cvegeo"]],
-              tooltipCount: 3,
-            })}
-          />
+          <GeoJSON key={`lim-mun-${cveEntCapas}-${baseLayerId}`} data={municipiosGeojson} style={() => boundaryStyle.municipality} onEachFeature={bindMunicipalityInfo} />
         ) : null}
 
         {territorioSeleccionadoGeojson?.features?.length ? (
-          <GeoJSON
-            key={`territorio-${fitKey}`}
-            data={territorioSeleccionadoGeojson}
-            style={() => SELECTED_TERRITORY_STYLE}
-            interactive={false}
-          />
+          <GeoJSON key={`territorio-${fitKey}`} data={territorioSeleccionadoGeojson} style={() => SELECTED_TERRITORY_STYLE} interactive={false} />
         ) : null}
 
         {displayGeojson?.features?.length ? (
-          <GeoJSON
-            key={renderKey}
-            data={displayGeojson}
-            style={styleFeature}
-            onEachFeature={onEachResultFeature}
-          />
+          <GeoJSON key={renderKey} data={displayGeojson} style={styleFeature} onEachFeature={onEachResultFeature} />
         ) : null}
 
         {overlays.fisiografia?.features?.length ? (
-          <GeoJSON
-            key={`fisiografia-${thematicKey}`}
-            data={overlays.fisiografia}
-            style={() => THEMATIC_STYLES.fisiografia}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.fisiografia_nombre || "Fisiografía INEGI",
-              kind: "fisiografia",
-              preferred: [["Provincia", "fisiografia_nombre"]],
-            })}
-          />
+          <GeoJSON key={`fisiografia-${thematicKey}`} data={overlays.fisiografia} style={() => THEMATIC_STYLES.fisiografia} onEachFeature={bindPhysiographyInfo} />
         ) : null}
 
         {overlays.hidrografia?.features?.length ? (
-          <GeoJSON
-            key={`hidrografia-${thematicKey}`}
-            data={overlays.hidrografia}
-            style={() => THEMATIC_STYLES.hidrografia}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.corriente_nombre || "Corriente de agua INEGI",
-              kind: "hidrografia",
-              preferred: [["Corriente", "corriente_nombre"], ["Orden", "orden_corriente"]],
-            })}
-          />
+          <GeoJSON key={`hidrografia-${thematicKey}`} data={overlays.hidrografia} style={() => THEMATIC_STYLES.hidrografia} onEachFeature={bindHydrologyInfo} />
         ) : null}
 
         {overlays.edafologia?.features?.length ? (
-          <GeoJSON
-            key={`edafologia-${thematicKey}`}
-            data={overlays.edafologia}
-            style={() => THEMATIC_STYLES.edafologia}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.grupo1_nombre || "Edafología INEGI",
-              kind: "edafologia",
-              preferred: [["Suelo", "grupo1_nombre"], ["Textura", "textura_nombre"]],
-            })}
-          />
+          <GeoJSON key={`edafologia-${thematicKey}`} data={overlays.edafologia} style={() => THEMATIC_STYLES.edafologia} onEachFeature={bindSoilInfo} />
         ) : null}
 
         {overlays.usoSueloVegetacion?.features?.length ? (
-          <GeoJSON
-            key={`usv-${thematicKey}`}
-            data={overlays.usoSueloVegetacion}
-            style={() => THEMATIC_STYLES.uso_suelo_vegetacion}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.usv_descripcion || "Uso de suelo y vegetación INEGI",
-              kind: "uso-suelo",
-              preferred: [["Uso / vegetación", "usv_descripcion"]],
-            })}
-          />
+          <GeoJSON key={`usv-${thematicKey}`} data={overlays.usoSueloVegetacion} style={() => THEMATIC_STYLES.uso_suelo_vegetacion} onEachFeature={bindLandUseInfo} />
         ) : null}
 
         {smnFiltrado?.features?.length ? (
           <GeoJSON
             key={`smn-${cveEntCapas || "mx"}-${cvegeoSeleccionado || "all"}-${filtrosSmn.alcance || "todas"}-${filtrosSmn.operando}-${filtrosSmn.suspendida}`}
             data={smnFiltrado}
-            pointToLayer={(_, latlng) => L.circleMarker(latlng, {
-              radius: 4,
-              color: "#0F766E",
-              weight: 1,
-              fillColor: "#14B8A6",
-              fillOpacity: 0.8,
-            })}
-            onEachFeature={(feature, layer) => bindGenericLayerInfo(feature, layer, {
-              title: feature?.properties?.nombre_estacion || "Estación SMN-CONAGUA",
-              kind: "smn",
-              preferred: [
-                ["Estación", "nombre_estacion"],
-                ["Situación", "situacion_operativa"],
-                ["Cobertura desde", "cobertura_inicio"],
-                ["Cobertura hasta", "cobertura_fin"],
-                ["Fecha inicial", "fecha_inicio"],
-                ["Fecha final", "fecha_fin"],
-              ],
-              tooltipCount: 6,
-            })}
+            pointToLayer={(_, latlng) => L.circleMarker(latlng, { radius: 4, color: "#0F766E", weight: 1, fillColor: "#14B8A6", fillOpacity: 0.8 })}
+            onEachFeature={bindSmnInfo}
           />
         ) : null}
 
         {overlays.conafor?.features?.length ? (
-          <GeoJSON
-            key={`conafor-${territoryKey}-${viewportReady ? viewportBbox : "pending"}`}
-            data={overlays.conafor}
-            pointToLayer={(feature, latlng) => L.circleMarker(latlng, conaforMarkerStyle(feature))}
-            onEachFeature={bindConaforInfo}
-          />
+          <GeoJSON key={`conafor-${territoryKey}-${viewportReady ? viewportBbox : "pending"}`} data={overlays.conafor} pointToLayer={(feature, latlng) => L.circleMarker(latlng, conaforMarkerStyle(feature))} onEachFeature={bindConaforInfo} />
         ) : null}
 
         {overlays.firms?.features?.length ? (
-          <GeoJSON
-            key={`firms-${territoryKey}-${viewportReady ? viewportBbox : "pending"}`}
-            data={overlays.firms}
-            pointToLayer={(feature, latlng) => L.circleMarker(latlng, firmsMarkerStyle(feature))}
-            onEachFeature={bindFirmsInfo}
-          />
+          <GeoJSON key={`firms-${territoryKey}-${viewportReady ? viewportBbox : "pending"}`} data={overlays.firms} pointToLayer={(feature, latlng) => L.circleMarker(latlng, firmsMarkerStyle(feature))} onEachFeature={bindFirmsInfo} />
         ) : null}
 
-        <FitGeoJsonBounds
-          geojson={territorioSeleccionadoGeojson}
-          enabled={Boolean(cveEntCapas || cvegeoSeleccionado)}
-          fitKey={fitKey}
-        />
+        <FitGeoJsonBounds geojson={territorioSeleccionadoGeojson} enabled={Boolean(cveEntCapas || cvegeoSeleccionado)} fitKey={fitKey} />
         <MapResizeInvalidator watchKey={`${leftPanelOpen}-${rightPanelOpen}-${baseLayerId}`} />
         <MapPopupCloser />
         <MapControls
@@ -1105,6 +1073,7 @@ export default function MapView({
         resumenConsulta={resumenConsulta}
         rightPanelOpen={rightPanelOpen}
         selectedMlCluster={selectedMlCluster}
+        capasActivas={capasActivas}
       />
     </div>
   );
