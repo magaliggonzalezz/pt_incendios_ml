@@ -42,8 +42,6 @@ function isConsultaCompleta(consulta) {
   if (consulta.tipoPeriodo === "comparar_anios") {
     return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
   }
-  // Los controles de fecha ya existen en el frontend, pero la consulta diaria se
-  // habilitará cuando las rutas día estén completas (municipio-día sigue diferido).
   return false;
 }
 
@@ -66,6 +64,7 @@ export default function DashboardPage() {
   const [consultaEjecutada, setConsultaEjecutada] = useState(false);
   const [ultimaConsultaEjecutada, setUltimaConsultaEjecutada] = useState(null);
   const [resumenConsulta, setResumenConsulta] = useState(null);
+  const [layerSummary, setLayerSummary] = useState(null);
   const [selectedMlCluster, setSelectedMlCluster] = useState(null);
   const [clusters, setClusters] = useState([]);
   const [estados, setEstados] = useState([]);
@@ -159,6 +158,7 @@ export default function DashboardPage() {
     cancelPendingQuery();
     setConsultaActiva(getConsultaInicial());
     invalidateExecutedQuery();
+    setLayerSummary(null);
     setError(null);
   };
 
@@ -262,6 +262,7 @@ export default function DashboardPage() {
         resumenConsulta={resumenConsulta}
         onConsultaChange={handleConsultaChange}
         onConsultar={handleConsultar}
+        onLayerSummaryChange={setLayerSummary}
         selectedMlCluster={selectedMlCluster}
         leftPanelOpen={leftOpen}
         rightPanelOpen={rightOpen}
@@ -287,6 +288,7 @@ export default function DashboardPage() {
         consultaActiva={consultaActiva}
         consultaResultado={ultimaConsultaEjecutada}
         resumenConsulta={resumenConsulta}
+        layerSummary={layerSummary}
         totalRecords={resumenConsulta?.totalRecords ?? 0}
         availableFormats={["csv", "json"]}
         isExporting={false}
