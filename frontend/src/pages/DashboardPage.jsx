@@ -4,10 +4,7 @@ import LeftPanel from "../components/LeftPanel/LeftPanel";
 import RightPanel from "../components/RightPanel/RightPanel";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
-import {
-  INITIAL_ACTIVE_LAYERS,
-  INITIAL_SMN_FILTERS,
-} from "../data/dashboardMock";
+import { INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../data/dashboardMock";
 import { buildRealDashboardResults } from "../data/dashboardRealData";
 import { obtenerClusters, obtenerEstados, obtenerMunicipios } from "../services/catalogos.service";
 import {
@@ -40,9 +37,14 @@ const CONSULTA_INICIAL = {
 function isConsultaCompleta(consulta) {
   if (!consulta?.nivelAgregacion || !consulta?.tipoPeriodo) return false;
   if (consulta.nivelAgregacion === "municipio" && !consulta.cveEnt) return false;
-  if ((consulta.tipoPeriodo === "anio" || consulta.tipoPeriodo === "anio_mes") && !consulta.anio) return false;
-  if (consulta.tipoPeriodo === "anio_mes" && !consulta.mes) return false;
-  return consulta.tipoPeriodo === "anio" || consulta.tipoPeriodo === "anio_mes";
+  if (consulta.tipoPeriodo === "anio") return Boolean(consulta.anio);
+  if (consulta.tipoPeriodo === "anio_mes") return Boolean(consulta.anio && consulta.mes);
+  if (consulta.tipoPeriodo === "comparar_anios") {
+    return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
+  }
+  // Los controles de fecha ya existen en el frontend, pero la consulta diaria se
+  // habilitará cuando las rutas día estén completas (municipio-día sigue diferido).
+  return false;
 }
 
 const getConsultaInicial = () => ({
@@ -74,7 +76,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let active = true;
-
     Promise.all([obtenerClusters(), obtenerEstados()])
       .then(([clusterRows, estadoRows]) => {
         if (!active) return;
@@ -84,22 +85,15 @@ export default function DashboardPage() {
       .catch((err) => {
         if (active) setError(err.message);
       });
-
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
     let active = true;
-
     if (!consultaActiva.cveEnt) {
       setMunicipios([]);
-      return () => {
-        active = false;
-      };
+      return () => { active = false; };
     }
-
     obtenerMunicipios(consultaActiva.cveEnt)
       .then((rows) => {
         if (active) setMunicipios(rows);
@@ -107,10 +101,7 @@ export default function DashboardPage() {
       .catch((err) => {
         if (active) setError(err.message);
       });
-
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [consultaActiva.cveEnt]);
 
   const invalidateExecutedQuery = () => {
@@ -139,26 +130,16 @@ export default function DashboardPage() {
     }
 
     const changesOnlyVisualization = campo === "capasActivas" || campo === "filtrosSmn";
-    if (!changesOnlyVisualization) {
-      invalidateForQueryChange();
-    }
+    if (!changesOnlyVisualization) invalidateForQueryChange();
 
     setConsultaActiva((prev) => {
       if (campo === "capasActivas") {
         const { capa, activo } = valor;
-        return {
-          ...prev,
-          capasActivas: { ...prev.capasActivas, [capa]: activo },
-        };
+        return { ...prev, capasActivas: { ...prev.capasActivas, [capa]: activo } };
       }
-
       if (campo === "filtrosSmn") {
-        return {
-          ...prev,
-          filtrosSmn: { ...prev.filtrosSmn, ...valor },
-        };
+        return { ...prev, filtrosSmn: { ...prev.filtrosSmn, ...valor } };
       }
-
       if (campo === "nivelAgregacion") {
         return {
           ...prev,
@@ -170,7 +151,6 @@ export default function DashboardPage() {
           cvegeo: "",
         };
       }
-
       return { ...prev, [campo]: valor };
     });
   };
@@ -180,6 +160,15 @@ export default function DashboardPage() {
     setConsultaActiva(getConsultaInicial());
     invalidateExecutedQuery();
     setError(null);
+  };
+
+  const fetchAnnualRows = async (consulta, anio) => {
+    if (consulta.nivelAgregacion === "entidad") {
+      let rows = await obtenerResultadosEstadoAnio(anio);
+      if (consulta.cveEnt) rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
+      return rows;
+    }
+    return obtenerResultadosMunicipioAnio({ anio, cveEnt: consulta.cveEnt, cvegeo: consulta.cvegeo });
   };
 
   const handleConsultar = async (consultaOverride = null) => {
@@ -194,20 +183,22 @@ export default function DashboardPage() {
     try {
       let rows;
 
-      if (consulta.nivelAgregacion === "entidad") {
+      if (consulta.tipoPeriodo === "comparar_anios") {
+        const [rowsA, rowsB] = await Promise.all([
+          fetchAnnualRows(consulta, consulta.anioInicio),
+          fetchAnnualRows(consulta, consulta.anioFin),
+        ]);
+        rows = [
+          ...rowsA.map((row) => ({ ...row, anio_comparacion: Number(consulta.anioInicio) })),
+          ...rowsB.map((row) => ({ ...row, anio_comparacion: Number(consulta.anioFin) })),
+        ];
+      } else if (consulta.nivelAgregacion === "entidad") {
         rows = consulta.tipoPeriodo === "anio_mes"
           ? await obtenerResultadosEstadoMes(consulta.anio, Number(consulta.mes))
           : await obtenerResultadosEstadoAnio(consulta.anio);
-
-        if (consulta.cveEnt) {
-          rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
-        }
+        if (consulta.cveEnt) rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
       } else {
-        const params = {
-          anio: consulta.anio,
-          cveEnt: consulta.cveEnt,
-          cvegeo: consulta.cvegeo,
-        };
+        const params = { anio: consulta.anio, cveEnt: consulta.cveEnt, cvegeo: consulta.cvegeo };
         rows = consulta.tipoPeriodo === "anio_mes"
           ? await obtenerResultadosMunicipioMes({ ...params, mes: Number(consulta.mes) })
           : await obtenerResultadosMunicipioAnio(params);
@@ -215,15 +206,9 @@ export default function DashboardPage() {
 
       if (runId !== queryRunRef.current) return;
 
-      const resumen = buildRealDashboardResults({
-        consulta,
-        rows,
-        clusters,
-        estados,
-        municipios,
-      });
-
+      const resumen = buildRealDashboardResults({ consulta, rows, clusters, estados, municipios });
       if (runId !== queryRunRef.current) return;
+
       setResumenConsulta(resumen);
       setUltimaConsultaEjecutada(snapshotConsulta(consulta));
       setConsultaEjecutada(true);
@@ -250,21 +235,16 @@ export default function DashboardPage() {
     const payloadRows = columns.length
       ? clusterFilteredRows.map((row) => Object.fromEntries(columns.map((column) => [column, row[column] ?? ""])))
       : clusterFilteredRows;
-    const text =
-      format === "json"
-        ? JSON.stringify(payloadRows, null, 2)
-        : [
-            columns.join(","),
-            ...payloadRows.map((row) =>
-              columns
-                .map((column) => {
-                  const value = row[column] ?? "";
-                  const str = String(value);
-                  return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-                })
-                .join(",")
-            ),
-          ].join("\n");
+    const text = format === "json"
+      ? JSON.stringify(payloadRows, null, 2)
+      : [
+          columns.join(","),
+          ...payloadRows.map((row) => columns.map((column) => {
+            const value = row[column] ?? "";
+            const str = String(value);
+            return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+          }).join(",")),
+        ].join("\n");
     const blob = new Blob([text], { type: format === "json" ? "application/json" : "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -286,13 +266,11 @@ export default function DashboardPage() {
         leftPanelOpen={leftOpen}
         rightPanelOpen={rightOpen}
       />
-
       <Header />
       <Footer />
-
       <LeftPanel
         open={leftOpen}
-        onToggle={() => setLeftOpen((v) => !v)}
+        onToggle={() => setLeftOpen((value) => !value)}
         consultaActiva={consultaActiva}
         consultaEjecutada={consultaEjecutada}
         onConsultaChange={handleConsultaChange}
@@ -304,7 +282,7 @@ export default function DashboardPage() {
       />
       <RightPanel
         open={rightOpen}
-        onToggle={() => setRightOpen((v) => !v)}
+        onToggle={() => setRightOpen((value) => !value)}
         consultaEjecutada={consultaEjecutada}
         consultaActiva={consultaActiva}
         consultaResultado={ultimaConsultaEjecutada}
