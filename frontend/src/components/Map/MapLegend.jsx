@@ -59,22 +59,39 @@ export default function MapLegend({
           {showFirms ? (
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">FIRMS</div>
+              <p className="legendIntro"><strong>Atributo de confianza.</strong> El color representa la categoría de confianza de cada detección FIRMS original.</p>
               <div className="mapLegendItems">
                 <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsLow"/><div><strong>Confianza baja</strong><span>Detección FIRMS original</span></div></div>
                 <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsNominal"/><div><strong>Confianza nominal</strong><span>Detección FIRMS original</span></div></div>
                 <div className="mapLegendItem"><span className="mapLegendSymbol dot firmsHigh"/><div><strong>Confianza alta</strong><span>Detección FIRMS original</span></div></div>
               </div>
-              <p className="legendNote"><strong>Archive:</strong> se muestran únicamente datos del archivo histórico consolidado de FIRMS. No se utilizan productos NRT ni RT.</p>
-              <p className="legendNote"><strong>Tipo:</strong> 0 incendio de vegetación presunto · 1 volcán activo · 2 otra fuente terrestre estática · 3 detección offshore.</p>
+              <p className="legendNote"><strong>Archive:</strong> se muestran únicamente datos del archivo histórico consolidado de FIRMS. La aplicación no utiliza productos NRT ni RT.</p>
+              <div className="legendListBlock">
+                <strong>Tipo de detección</strong>
+                <ul>
+                  <li><b>0</b> · Incendio de vegetación presunto</li>
+                  <li><b>1</b> · Volcán activo</li>
+                  <li><b>2</b> · Otra fuente terrestre estática</li>
+                  <li><b>3</b> · Detección offshore</li>
+                </ul>
+              </div>
             </section>
           ) : null}
 
-          {(showConafor || showSmn) ? (
+          {showConafor ? (
             <section className="mapLegendSection">
-              <div className="mapLegendSectionTitle">CONAFOR y SMN-CONAGUA</div>
+              <div className="mapLegendSectionTitle">CONAFOR</div>
               <div className="mapLegendItems">
-                {showConafor ? <div className="mapLegendItem"><span className="mapLegendSymbol dot conafor"/><div><strong>Incendio CONAFOR</strong><span>Registro original; tamaño según superficie cuando existe.</span></div></div> : null}
-                {showSmn ? <div className="mapLegendItem"><span className="mapLegendSymbol station"/><div><strong>Estación meteorológica</strong><span>Inventario SMN-CONAGUA filtrado por territorio, período y situación operativa.</span></div></div> : null}
+                <div className="mapLegendItem"><span className="mapLegendSymbol dot conafor"/><div><strong>Incendio registrado</strong><span>Registro original; el tamaño visual depende de la superficie cuando existe.</span></div></div>
+              </div>
+            </section>
+          ) : null}
+
+          {showSmn ? (
+            <section className="mapLegendSection">
+              <div className="mapLegendSectionTitle">SMN-CONAGUA</div>
+              <div className="mapLegendItems">
+                <div className="mapLegendItem"><span className="mapLegendSymbol station"/><div><strong>Estación meteorológica</strong><span>Registro original del inventario de estaciones.</span></div></div>
               </div>
             </section>
           ) : null}
@@ -90,7 +107,7 @@ export default function MapLegend({
                 {capasActivas.limitesEstatales ? <div className="mapLegendItem"><span className="mapLegendSymbol line boundary"/><div><strong>Límite estatal</strong><span>El color se adapta al mapa base.</span></div></div> : null}
                 {capasActivas.limitesMunicipales ? <div className="mapLegendItem"><span className="mapLegendSymbol line boundaryMunicipal"/><div><strong>Límite municipal</strong><span>El color se adapta al mapa base.</span></div></div> : null}
               </div>
-              <p className="legendNote">Las geometrías temáticas pueden simplificarse para visualización web; no se crean registros sintéticos ni se sustituyen los atributos originales.</p>
+              <p className="legendNote">Los colores de estas capas son una simbología web definida por la aplicación; no se presentan como la simbología cartográfica oficial de INEGI. Las geometrías pueden simplificarse para visualización web sin sustituir sus features por registros sintéticos.</p>
             </section>
           ) : null}
 
