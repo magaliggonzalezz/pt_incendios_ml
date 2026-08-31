@@ -1,9 +1,9 @@
 import { useMemo } from "react";
+import SearchableSelect from "../Common/SearchableSelect";
 import { LAYER_GROUPS, INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
 import "./LeftPanel.css";
 
 const MESES = [
-  { value: "", label: "Selecciona mes" },
   { value: "01", label: "Enero" },
   { value: "02", label: "Febrero" },
   { value: "03", label: "Marzo" },
@@ -20,24 +20,46 @@ const MESES = [
 
 const MIN_YEAR = 2001;
 const MAX_YEAR = 2025;
-const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, index) =>
-  String(MIN_YEAR + index)
-).reverse();
+const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, index) => ({
+  value: String(MAX_YEAR - index),
+  label: String(MAX_YEAR - index),
+}));
 
-const getLayerDisabled = (layer, nivelAgregacion) => {
-  if (!layer.nivel) return false;
-  return layer.nivel !== nivelAgregacion;
-};
+const PERIOD_OPTIONS = [
+  { value: "", label: "Selecciona tipo de período" },
+  { value: "anio", label: "Año" },
+  { value: "anio_mes", label: "Año y mes" },
+  { value: "comparar_anios", label: "Comparar años" },
+  { value: "fecha", label: "Fecha" },
+  { value: "rango_fechas", label: "Rango de fechas" },
+];
+
+const getLayerDisabled = (layer, nivelAgregacion) => Boolean(layer.nivel && layer.nivel !== nivelAgregacion);
 
 const SMN_FILTERS = [
   { id: "operando", label: "Operando" },
   { id: "suspendida", label: "Suspendida" },
 ];
 
-const SMN_SCOPE_OPTIONS = [
-  { value: "todas", label: "Todas las estaciones" },
-  { value: "periodo", label: "Con datos del período" },
-];
+function buildPeriodLabel(consulta) {
+  if (consulta?.tipoPeriodo === "anio" && consulta.anio) return consulta.anio;
+  if (consulta?.tipoPeriodo === "anio_mes" && consulta.anio && consulta.mes) return `${consulta.anio}-${consulta.mes}`;
+  if (consulta?.tipoPeriodo === "comparar_anios" && consulta.anioInicio && consulta.anioFin) return `${consulta.anioInicio} vs ${consulta.anioFin}`;
+  if (consulta?.tipoPeriodo === "fecha" && consulta.fechaInicio) return consulta.fechaInicio;
+  if (consulta?.tipoPeriodo === "rango_fechas" && consulta.fechaInicio && consulta.fechaFin) return `${consulta.fechaInicio} a ${consulta.fechaFin}`;
+  return "período seleccionado";
+}
+
+function consultaCompleta(consulta) {
+  if (!consulta?.nivelAgregacion || !consulta?.tipoPeriodo) return false;
+  if (consulta.nivelAgregacion === "municipio" && !consulta.cveEnt) return false;
+  if (consulta.tipoPeriodo === "anio") return Boolean(consulta.anio);
+  if (consulta.tipoPeriodo === "anio_mes") return Boolean(consulta.anio && consulta.mes);
+  if (consulta.tipoPeriodo === "comparar_anios") return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
+  if (consulta.tipoPeriodo === "fecha") return Boolean(consulta.fechaInicio) && consulta.nivelAgregacion !== "municipio";
+  if (consulta.tipoPeriodo === "rango_fechas") return Boolean(consulta.fechaInicio && consulta.fechaFin && consulta.fechaInicio <= consulta.fechaFin) && consulta.nivelAgregacion !== "municipio";
+  return false;
+}
 
 export default function LeftPanel({
   open,
@@ -56,41 +78,32 @@ export default function LeftPanel({
   const showMunicipality = consultaActiva?.nivelAgregacion === "municipio";
   const municipalityEnabled = showMunicipality && selectedState !== "";
   const tipoPeriodo = consultaActiva?.tipoPeriodo || "";
+  const canQuery = consultaCompleta(consultaActiva);
+  const datePendingMunicipality = showMunicipality && (tipoPeriodo === "fecha" || tipoPeriodo === "rango_fechas");
 
-  const consultaCompleta =
-    Boolean(consultaActiva?.nivelAgregacion) &&
-    Boolean(tipoPeriodo) &&
-    (!showMunicipality || Boolean(selectedState)) &&
-    Boolean(consultaActiva?.anio) &&
-    (tipoPeriodo !== "anio_mes" || Boolean(consultaActiva?.mes));
+  const stateOptions = useMemo(() => estados.map((state) => ({
+    value: state.cve_ent,
+    label: state.nombre,
+    meta: `Entidad ${state.cve_ent}`,
+  })), [estados]);
+
+  const municipalityOptions = useMemo(() => municipios.map((municipality) => ({
+    value: municipality.cvegeo,
+    label: municipality.nombre,
+    meta: `CVEGEO ${municipality.cvegeo}`,
+  })), [municipios]);
 
   const isDirty = useMemo(() => {
     const currentLayers = consultaActiva?.capasActivas ?? {};
-    const layersChanged = Object.entries(INITIAL_ACTIVE_LAYERS).some(
-      ([key, value]) => currentLayers[key] !== value
-    );
+    const layersChanged = Object.entries(INITIAL_ACTIVE_LAYERS).some(([key, value]) => currentLayers[key] !== value);
     const currentSmnFilters = consultaActiva?.filtrosSmn ?? {};
-    const smnFiltersChanged = Object.entries(INITIAL_SMN_FILTERS).some(
-      ([key, value]) => currentSmnFilters[key] !== value
-    );
-
-    const consultaChanged =
-      consultaActiva?.nivelAgregacion !== "" ||
-      consultaActiva?.tipoPeriodo !== "" ||
-      consultaActiva?.anio !== "" ||
-      consultaActiva?.mes !== "" ||
-      consultaActiva?.estado !== "" ||
-      consultaActiva?.municipio !== "" ||
-      consultaActiva?.cveEnt !== "" ||
-      consultaActiva?.cveMun !== "" ||
-      consultaActiva?.cvegeo !== "";
-
+    const smnFiltersChanged = Object.entries(INITIAL_SMN_FILTERS).some(([key, value]) => currentSmnFilters[key] !== value);
+    const consultaChanged = [
+      "nivelAgregacion", "tipoPeriodo", "anio", "mes", "anioInicio", "anioFin", "fechaInicio", "fechaFin",
+      "estado", "municipio", "cveEnt", "cveMun", "cvegeo",
+    ].some((key) => Boolean(consultaActiva?.[key]));
     return layersChanged || smnFiltersChanged || consultaChanged;
   }, [consultaActiva]);
-
-  const onChangeNivelAgregacion = (value) => {
-    onConsultaChange?.("nivelAgregacion", value);
-  };
 
   const onChangeState = (cveEnt) => {
     const state = estados.find((item) => item.cve_ent === cveEnt);
@@ -112,15 +125,11 @@ export default function LeftPanel({
     });
   };
 
+  const periodScopeLabel = buildPeriodLabel(consultaActiva);
+
   return (
     <aside className={`leftPanel ${open ? "open" : "closed"}`} aria-label="Panel de filtros de consulta">
-      <button
-        className="toggleBtn"
-        type="button"
-        onClick={onToggle}
-        aria-label={open ? "Ocultar panel de filtros" : "Mostrar panel de filtros"}
-        aria-expanded={open}
-      >
+      <button className="toggleBtn" type="button" onClick={onToggle} aria-label={open ? "Ocultar panel de filtros" : "Mostrar panel de filtros"} aria-expanded={open}>
         {open ? "⟨" : "⟩"}
       </button>
 
@@ -130,12 +139,7 @@ export default function LeftPanel({
 
           <div className="field">
             <label htmlFor="aggregationLevel">Nivel de análisis</label>
-            <select
-              id="aggregationLevel"
-              className="selectInput"
-              value={consultaActiva?.nivelAgregacion ?? ""}
-              onChange={(e) => onChangeNivelAgregacion(e.target.value)}
-            >
+            <select id="aggregationLevel" className="selectInput" value={consultaActiva?.nivelAgregacion ?? ""} onChange={(event) => onConsultaChange?.("nivelAgregacion", event.target.value)}>
               <option value="">Selecciona nivel de análisis</option>
               <option value="entidad">Estatal</option>
               <option value="municipio">Municipal</option>
@@ -144,106 +148,77 @@ export default function LeftPanel({
 
           <div className="field">
             <label htmlFor="periodType">Tipo de período</label>
-            <select
-              id="periodType"
-              className="selectInput"
-              value={tipoPeriodo}
-              onChange={(e) => onConsultaChange?.("tipoPeriodo", e.target.value)}
-            >
-              <option value="">Selecciona tipo de período</option>
-              <option value="anio">Año</option>
-              <option value="anio_mes">Año y mes</option>
+            <select id="periodType" className="selectInput" value={tipoPeriodo} onChange={(event) => onConsultaChange?.("consultaPatch", {
+              tipoPeriodo: event.target.value,
+              anio: "", mes: "", anioInicio: "", anioFin: "", fechaInicio: "", fechaFin: "",
+            })}>
+              {PERIOD_OPTIONS.map((option) => <option key={option.value || "empty"} value={option.value}>{option.label}</option>)}
             </select>
           </div>
 
-          <div className="field">
-            <label htmlFor="yearInput">Año</label>
-            <select
-              id="yearInput"
-              className="selectInput"
-              value={consultaActiva?.anio ?? ""}
-              onChange={(e) => onConsultaChange?.("anio", e.target.value)}
-            >
-              <option value="">Selecciona año</option>
-              {YEAR_OPTIONS.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
+          {(tipoPeriodo === "anio" || tipoPeriodo === "anio_mes") ? (
+            <SearchableSelect id="yearInput" label="Año" value={consultaActiva?.anio || ""} options={YEAR_OPTIONS} placeholder="Selecciona año" searchPlaceholder="Escribe un año..." maxVisible={7} onChange={(value) => onConsultaChange?.("anio", value)} />
+          ) : null}
 
-          {tipoPeriodo === "anio_mes" && (
-            <div className="field">
-              <label htmlFor="monthSelect">Mes</label>
-              <select
-                id="monthSelect"
-                className="selectInput"
-                value={consultaActiva?.mes ?? ""}
-                onChange={(e) => onConsultaChange?.("mes", e.target.value)}
-              >
-                {MESES.map((month) => (
-                  <option key={month.value || "empty"} value={month.value}>{month.label}</option>
-                ))}
-              </select>
+          {tipoPeriodo === "anio_mes" ? (
+            <SearchableSelect id="monthSelect" label="Mes" value={consultaActiva?.mes || ""} options={MESES} placeholder="Selecciona mes" searchPlaceholder="Escribe un mes..." maxVisible={6} onChange={(value) => onConsultaChange?.("mes", value)} />
+          ) : null}
+
+          {tipoPeriodo === "comparar_anios" ? (
+            <div className="comparisonGrid">
+              <SearchableSelect id="yearA" label="Año A" value={consultaActiva?.anioInicio || ""} options={YEAR_OPTIONS} placeholder="Selecciona año" searchPlaceholder="Buscar año..." maxVisible={6} onChange={(value) => onConsultaChange?.("anioInicio", value)} />
+              <SearchableSelect id="yearB" label="Año B" value={consultaActiva?.anioFin || ""} options={YEAR_OPTIONS} placeholder="Selecciona año" searchPlaceholder="Buscar año..." maxVisible={6} onChange={(value) => onConsultaChange?.("anioFin", value)} />
             </div>
-          )}
+          ) : null}
 
-          <div className="field">
-            <label htmlFor="stateSelect">Estado</label>
-            <select
-              id="stateSelect"
-              className="selectInput"
-              value={selectedState}
-              onChange={(e) => onChangeState(e.target.value)}
-            >
-              <option value="">
-                {showMunicipality ? "Selecciona estado" : "Todos los estados"}
-              </option>
-              {estados.map((state) => (
-                <option key={state.cve_ent} value={state.cve_ent}>
-                  {state.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {showMunicipality && (
-            <div className="field">
-              <label htmlFor="municipalitySelect">Municipio</label>
-              <select
-                id="municipalitySelect"
-                className="selectInput"
-                value={selectedMunicipality}
-                onChange={(e) => onChangeMunicipio(e.target.value)}
-                disabled={!municipalityEnabled}
-              >
-                {!selectedState ? (
-                  <option value="">Selecciona estado primero</option>
-                ) : (
-                  <option value="">Todos los municipios</option>
-                )}
-                {municipios.map((municipality) => (
-                  <option key={municipality.cvegeo} value={municipality.cvegeo}>
-                    {municipality.nombre}
-                  </option>
-                ))}
-              </select>
+          {(tipoPeriodo === "fecha" || tipoPeriodo === "rango_fechas") ? (
+            <div className="dateGrid">
+              <div className="field">
+                <label htmlFor="dateStart">{tipoPeriodo === "fecha" ? "Fecha" : "Fecha inicial"}</label>
+                <input id="dateStart" type="date" value={consultaActiva?.fechaInicio || ""} onChange={(event) => onConsultaChange?.("fechaInicio", event.target.value)} />
+              </div>
+              {tipoPeriodo === "rango_fechas" ? (
+                <div className="field">
+                  <label htmlFor="dateEnd">Fecha final</label>
+                  <input id="dateEnd" type="date" value={consultaActiva?.fechaFin || ""} min={consultaActiva?.fechaInicio || undefined} onChange={(event) => onConsultaChange?.("fechaFin", event.target.value)} />
+                </div>
+              ) : null}
             </div>
-          )}
+          ) : null}
 
-          <button
-            type="button"
-            className="primaryBtn"
-            onClick={() => onConsultar?.()}
-            disabled={!consultaCompleta || isLoading}
-          >
+          <SearchableSelect
+            id="stateSelect"
+            label="Estado"
+            value={selectedState}
+            options={stateOptions}
+            placeholder={showMunicipality ? "Selecciona estado" : "Todos los estados"}
+            searchPlaceholder="Buscar estado..."
+            maxVisible={7}
+            onChange={onChangeState}
+          />
+
+          {showMunicipality ? (
+            <SearchableSelect
+              id="municipalitySelect"
+              label="Municipio"
+              value={selectedMunicipality}
+              options={municipalityOptions}
+              placeholder={selectedState ? "Todos los municipios" : "Selecciona estado primero"}
+              searchPlaceholder="Buscar municipio..."
+              disabled={!municipalityEnabled}
+              maxVisible={7}
+              onChange={onChangeMunicipio}
+            />
+          ) : null}
+
+          {datePendingMunicipality ? (
+            <div className="helperText pendingNote">El filtro diario municipal quedará habilitado al integrar el conjunto municipio-día.</div>
+          ) : null}
+
+          <button type="button" className="primaryBtn" onClick={() => onConsultar?.()} disabled={!canQuery || isLoading}>
             {isLoading ? "Consultando..." : "Consultar"}
           </button>
-          <button
-            type="button"
-            className="ghostBtn"
-            disabled={isLoading || (!consultaEjecutada && !isDirty)}
-            onClick={onResetConsulta}
-          >
+          <button type="button" className="ghostBtn" disabled={isLoading || (!consultaEjecutada && !isDirty)} onClick={onResetConsulta}>
             Limpiar filtros
           </button>
         </div>
@@ -258,64 +233,36 @@ export default function LeftPanel({
                   const disabled = getLayerDisabled(layer, consultaActiva?.nivelAgregacion);
                   return (
                     <label className={`row layerRow ${disabled ? "isDisabled" : ""}`} key={layer.id}>
-                      <input
-                        type="checkbox"
-                        aria-label={layer.label}
-                        checked={consultaActiva?.capasActivas?.[layer.id] ?? false}
-                        disabled={disabled}
-                        onChange={(e) =>
-                          onConsultaChange?.("capasActivas", {
-                            capa: layer.id,
-                            activo: e.target.checked,
-                          })
-                        }
-                      />
-                      <span>
-                        {layer.label}
-                        {layer.helper && <small>{layer.helper}</small>}
-                      </span>
+                      <input type="checkbox" aria-label={layer.label} checked={consultaActiva?.capasActivas?.[layer.id] ?? false} disabled={disabled} onChange={(event) => onConsultaChange?.("capasActivas", { capa: layer.id, activo: event.target.checked })} />
+                      <span>{layer.label}{layer.helper ? <small>{layer.helper}</small> : null}</span>
                     </label>
                   );
                 })}
 
-                {group.id === "smn" && (
-                  <div
-                    className={`smnFilters ${consultaActiva?.capasActivas?.estacionesSmn ? "" : "isDisabled"}`}
-                    aria-label="Filtros de estaciones SMN-CONAGUA"
-                  >
-                    <div className="smnFilterBlock" role="radiogroup" aria-label="Alcance de estaciones SMN-CONAGUA">
+                {group.id === "smn" ? (
+                  <div className={`smnFilters ${consultaActiva?.capasActivas?.estacionesSmn ? "" : "isDisabled"}`} aria-label="Filtros de estaciones meteorológicas SMN-CONAGUA">
+                    <div className="smnFilterBlock" role="radiogroup" aria-label="Alcance de estaciones meteorológicas">
                       <div className="smnFiltersTitle">Alcance</div>
-                      {SMN_SCOPE_OPTIONS.map((option) => (
-                        <label className="row smnFilterRow" key={option.value}>
-                          <input
-                            name="smn-scope"
-                            type="radio"
-                            value={option.value}
-                            checked={(consultaActiva?.filtrosSmn?.alcance ?? "todas") === option.value}
-                            disabled={!consultaActiva?.capasActivas?.estacionesSmn}
-                            onChange={(e) => onConsultaChange?.("filtrosSmn", { alcance: e.target.value })}
-                          />
-                          <span>{option.label}</span>
-                        </label>
-                      ))}
+                      <label className="row smnFilterRow">
+                        <input name="smn-scope" type="radio" value="todas" checked={(consultaActiva?.filtrosSmn?.alcance ?? "todas") === "todas"} disabled={!consultaActiva?.capasActivas?.estacionesSmn} onChange={(event) => onConsultaChange?.("filtrosSmn", { alcance: event.target.value })} />
+                        <span>Todas las estaciones</span>
+                      </label>
+                      <label className="row smnFilterRow">
+                        <input name="smn-scope" type="radio" value="periodo" checked={consultaActiva?.filtrosSmn?.alcance === "periodo"} disabled={!consultaActiva?.capasActivas?.estacionesSmn} onChange={(event) => onConsultaChange?.("filtrosSmn", { alcance: event.target.value })} />
+                        <span>Con datos del período seleccionado <small>{periodScopeLabel}</small></span>
+                      </label>
                     </div>
-
-                    <div className="smnFilterBlock" aria-label="Situación operativa de estaciones SMN-CONAGUA">
+                    <div className="smnFilterBlock" aria-label="Situación operativa de estaciones meteorológicas">
                       <div className="smnFiltersTitle">Situación operativa</div>
                       {SMN_FILTERS.map((filter) => (
                         <label className="row smnFilterRow" key={filter.id}>
-                          <input
-                            type="checkbox"
-                            checked={consultaActiva?.filtrosSmn?.[filter.id] ?? false}
-                            disabled={!consultaActiva?.capasActivas?.estacionesSmn}
-                            onChange={(e) => onConsultaChange?.("filtrosSmn", { [filter.id]: e.target.checked })}
-                          />
+                          <input type="checkbox" checked={consultaActiva?.filtrosSmn?.[filter.id] ?? false} disabled={!consultaActiva?.capasActivas?.estacionesSmn} onChange={(event) => onConsultaChange?.("filtrosSmn", { [filter.id]: event.target.checked })} />
                           <span>{filter.label}</span>
                         </label>
                       ))}
                     </div>
                   </div>
-                )}
+                ) : null}
               </section>
             ))}
           </div>
