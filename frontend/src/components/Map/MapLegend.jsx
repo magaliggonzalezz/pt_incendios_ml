@@ -44,9 +44,11 @@ export default function MapLegend({
   }, [hasSymbology]);
 
   useEffect(() => {
-    const collapseForPopup = () => setCollapsed(true);
-    window.addEventListener("map:feature-popup-open", collapseForPopup);
-    return () => window.removeEventListener("map:feature-popup-open", collapseForPopup);
+    const observer = new MutationObserver(() => {
+      if (document.querySelector(".leaflet-popup")) setCollapsed(true);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
   }, []);
 
   if (!hasSymbology) return null;
@@ -54,7 +56,7 @@ export default function MapLegend({
   const toggleLegend = () => {
     setCollapsed((value) => {
       const next = !value;
-      if (!next) window.dispatchEvent(new CustomEvent("map:legend-open"));
+      if (!next) document.querySelector(".leaflet-popup-close-button")?.click();
       return next;
     });
   };
