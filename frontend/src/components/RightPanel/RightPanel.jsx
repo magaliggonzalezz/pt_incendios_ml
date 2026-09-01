@@ -42,6 +42,12 @@ function formatCoverage(coverage) {
   return coverage.from || coverage.to;
 }
 
+function splitSatelliteInstrument(value) {
+  if (!value) return { satellite: null, instrument: null };
+  const parts = String(value).split(" · ").map((part) => part.trim()).filter(Boolean);
+  return { satellite: parts[0] || null, instrument: parts[1] || null };
+}
+
 function activeLayerCards(consulta, layerSummary) {
   const active = consulta?.capasActivas || {};
   const cards = [];
@@ -49,15 +55,18 @@ function activeLayerCards(consulta, layerSummary) {
 
   if (active.puntosCalorFirms) {
     const firms = summary.firms || {};
-    const instrument = firms.satelliteInstrument?.value;
+    const frequentPair = splitSatelliteInstrument(firms.satelliteInstrument?.value);
+    const frequentCount = Number(firms.satelliteInstrument?.count || 0);
     cards.push({
       id: "firms",
       icon: Satellite,
       title: "FIRMS · área visible",
-      value: `${formatNumber(firms.count)} detecciones`,
+      value: `${formatNumber(firms.count)} anomalías térmicas`,
       details: [
         `${formatNumber(firms.day)} diurnas · ${formatNumber(firms.night)} nocturnas`,
-        instrument ? `Satélite / instrumento predominante: ${instrument}` : null,
+        frequentPair.satellite ? `Satélite de la combinación más frecuente: ${frequentPair.satellite}` : null,
+        frequentPair.instrument ? `Instrumento de la combinación más frecuente: ${frequentPair.instrument}` : null,
+        frequentCount ? `Esa combinación representa ${formatNumber(frequentCount)} de ${formatNumber(firms.count)} detecciones visibles.` : null,
       ].filter(Boolean),
     });
   }
@@ -87,7 +96,7 @@ function activeLayerCards(consulta, layerSummary) {
       details: [
         `${formatNumber(smn.operando)} operando · ${formatNumber(smn.suspendida)} suspendidas`,
         formatCoverage(smn.coverage) ? `Cobertura disponible: ${formatCoverage(smn.coverage)}` : null,
-        consulta?.filtrosSmn?.alcance === "periodo" ? "Conteo filtrado por el período seleccionado." : "Conteo según territorio y situación operativa seleccionados.",
+        consulta?.filtrosSmn?.alcance === "periodo" ? "Conteo de estaciones cuya cobertura intersecta el período seleccionado." : "Conteo según territorio y situación operativa seleccionados.",
       ].filter(Boolean),
     });
   }
