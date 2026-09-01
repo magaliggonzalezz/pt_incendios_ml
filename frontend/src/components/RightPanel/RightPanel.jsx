@@ -64,9 +64,9 @@ function activeLayerCards(consulta, layerSummary) {
       value: `${formatNumber(firms.count)} anomalías térmicas`,
       details: [
         `${formatNumber(firms.day)} diurnas · ${formatNumber(firms.night)} nocturnas`,
-        frequentPair.satellite ? `Satélite de la combinación más frecuente: ${frequentPair.satellite}` : null,
-        frequentPair.instrument ? `Instrumento de la combinación más frecuente: ${frequentPair.instrument}` : null,
-        frequentCount ? `Esa combinación representa ${formatNumber(frequentCount)} de ${formatNumber(firms.count)} detecciones visibles.` : null,
+        frequentPair.satellite ? `Satélite más frecuente: ${frequentPair.satellite}` : null,
+        frequentPair.instrument ? `Instrumento más frecuente: ${frequentPair.instrument}` : null,
+        frequentCount ? `Combinación predominante: ${formatNumber(frequentCount)} de ${formatNumber(firms.count)} detecciones visibles.` : null,
       ].filter(Boolean),
     });
   }
@@ -96,7 +96,7 @@ function activeLayerCards(consulta, layerSummary) {
       details: [
         `${formatNumber(smn.operando)} operando · ${formatNumber(smn.suspendida)} suspendidas`,
         formatCoverage(smn.coverage) ? `Cobertura disponible: ${formatCoverage(smn.coverage)}` : null,
-        consulta?.filtrosSmn?.alcance === "periodo" ? "Conteo de estaciones cuya cobertura intersecta el período seleccionado." : "Conteo según territorio y situación operativa seleccionados.",
+        consulta?.filtrosSmn?.alcance === "periodo" ? "Cobertura intersecta el período seleccionado." : "Conteo según territorio y situación operativa seleccionados.",
       ].filter(Boolean),
     });
   }
@@ -147,6 +147,7 @@ export default function RightPanel({
   const periodoActivo = buildPeriodoLabel(consultaActiva);
   const nivelActivo = getNivelUiLabel(consultaActiva?.nivelAgregacion);
   const layerCards = useMemo(() => activeLayerCards(consultaActiva, layerSummary), [consultaActiva, layerSummary]);
+  const disabledActionHint = !hasResults ? "Ejecuta una consulta para habilitar esta acción." : undefined;
 
   return (
     <>
@@ -176,6 +177,9 @@ export default function RightPanel({
             {layerCards.length ? (
               <section className="mapSummarySection">
                 <div className="mapSummaryTitle">Resumen de capas activas</div>
+                <div className="mapSummaryDisclaimer mapSummaryDisclaimerTop">
+                  Los conteos corresponden a los registros o features cargados actualmente en el área visible del mapa.
+                </div>
                 <div className="layerSummaryList">
                   {layerCards.map((card) => {
                     const Icon = card.icon;
@@ -191,9 +195,6 @@ export default function RightPanel({
                     );
                   })}
                 </div>
-                <div className="mapSummaryDisclaimer">
-                  Los conteos corresponden a los registros o features cargados actualmente en el área visible del mapa.
-                </div>
               </section>
             ) : null}
 
@@ -206,16 +207,13 @@ export default function RightPanel({
                 <small>El detalle, las gráficas y los datos de la consulta se muestran en “Ver resultados”.</small>
               </div>
             ) : null}
-            {!isLoading && !error && !hasResults ? (
-              <div className="emptyState compact">Configura los filtros y ejecuta la consulta para habilitar el análisis ML y la exportación.</div>
-            ) : null}
           </div>
 
           <div className="kpiActions">
-            <button type="button" className="primaryBtn" onClick={() => setOpenCharts(true)} disabled={!hasResults || isLoading}>
+            <button type="button" className="primaryBtn" title={disabledActionHint} onClick={() => setOpenCharts(true)} disabled={!hasResults || isLoading}>
               <BarChart3 size={18} /> Ver resultados
             </button>
-            <button type="button" className="secondaryBtn" onClick={() => setOpenExport(true)} disabled={!hasResults || isLoading}>
+            <button type="button" className="secondaryBtn" title={disabledActionHint} onClick={() => setOpenExport(true)} disabled={!hasResults || isLoading}>
               <Download size={18} /> Exportar datos
             </button>
           </div>
