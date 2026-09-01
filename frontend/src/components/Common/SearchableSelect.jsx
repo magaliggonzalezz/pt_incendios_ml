@@ -16,6 +16,7 @@ export default function SearchableSelect({
   const rootRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [openAbove, setOpenAbove] = useState(false);
 
   const availableOptions = useMemo(() => {
     if (options.some((option) => String(option.value) === "")) return options;
@@ -40,8 +41,18 @@ export default function SearchableSelect({
   }, []);
 
   useEffect(() => {
-    if (!open) setQuery("");
-  }, [open]);
+    if (!open) {
+      setQuery("");
+      return;
+    }
+
+    const rect = rootRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const estimatedHeight = 58 + Math.max(3, Math.min(maxVisible, 9)) * 38;
+    const spaceBelow = window.innerHeight - rect.bottom - 12;
+    const spaceAbove = rect.top - 12;
+    setOpenAbove(spaceBelow < Math.min(estimatedHeight, 320) && spaceAbove > spaceBelow);
+  }, [open, maxVisible]);
 
   const choose = (option) => {
     onChange?.(String(option.value));
@@ -52,7 +63,7 @@ export default function SearchableSelect({
   return (
     <div className="field searchableField" ref={rootRef}>
       {label ? <label htmlFor={id}>{label}</label> : null}
-      <div className={`searchableSelect ${disabled ? "isDisabled" : ""}`}>
+      <div className={`searchableSelect ${disabled ? "isDisabled" : ""} ${openAbove ? "openAbove" : ""}`}>
         <button
           id={id}
           className="searchableSelectTrigger"
