@@ -37,11 +37,6 @@
 }
 
 .searchableSelectPopover{
-  position: absolute;
-  z-index: 1200;
-  left: 0;
-  right: 0;
-  top: calc(100% + 5px);
   border: 1px solid rgba(11,79,74,.16);
   border-radius: 11px;
   background: #fff;
@@ -49,8 +44,17 @@
   padding: 8px;
 }
 
+.searchableSelectPortal{
+  position: fixed;
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .searchableSelectSearchWrap{
   position: relative;
+  flex: 0 0 auto;
 }
 
 .searchableSelectSearch{
@@ -90,6 +94,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
+  min-height: 0;
 }
 
 .searchableSelectOption{
