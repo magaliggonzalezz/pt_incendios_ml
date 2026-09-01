@@ -2,11 +2,32 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import "./MapLegend.css";
 
+function CategoryLegend({ title, data }) {
+  const items = data?.items || [];
+  const total = Number(data?.total || 0);
+  if (!items.length) return null;
+  return (
+    <div className="thematicCategoryBlock">
+      <strong>{title}</strong>
+      <div className="thematicCategoryList">
+        {items.map((item) => (
+          <div className="thematicCategoryItem" key={`${title}-${item.label}`}>
+            <span className="thematicSwatch" style={{ "--category-color": item.color }} aria-hidden="true" />
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+      {total > items.length ? <small>+ {total - items.length} categorías adicionales visibles</small> : null}
+    </div>
+  );
+}
+
 export default function MapLegend({
   resumenConsulta = null,
   rightPanelOpen = false,
   selectedMlCluster = null,
   capasActivas = {},
+  thematicLegend = {},
 }) {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -44,11 +65,9 @@ export default function MapLegend({
   }, [hasSymbology]);
 
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      if (document.querySelector(".leaflet-popup")) setCollapsed(true);
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
+    const collapseForPopup = () => setCollapsed(true);
+    window.addEventListener("map:feature-popup-open", collapseForPopup);
+    return () => window.removeEventListener("map:feature-popup-open", collapseForPopup);
   }, []);
 
   if (!hasSymbology) return null;
@@ -56,7 +75,7 @@ export default function MapLegend({
   const toggleLegend = () => {
     setCollapsed((value) => {
       const next = !value;
-      if (!next) document.querySelector(".leaflet-popup-close-button")?.click();
+      if (!next) window.dispatchEvent(new CustomEvent("map:legend-open"));
       return next;
     });
   };
@@ -133,15 +152,32 @@ export default function MapLegend({
           {showInegi ? (
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">INEGI</div>
-              <div className="mapLegendItems">
-                {capasActivas.fisiografiaInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line physiography"/><div><strong>Provincias fisiográficas</strong><span>Regiones físicas del territorio definidas por rasgos del relieve y su origen.</span></div></div> : null}
-                {capasActivas.edafologiaInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line soil"/><div><strong>Edafología</strong><span>Unidades y grupos de suelo presentes en la cartografía fuente.</span></div></div> : null}
-                {capasActivas.usoSueloVegetacionInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line landUse"/><div><strong>Uso de suelo y vegetación</strong><span>Cobertura y uso de suelo según la clasificación del producto.</span></div></div> : null}
-                {capasActivas.corrientesAguaInegi ? <div className="mapLegendItem"><span className="mapLegendSymbol line water"/><div><strong>Corrientes de agua</strong><span>Elementos lineales de la red hidrográfica; cuando la fuente incluye nombre se presenta en el detalle.</span></div></div> : null}
-                {capasActivas.limitesEstatales ? <div className="mapLegendItem"><span className="mapLegendSymbol line boundary"/><div><strong>Límite estatal</strong><span>El estilo se adapta al mapa base para mantener contraste.</span></div></div> : null}
-                {capasActivas.limitesMunicipales ? <div className="mapLegendItem"><span className="mapLegendSymbol line boundaryMunicipal"/><div><strong>Límite municipal</strong><span>El estilo se adapta al mapa base para mantener contraste.</span></div></div> : null}
-              </div>
-              <p className="legendNote">La versión web actual conserva las features y sus atributos, pero no dispone en el repositorio de una definición de estilo oficial (QML/SLD/LYR) para reproducir exactamente la simbología cartográfica de origen. La paleta actual es de la aplicación y deberá sustituirse por la convención oficial cuando se incorpore esa definición.</p>
+              <p className="legendLead">Las capas temáticas distinguen sus categorías mediante colores consistentes por valor. La paleta se adapta para lectura web y contraste con el mapa base; no pretende reproducir píxel por píxel el visor oficial.</p>
+
+              {capasActivas.fisiografiaInegi ? (
+                <>
+                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line physiography"/><div><strong>Provincias fisiográficas</strong><span>El color diferencia cada provincia presente.</span></div></div></div>
+                  <CategoryLegend title="Provincias visibles" data={thematicLegend.fisiografia} />
+                </>
+              ) : null}
+
+              {capasActivas.edafologiaInegi ? (
+                <>
+                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line soil"/><div><strong>Edafología</strong><span>El color diferencia el grupo principal de suelo.</span></div></div></div>
+                  <CategoryLegend title="Grupos de suelo visibles" data={thematicLegend.edafologia} />
+                </>
+              ) : null}
+
+              {capasActivas.usoSueloVegetacionInegi ? (
+                <>
+                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line landUse"/><div><strong>Uso de suelo y vegetación</strong><span>El color diferencia la categoría temática del producto.</span></div></div></div>
+                  <CategoryLegend title="Categorías visibles" data={thematicLegend.usoSueloVegetacion} />
+                </>
+              ) : null}
+
+              {capasActivas.corrientesAguaInegi ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line water"/><div><strong>Corrientes de agua</strong><span>Azul para la red hidrográfica; el grosor aumenta con el orden de corriente cuando está disponible. Los nombres se muestran cuando existen en la fuente.</span></div></div></div> : null}
+              {capasActivas.limitesEstatales ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line boundary"/><div><strong>Límite estatal</strong><span>Usa línea y halo adaptados al mapa base para mantener contraste.</span></div></div></div> : null}
+              {capasActivas.limitesMunicipales ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line boundaryMunicipal"/><div><strong>Límite municipal</strong><span>Usa línea y halo adaptados al mapa base para mantener contraste.</span></div></div></div> : null}
             </section>
           ) : null}
 
