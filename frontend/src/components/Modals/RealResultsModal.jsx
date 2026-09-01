@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BarChart3, FileText, LayoutDashboard } from "lucide-react";
+import { BarChart3, Download, FileText, LayoutDashboard } from "lucide-react";
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import ModalShell from "./ModalShell";
@@ -40,7 +40,7 @@ const horizontalOptions = (xTitle = "") => ({
   scales: { x: { beginAtZero: true, title: { display: Boolean(xTitle), text: xTitle } } },
 });
 
-export default function RealResultsModal({ open, onClose, resumenConsulta = null }) {
+export default function RealResultsModal({ open, onClose, resumenConsulta = null, onOpenExport }) {
   const [tab, setTab] = useState("summary");
   const [graphView, setGraphView] = useState("activity");
   const rows = resumenConsulta?.rows ?? [];
@@ -53,8 +53,14 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
   const chartModel = useMemo(() => buildChartModel({ activeGraph, rows, summaryRows, temporalRows }), [activeGraph, rows, summaryRows, temporalRows]);
   const ml = resumenConsulta?.resultadoMl ?? {};
 
+  const footer = onOpenExport ? (
+    <button type="button" className="cmClearBtn" onClick={onOpenExport} title="Descargar los datos de la consulta ejecutada">
+      <Download size={15} /> Exportar datos de la consulta
+    </button>
+  ) : null;
+
   return (
-    <ModalShell open={open} onClose={onClose} title="Resultados ML" width={1040} footer={null} allowOverlayClose>
+    <ModalShell open={open} onClose={onClose} title="Resultados ML" width={1040} footer={footer} allowOverlayClose>
       <div className="cmSub">Datos reales obtenidos desde la API v2 para la consulta activa.</div>
       <div className="cmTabs" role="tablist" aria-label="Resultados ML">
         {TABS.map((item) => {
