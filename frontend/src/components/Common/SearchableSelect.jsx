@@ -50,29 +50,34 @@ export default function SearchableSelect({
       return undefined;
     }
 
+    let rafId = null;
     const position = () => {
       const rect = rootRef.current?.getBoundingClientRect();
       if (!rect) return;
       const optionRows = Math.max(3, Math.min(maxVisible, 9));
-      const desiredHeight = 60 + optionRows * 38;
+      const desiredHeight = 58 + optionRows * 38;
       const margin = 10;
       const spaceBelow = window.innerHeight - rect.bottom - margin;
-      const spaceAbove = rect.top - margin;
-      const openAbove = spaceBelow < Math.min(desiredHeight, 330) && spaceAbove > spaceBelow;
-      const availableHeight = Math.max(150, Math.min(desiredHeight, (openAbove ? spaceAbove : spaceBelow) - 6));
+
+      if (spaceBelow < 155) {
+        rootRef.current?.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
+      }
+
+      const usableHeight = Math.max(125, Math.min(desiredHeight, Math.max(125, spaceBelow - 6)));
       setPopoverStyle({
         left: rect.left,
         width: rect.width,
-        maxHeight: availableHeight,
-        top: openAbove ? Math.max(margin, rect.top - availableHeight - 5) : rect.bottom + 5,
+        maxHeight: usableHeight,
+        top: Math.min(rect.bottom + 5, window.innerHeight - 130),
         "--visible-options": optionRows,
       });
     };
 
-    position();
+    rafId = window.requestAnimationFrame(position);
     window.addEventListener("resize", position);
     window.addEventListener("scroll", position, true);
     return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener("resize", position);
       window.removeEventListener("scroll", position, true);
     };
