@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
 import "./SearchableSelect.css";
 
@@ -14,9 +15,10 @@ export default function SearchableSelect({
   onChange,
 }) {
   const rootRef = useRef(null);
+  const popoverRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [openAbove, setOpenAbove] = useState(false);
+  const [popoverStyle, setPopoverStyle] = useState(null);
 
   const availableOptions = useMemo(() => {
     if (options.some((option) => String(option.value) === "")) return options;
@@ -34,7 +36,8 @@ export default function SearchableSelect({
 
   useEffect(() => {
     const handleOutside = (event) => {
-      if (!rootRef.current?.contains(event.target)) setOpen(false);
+      if (rootRef.current?.contains(event.target) || popoverRef.current?.contains(event.target)) return;
+      setOpen(false);
     };
     document.addEventListener("pointerdown", handleOutside);
     return () => document.removeEventListener("pointerdown", handleOutside);
@@ -43,15 +46,36 @@ export default function SearchableSelect({
   useEffect(() => {
     if (!open) {
       setQuery("");
-      return;
+      setPopoverStyle(null);
+      return undefined;
     }
 
-    const rect = rootRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const estimatedHeight = 58 + Math.max(3, Math.min(maxVisible, 9)) * 38;
-    const spaceBelow = window.innerHeight - rect.bottom - 12;
-    const spaceAbove = rect.top - 12;
-    setOpenAbove(spaceBelow < Math.min(estimatedHeight, 320) && spaceAbove > spaceBelow);
+    const position = () => {
+      const rect = rootRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const optionRows = Math.max(3, Math.min(maxVisible, 9));
+      const desiredHeight = 60 + optionRows * 38;
+      const margin = 10;
+      const spaceBelow = window.innerHeight - rect.bottom - margin;
+      const spaceAbove = rect.top - margin;
+      const openAbove = spaceBelow < Math.min(desiredHeight, 330) && spaceAbove > spaceBelow;
+      const availableHeight = Math.max(150, Math.min(desiredHeight, (openAbove ? spaceAbove : spaceBelow) - 6));
+      setPopoverStyle({
+        left: rect.left,
+        width: rect.width,
+        maxHeight: availableHeight,
+        top: openAbove ? Math.max(margin, rect.top - availableHeight - 5) : rect.bottom + 5,
+        "--visible-options": optionRows,
+      });
+    };
+
+    position();
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+    return () => {
+      window.removeEventListener("resize", position);
+      window.removeEventListener("scroll", position, true);
+    };
   }, [open, maxVisible]);
 
   const choose = (option) => {
@@ -63,7 +87,7 @@ export default function SearchableSelect({
   return (
     <div className="field searchableField" ref={rootRef}>
       {label ? <label htmlFor={id}>{label}</label> : null}
-      <div className={`searchableSelect ${disabled ? "isDisabled" : ""} ${openAbove ? "openAbove" : ""}`}>
+      <div className={`searchableSelect ${disabled ? "isDisabled" : ""}`}>
         <button
           id={id}
           className="searchableSelectTrigger"
@@ -77,8 +101,8 @@ export default function SearchableSelect({
           <ChevronDown size={16} aria-hidden="true" />
         </button>
 
-        {open ? (
-          <div className="searchableSelectPopover">
+        {open && popoverStyle ? createPortal(
+          <div ref={popoverRef} className="searchableSelectPopover searchableSelectPortal" style={popoverStyle}>
             <div className="searchableSelectSearchWrap">
               <input
                 className="searchableSelectSearch"
@@ -94,7 +118,7 @@ export default function SearchableSelect({
                 </button>
               ) : null}
             </div>
-            <div className="searchableSelectList" role="listbox" style={{ "--visible-options": Math.max(3, Math.min(maxVisible, 9)) }}>
+            <div className="searchableSelectList" role="listbox">
               {filtered.map((option) => (
                 <button
                   type="button"
@@ -110,7 +134,8 @@ export default function SearchableSelect({
               ))}
               {!filtered.length ? <div className="searchableSelectEmpty">Sin coincidencias</div> : null}
             </div>
-          </div>
+          </div>,
+          document.body
         ) : null}
       </div>
     </div>
