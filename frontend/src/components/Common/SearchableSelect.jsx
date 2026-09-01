@@ -50,56 +50,39 @@ export default function SearchableSelect({
       return undefined;
     }
 
-    let rafId = null;
-    let secondRafId = null;
-
-    const position = (allowPanelScroll = true) => {
+    const position = () => {
       const root = rootRef.current;
       const rect = root?.getBoundingClientRect();
       const panel = root?.closest(".leftPanel.open");
       const panelRect = panel?.getBoundingClientRect();
       if (!rect || !panelRect) return;
 
-      const optionRows = Math.max(3, Math.min(maxVisible, 9));
-      const desiredHeight = 58 + optionRows * 38;
       const gap = 5;
-      const panelPadding = 12;
+      const panelPadding = 10;
+      const optionRows = Math.max(3, Math.min(maxVisible, 7));
+      const desiredHeight = 54 + optionRows * 38;
+      const top = rect.bottom + gap;
       const bottomLimit = panelRect.bottom - panelPadding;
-      const availableBelow = bottomLimit - rect.bottom - gap;
-
-      if (allowPanelScroll && availableBelow < Math.min(desiredHeight, 220)) {
-        const panelContent = root.closest(".panelContent");
-        if (panelContent) {
-          const needed = Math.min(desiredHeight, 220) - availableBelow;
-          panelContent.scrollBy({ top: Math.max(0, needed + 12), behavior: "smooth" });
-          secondRafId = window.requestAnimationFrame(() => position(false));
-          return;
-        }
-      }
-
-      const freshRect = root.getBoundingClientRect();
-      const freshPanelRect = panel.getBoundingClientRect();
-      const freshBottomLimit = freshPanelRect.bottom - panelPadding;
-      const usableHeight = Math.max(118, Math.min(desiredHeight, freshBottomLimit - freshRect.bottom - gap));
+      const maxHeight = Math.max(118, Math.min(desiredHeight, bottomLimit - top));
+      const left = Math.max(panelRect.left + panelPadding, rect.left);
+      const rightLimit = panelRect.right - panelPadding;
 
       setPopoverStyle({
-        left: Math.max(freshPanelRect.left + panelPadding, freshRect.left),
-        width: Math.min(freshRect.width, freshPanelRect.right - panelPadding - freshRect.left),
-        maxHeight: usableHeight,
-        top: freshRect.bottom + gap,
+        left,
+        top,
+        width: Math.min(rect.width, Math.max(180, rightLimit - left)),
+        maxHeight,
         "--visible-options": optionRows,
       });
     };
 
-    rafId = window.requestAnimationFrame(() => position(true));
-    const reposition = () => position(false);
-    window.addEventListener("resize", reposition);
-    window.addEventListener("scroll", reposition, true);
+    const rafId = window.requestAnimationFrame(position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
     return () => {
-      if (rafId) window.cancelAnimationFrame(rafId);
-      if (secondRafId) window.cancelAnimationFrame(secondRafId);
-      window.removeEventListener("resize", reposition);
-      window.removeEventListener("scroll", reposition, true);
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", position);
+      window.removeEventListener("scroll", position, true);
     };
   }, [open, maxVisible]);
 
