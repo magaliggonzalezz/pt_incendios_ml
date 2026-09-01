@@ -5,7 +5,6 @@ import {
   Layers3,
   MapPin,
   BarChart3,
-  Download,
   Flame,
   Satellite,
   CloudSun,
@@ -66,7 +65,7 @@ function activeLayerCards(consulta, layerSummary) {
         `${formatNumber(firms.day)} diurnas · ${formatNumber(firms.night)} nocturnas`,
         frequentPair.satellite ? `Satélite más frecuente: ${frequentPair.satellite}` : null,
         frequentPair.instrument ? `Instrumento más frecuente: ${frequentPair.instrument}` : null,
-        frequentCount ? `Combinación predominante: ${formatNumber(frequentCount)} de ${formatNumber(firms.count)} detecciones visibles.` : null,
+        frequentCount ? `Combinación predominante: ${formatNumber(frequentCount)} de ${formatNumber(firms.count)} observaciones visibles.` : null,
       ].filter(Boolean),
     });
   }
@@ -110,13 +109,7 @@ function activeLayerCards(consulta, layerSummary) {
   if (active.limitesEstatales) inegiDetails.push("Límites estatales activos");
   if (active.limitesMunicipales) inegiDetails.push("Límites municipales activos");
   if (inegiDetails.length) {
-    cards.push({
-      id: "inegi",
-      icon: Map,
-      title: "INEGI",
-      value: "Capas geográficas activas",
-      details: inegiDetails,
-    });
+    cards.push({ id: "inegi", icon: Map, title: "INEGI", value: "Capas geográficas activas", details: inegiDetails });
   }
 
   return cards;
@@ -147,7 +140,7 @@ export default function RightPanel({
   const periodoActivo = buildPeriodoLabel(consultaActiva);
   const nivelActivo = getNivelUiLabel(consultaActiva?.nivelAgregacion);
   const layerCards = useMemo(() => activeLayerCards(consultaActiva, layerSummary), [consultaActiva, layerSummary]);
-  const disabledActionHint = !hasResults ? "Ejecuta una consulta para habilitar esta acción." : undefined;
+  const resultsHint = hasResults ? "Abrir resumen, gráficas, datos y opciones de descarga." : "Configura los filtros y ejecuta la consulta para habilitar los resultados.";
 
   return (
     <>
@@ -177,9 +170,7 @@ export default function RightPanel({
             {layerCards.length ? (
               <section className="mapSummarySection">
                 <div className="mapSummaryTitle">Resumen de capas activas</div>
-                <div className="mapSummaryDisclaimer mapSummaryDisclaimerTop">
-                  Los conteos corresponden a los registros o features cargados actualmente en el área visible del mapa.
-                </div>
+                <div className="mapSummaryDisclaimer mapSummaryDisclaimerTop">Los conteos corresponden a los registros o features cargados actualmente en el área visible del mapa.</div>
                 <div className="layerSummaryList">
                   {layerCards.map((card) => {
                     const Icon = card.icon;
@@ -204,24 +195,21 @@ export default function RightPanel({
               <div className="querySummaryBox">
                 <span>Consulta ML disponible</span>
                 <strong>{formatNumber(resumen.observaciones)} observaciones evaluadas</strong>
-                <small>El detalle, las gráficas y los datos de la consulta se muestran en “Ver resultados”.</small>
+                <small>El detalle, las gráficas, los datos y la descarga están disponibles en “Ver resultados”.</small>
               </div>
             ) : null}
           </div>
 
-          <div className="kpiActions">
-            <button type="button" className="primaryBtn" title={disabledActionHint} onClick={() => setOpenCharts(true)} disabled={!hasResults || isLoading}>
+          <div className="kpiActions singleAction">
+            <button type="button" className="primaryBtn" title={resultsHint} onClick={() => setOpenCharts(true)} disabled={!hasResults || isLoading}>
               <BarChart3 size={18} /> Ver resultados
-            </button>
-            <button type="button" className="secondaryBtn" title={disabledActionHint} onClick={() => setOpenExport(true)} disabled={!hasResults || isLoading}>
-              <Download size={18} /> Exportar datos
             </button>
           </div>
         </div>
       </aside>
 
       <ExportModal open={openExport} onClose={() => setOpenExport(false)} consultaActiva={consultaResultado} resumenConsulta={resumenConsulta} totalRecords={totalRecords} availableFormats={availableFormats} isExporting={isExporting} error={error} onPreviewExport={onPreviewExport} onDownloadExport={onDownloadExport} selectedMlCluster={selectedMlCluster} />
-      <RealResultsModal open={openCharts} onClose={() => setOpenCharts(false)} resumenConsulta={resumenConsulta} />
+      <RealResultsModal open={openCharts} onClose={() => setOpenCharts(false)} resumenConsulta={resumenConsulta} onOpenExport={() => setOpenExport(true)} />
     </>
   );
 }
