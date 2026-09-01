@@ -102,10 +102,10 @@ function activeLayerCards(consulta, layerSummary) {
 
   const inegi = summary.inegi || {};
   const inegiDetails = [];
-  if (active.fisiografiaInegi) inegiDetails.push(`Provincias fisiográficas: ${formatNumber(inegi.fisiografia)} features visibles`);
-  if (active.edafologiaInegi) inegiDetails.push(`Edafología: ${formatNumber(inegi.edafologia)} features visibles`);
-  if (active.usoSueloVegetacionInegi) inegiDetails.push(`Uso de suelo y vegetación: ${formatNumber(inegi.usoSueloVegetacion)} features visibles`);
-  if (active.corrientesAguaInegi) inegiDetails.push(`Corrientes de agua: ${formatNumber(inegi.hidrografia)} features visibles`);
+  if (active.fisiografiaInegi) inegiDetails.push(`Provincias fisiográficas visibles: ${formatNumber(inegi.fisiografia)}`);
+  if (active.edafologiaInegi) inegiDetails.push(`Unidades edafológicas visibles: ${formatNumber(inegi.edafologia)}`);
+  if (active.usoSueloVegetacionInegi) inegiDetails.push(`Unidades de uso de suelo y vegetación visibles: ${formatNumber(inegi.usoSueloVegetacion)}`);
+  if (active.corrientesAguaInegi) inegiDetails.push(`Corrientes de agua visibles: ${formatNumber(inegi.hidrografia)}`);
   if (active.limitesEstatales) inegiDetails.push("Límites estatales activos");
   if (active.limitesMunicipales) inegiDetails.push("Límites municipales activos");
   if (inegiDetails.length) {
@@ -170,7 +170,7 @@ export default function RightPanel({
             {layerCards.length ? (
               <section className="mapSummarySection">
                 <div className="mapSummaryTitle">Resumen de capas activas</div>
-                <div className="mapSummaryDisclaimer mapSummaryDisclaimerTop">Los conteos corresponden a los registros o features cargados actualmente en el área visible del mapa.</div>
+                <div className="mapSummaryDisclaimer mapSummaryDisclaimerTop">Los conteos corresponden a los registros o elementos cargados actualmente en el área visible del mapa.</div>
                 <div className="layerSummaryList">
                   {layerCards.map((card) => {
                     const Icon = card.icon;
