@@ -153,7 +153,7 @@ export default function MapLegend({
           {showInegi ? (
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">INEGI</div>
-              <p className="legendLead">En las capas temáticas el color corresponde al valor o categoría representada, manteniendo contraste con el mapa base.</p>
+              <p className="legendLead">En las capas temáticas el color diferencia los valores o categorías representados. El contraste se ajusta para conservar legibilidad sobre el mapa base.</p>
 
               {capasActivas.fisiografiaInegi ? (
                 <>
