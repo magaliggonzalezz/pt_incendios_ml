@@ -82,12 +82,25 @@ export default function MapLegend({
 
   return (
     <aside className={`mapLegend ${rightPanelOpen ? "rightPanelOpen" : ""} ${collapsed ? "isCollapsed" : ""}`} aria-label="Simbología del mapa">
-      <div className="mapLegendHeader">
-        <span>Simbología</span>
-        <button type="button" className="mapLegendToggle" aria-label={collapsed ? "Mostrar simbología" : "Ocultar simbología"} aria-expanded={!collapsed} onClick={toggleLegend}>
-          {collapsed ? <ChevronRight size={15} /> : <ChevronDown size={15} />}
+      {collapsed ? (
+        <button
+          type="button"
+          className="mapLegendCollapsedButton"
+          aria-label="Mostrar simbología"
+          aria-expanded="false"
+          onClick={toggleLegend}
+        >
+          <span>Simbología</span>
+          <ChevronRight size={17} strokeWidth={2.2} aria-hidden="true" />
         </button>
-      </div>
+      ) : (
+        <div className="mapLegendHeader">
+          <span>Simbología</span>
+          <button type="button" className="mapLegendToggle" aria-label="Ocultar simbología" aria-expanded="true" onClick={toggleLegend}>
+            <ChevronDown size={15} />
+          </button>
+        </div>
+      )}
 
       {!collapsed ? (
         <div className="mapLegendBody">
