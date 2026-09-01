@@ -482,9 +482,14 @@ function bindSmnInfo(feature, layer) {
       ["Clave de entidad", () => firstProp(props, ["cve_ent", "CVE_ENT"])],
       ["CVEGEO", () => firstProp(props, ["cvegeo", "CVEGEO"])],
       ["Estación meteorológica", () => estacion],
+      ["ID de estación", () => firstProp(props, ["id_estacion", "id_estacion_cabecera", "estacion_id", "id"])],
+      ["CVE-OMM", () => firstProp(props, ["cve_omm", "CVE_OMM", "clave_omm", "omm", "wmo"])],
+      ["Altitud (m s. n. m.)", () => firstProp(props, ["altitud_msnm", "altitud", "elevacion_m", "elevacion"]), { number: true }],
       ["Situación operativa", () => firstProp(props, ["situacion_operativa", "situacion", "estatus"])],
       ["Cobertura desde", () => firstProp(props, ["cobertura_inicio", "fecha_inicio", "fecha_min"])],
       ["Cobertura hasta", () => firstProp(props, ["cobertura_fin", "fecha_fin", "fecha_max"])],
+      ["Latitud", () => firstProp(props, ["latitud", "latitude"]), { number: true, maximumFractionDigits: 6 }],
+      ["Longitud", () => firstProp(props, ["longitud", "longitude"]), { number: true, maximumFractionDigits: 6 }],
     ]),
   });
 }
@@ -498,10 +503,14 @@ function normalizeText(value) {
 }
 
 function stationMatchesOperationalFilter(feature, filtros) {
+  const filterOperando = filtros?.operando === true;
+  const filterSuspendida = filtros?.suspendida === true;
+  if (!filterOperando && !filterSuspendida) return true;
+
   const status = normalizeText(feature?.properties?.situacion_operativa);
   if (!status) return true;
-  if (status.includes("operando") || status.includes("operativa")) return filtros?.operando !== false;
-  if (status.includes("suspend")) return filtros?.suspendida !== false;
+  if (status.includes("operando") || status.includes("operativa")) return filterOperando;
+  if (status.includes("suspend")) return filterSuspendida;
   return true;
 }
 
