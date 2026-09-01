@@ -17,7 +17,7 @@ except ImportError as exc:
 
 TOTAL_FILAS_ESPERADAS = 22_626_618
 FLEX_BYTES = 5 * 1024**3
-M10_BYTES = 10 * 1024**3
+DEFAULT_STORAGE_GB = 10.0
 
 
 def encontrar_raiz(inicio: Path) -> Path:
@@ -76,7 +76,10 @@ def estimar_archivo(path: Path, muestra_objetivo: int) -> tuple[int, list[int]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Estima el tamaño BSON de resultados_municipio_dia para elegir Atlas Flex o M10."
+        description=(
+            "Estima el tamaño BSON de resultados_municipio_dia y lo compara con "
+            "el almacenamiento actualmente asignado en Atlas."
+        )
     )
     parser.add_argument(
         "--muestra-por-anio",
@@ -84,7 +87,30 @@ def main() -> None:
         default=2000,
         help="Documentos BSON a muestrear por archivo anual (default: 2000).",
     )
+    parser.add_argument(
+        "--storage-gb",
+        type=float,
+        default=DEFAULT_STORAGE_GB,
+        help=(
+            "Almacenamiento asignado actualmente al cluster Atlas en GB decimales "
+            "(default: 10). No representa un límite fijo del tier M10."
+        ),
+    )
+    parser.add_argument(
+        "--margen-pct",
+        type=float,
+        default=20.0,
+        help=(
+            "Margen orientativo para índice compuesto y overhead de almacenamiento "
+            "(default: 20)."
+        ),
+    )
     args = parser.parse_args()
+
+    if args.storage_gb <= 0:
+        parser.error("--storage-gb debe ser mayor que 0")
+    if args.margen_pct < 0:
+        parser.error("--margen-pct no puede ser negativo")
 
     raiz = encontrar_raiz(Path.cwd())
     carpeta = raiz / "data_deploy" / "resultados" / "municipio_dia"
@@ -96,7 +122,8 @@ def main() -> None:
     filas_totales = 0
 
     print(f"Archivos encontrados: {len(archivos)}")
-    print(f"Muestra objetivo por año: {args.muestra_por_anio:,}\n")
+    print(f"Muestra objetivo por año: {args.muestra_por_anio:,}")
+    print(f"Storage Atlas asignado para comparación: {args.storage_gb:.2f} GB\n")
 
     for path in archivos:
         filas, medidas = estimar_archivo(path, args.muestra_por_anio)
@@ -112,11 +139,10 @@ def main() -> None:
     minimo = min(todas_medidas)
     maximo = max(todas_medidas)
     estimado_datos = promedio_bson * filas_totales
-
-    # Margen orientativo para índice compuesto cvegeo+fecha y overhead de almacenamiento.
-    # No pretende sustituir storageSize/totalIndexSize reales de MongoDB.
-    margen_indice_20 = estimado_datos * 0.20
-    estimado_con_margen = estimado_datos + margen_indice_20
+    margen = estimado_datos * (args.margen_pct / 100)
+    estimado_con_margen = estimado_datos + margen
+    storage_asignado = args.storage_gb * 1_000_000_000
+    ocupacion_proyectada = (estimado_con_margen / storage_asignado) * 100
 
     print("\n=== RESULTADO ===")
     print(f"Filas reales detectadas: {filas_totales:,}")
@@ -125,10 +151,32 @@ def main() -> None:
     print(f"Documentos muestreados: {len(todas_medidas):,}")
     print(f"BSON por documento: promedio {promedio_bson:.1f} B | min {minimo} B | max {maximo} B")
     print(f"Datos BSON proyectados: {formato_bytes(estimado_datos)}")
-    print(f"Proyección + 20% orientativo para índice/overhead: {formato_bytes(estimado_con_margen)}")
+    print(
+        f"Proyección + {args.margen_pct:.1f}% orientativo para índice/overhead: "
+        f"{formato_bytes(estimado_con_margen)}"
+    )
     print(f"Flex (5 GiB): {'CABE por estimación' if estimado_con_margen < FLEX_BYTES else 'NO CABE por estimación'}")
-    print(f"M10 (10 GiB): {'CABE por estimación' if estimado_con_margen < M10_BYTES else 'REQUIERE REVISIÓN / MÁS ALMACENAMIENTO'}")
-    print("\nNota: la decisión final debe confirmarse con storageSize y totalIndexSize tras una importación piloto; esta prueba evita elegir tier a ciegas.")
+    print(f"Storage Atlas indicado: {args.storage_gb:.2f} GB")
+    print(f"Ocupación proyectada sobre ese storage: {ocupacion_proyectada:.1f}%")
+
+    if estimado_con_margen >= storage_asignado:
+        print(
+            "Estado: STORAGE INSUFICIENTE para la proyección. Amplía el almacenamiento "
+            "antes del bulk import; no dependas de que el auto-scaling reaccione durante la carga."
+        )
+    elif ocupacion_proyectada >= 80:
+        print(
+            "Estado: STORAGE MUY AJUSTADO. Conviene ampliar almacenamiento antes del bulk import "
+            "para dejar margen operativo a datos, índices y oplog."
+        )
+    else:
+        print("Estado: CAPACIDAD PRELIMINAR SUFICIENTE para esta proyección.")
+
+    print(
+        "\nNota: M10 no se modela aquí como un límite fijo de 10 GB. "
+        "La decisión final depende del storage realmente asignado al cluster y debe confirmarse "
+        "con storageSize y totalIndexSize después de una importación piloto."
+    )
 
 
 if __name__ == "__main__":
