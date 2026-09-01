@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
 import { Search, ZoomIn, ZoomOut, Home, Layers, ScanSearch } from "lucide-react";
 import { GEO_CATALOG } from "../../data/geoCatalog";
@@ -66,6 +66,7 @@ export default function MapControls({
   rightPanelOpen = false,
 }) {
   const map = useMap();
+  const previousTerritoryRef = useRef(consultaActiva?.cveEnt || "");
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -79,6 +80,14 @@ export default function MapControls({
     ).slice(0, 8);
   }, [query]);
 
+  useEffect(() => {
+    const currentTerritory = consultaActiva?.cveEnt || "";
+    if (previousTerritoryRef.current && !currentTerritory) {
+      map?.setView(defaultView.center, defaultView.zoom, { animate: false });
+    }
+    previousTerritoryRef.current = currentTerritory;
+  }, [consultaActiva?.cveEnt, defaultView.center, defaultView.zoom, map]);
+
   const toggleSearch = () => {
     setSearchOpen((value) => !value);
     setLayersOpen(false);
@@ -86,9 +95,7 @@ export default function MapControls({
   };
 
   const goToPlace = (place) => {
-    if (place.id === "mx") {
-      map?.setView(defaultView.center, defaultView.zoom);
-    }
+    if (place.id === "mx") map?.setView(defaultView.center, defaultView.zoom, { animate: false });
 
     onConsultaChange?.("consultaPatch", {
       nivelAgregacion: place.nivelAgregacion,
@@ -105,7 +112,7 @@ export default function MapControls({
   };
 
   const resetView = () => {
-    map?.setView(defaultView.center, defaultView.zoom);
+    map?.setView(defaultView.center, defaultView.zoom, { animate: false });
     onConsultaChange?.("consultaPatch", {
       nivelAgregacion: consultaActiva?.nivelAgregacion || "entidad",
       cveEnt: "",
