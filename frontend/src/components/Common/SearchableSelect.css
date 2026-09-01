@@ -41,7 +41,7 @@
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 8px 22px rgba(16,24,40,.14);
-  padding: 7px;
+  padding: 6px;
 }
 
 .searchableSelectPortal{
@@ -59,30 +59,31 @@
 
 .searchableSelectSearch{
   width: 100%;
-  height: 36px !important;
-  border: 1px solid rgba(11,79,74,.22) !important;
-  border-radius: 9px !important;
-  background: #F8FAFC !important;
-  padding: 0 34px 0 10px !important;
+  height: 34px !important;
+  border: 1px solid rgba(11,79,74,.20) !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  padding: 0 32px 0 9px !important;
   font: inherit;
+  font-size: 13px !important;
   color: var(--text-field);
 }
 
 .searchableSelectSearch:focus{
-  border-color: rgba(11,79,74,.48) !important;
-  box-shadow: 0 0 0 2px rgba(11,79,74,.10);
+  border-color: rgba(11,79,74,.44) !important;
+  box-shadow: 0 0 0 2px rgba(11,79,74,.09);
   outline: none;
 }
 
 .searchableSelectClear{
   position: absolute;
-  right: 6px;
+  right: 5px;
   top: 50%;
   transform: translateY(-50%);
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 6px;
   background: transparent;
   color: #667085;
   display: grid;
@@ -91,8 +92,8 @@
 }
 
 .searchableSelectList{
-  margin-top: 6px;
-  max-height: calc(var(--visible-options, 7) * 38px);
+  margin-top: 5px;
+  max-height: calc(var(--visible-options, 7) * 34px);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -101,11 +102,11 @@
 
 .searchableSelectOption{
   width: 100%;
-  min-height: 38px;
+  min-height: 34px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 7px;
   background: transparent;
-  padding: 7px 9px;
+  padding: 5px 8px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -114,6 +115,8 @@
   cursor: pointer;
   color: #172B2A;
   font: inherit;
+  font-size: 13px;
+  line-height: 16px;
 }
 
 .searchableSelectOption:hover{
@@ -127,12 +130,13 @@
 
 .searchableSelectOption small{
   color: #667085;
-  font-size: 11px;
-  margin-top: 2px;
+  font-size: 10.5px;
+  line-height: 13px;
+  margin-top: 1px;
 }
 
 .searchableSelectEmpty{
-  padding: 10px 8px;
+  padding: 8px;
   color: #667085;
   font-size: 12px;
 }
