@@ -7,6 +7,8 @@ from statistics import mean
 
 import pyarrow.parquet as pq
 
+from preparar_datos_v2.preparar_municipio_dia_mongo import transformar_registro
+
 try:
     from bson import BSON, ObjectId
 except ImportError as exc:
@@ -27,19 +29,13 @@ def encontrar_raiz(inicio: Path) -> Path:
     raise FileNotFoundError("No se encontró data_deploy/resultados/municipio_dia")
 
 
-def normalizar_valor(valor):
-    if hasattr(valor, "as_py"):
-        valor = valor.as_py()
-    if hasattr(valor, "isoformat"):
-        return valor.isoformat()
-    return valor
-
-
 def documento_desde_tabla(tabla, indice: int) -> dict:
-    doc = {"_id": ObjectId()}
-    for nombre in tabla.column_names:
-        doc[nombre] = normalizar_valor(tabla[nombre][indice])
-    return doc
+    registro = {
+        nombre: tabla[nombre][indice].as_py()
+        for nombre in tabla.column_names
+    }
+    doc = transformar_registro(registro)
+    return {"_id": ObjectId(), **doc}
 
 
 def formato_bytes(valor: float) -> str:
@@ -77,8 +73,8 @@ def estimar_archivo(path: Path, muestra_objetivo: int) -> tuple[int, list[int]]:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Estima el tamaño BSON de resultados_municipio_dia y lo compara con "
-            "el almacenamiento actualmente asignado en Atlas."
+            "Estima el tamaño BSON real del esquema compacto de resultados_municipio_dia "
+            "y lo compara con el almacenamiento actualmente asignado en Atlas."
         )
     )
     parser.add_argument(
@@ -130,7 +126,7 @@ def main() -> None:
         filas_totales += filas
         todas_medidas.extend(medidas)
         promedio = mean(medidas) if medidas else 0
-        print(f"{path.name}: {filas:,} filas | BSON promedio muestra: {promedio:.1f} B")
+        print(f"{path.name}: {filas:,} filas | BSON compacto promedio muestra: {promedio:.1f} B")
 
     if not todas_medidas:
         raise RuntimeError("No se pudo obtener ninguna muestra BSON")
@@ -149,7 +145,7 @@ def main() -> None:
     if filas_totales != TOTAL_FILAS_ESPERADAS:
         print(f"Aviso: se esperaban {TOTAL_FILAS_ESPERADAS:,} filas según la auditoría previa.")
     print(f"Documentos muestreados: {len(todas_medidas):,}")
-    print(f"BSON por documento: promedio {promedio_bson:.1f} B | min {minimo} B | max {maximo} B")
+    print(f"BSON compacto por documento: promedio {promedio_bson:.1f} B | min {minimo} B | max {maximo} B")
     print(f"Datos BSON proyectados: {formato_bytes(estimado_datos)}")
     print(
         f"Proyección + {args.margen_pct:.1f}% orientativo para índice/overhead: "
