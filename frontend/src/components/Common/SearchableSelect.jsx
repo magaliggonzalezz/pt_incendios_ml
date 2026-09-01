@@ -51,35 +51,55 @@ export default function SearchableSelect({
     }
 
     let rafId = null;
-    const position = () => {
-      const rect = rootRef.current?.getBoundingClientRect();
-      if (!rect) return;
+    let secondRafId = null;
+
+    const position = (allowPanelScroll = true) => {
+      const root = rootRef.current;
+      const rect = root?.getBoundingClientRect();
+      const panel = root?.closest(".leftPanel.open");
+      const panelRect = panel?.getBoundingClientRect();
+      if (!rect || !panelRect) return;
+
       const optionRows = Math.max(3, Math.min(maxVisible, 9));
       const desiredHeight = 58 + optionRows * 38;
-      const margin = 10;
-      const spaceBelow = window.innerHeight - rect.bottom - margin;
+      const gap = 5;
+      const panelPadding = 12;
+      const bottomLimit = panelRect.bottom - panelPadding;
+      const availableBelow = bottomLimit - rect.bottom - gap;
 
-      if (spaceBelow < 155) {
-        rootRef.current?.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
+      if (allowPanelScroll && availableBelow < Math.min(desiredHeight, 220)) {
+        const panelContent = root.closest(".panelContent");
+        if (panelContent) {
+          const needed = Math.min(desiredHeight, 220) - availableBelow;
+          panelContent.scrollBy({ top: Math.max(0, needed + 12), behavior: "smooth" });
+          secondRafId = window.requestAnimationFrame(() => position(false));
+          return;
+        }
       }
 
-      const usableHeight = Math.max(125, Math.min(desiredHeight, Math.max(125, spaceBelow - 6)));
+      const freshRect = root.getBoundingClientRect();
+      const freshPanelRect = panel.getBoundingClientRect();
+      const freshBottomLimit = freshPanelRect.bottom - panelPadding;
+      const usableHeight = Math.max(118, Math.min(desiredHeight, freshBottomLimit - freshRect.bottom - gap));
+
       setPopoverStyle({
-        left: rect.left,
-        width: rect.width,
+        left: Math.max(freshPanelRect.left + panelPadding, freshRect.left),
+        width: Math.min(freshRect.width, freshPanelRect.right - panelPadding - freshRect.left),
         maxHeight: usableHeight,
-        top: Math.min(rect.bottom + 5, window.innerHeight - 130),
+        top: freshRect.bottom + gap,
         "--visible-options": optionRows,
       });
     };
 
-    rafId = window.requestAnimationFrame(position);
-    window.addEventListener("resize", position);
-    window.addEventListener("scroll", position, true);
+    rafId = window.requestAnimationFrame(() => position(true));
+    const reposition = () => position(false);
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", position);
-      window.removeEventListener("scroll", position, true);
+      if (secondRafId) window.cancelAnimationFrame(secondRafId);
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
     };
   }, [open, maxVisible]);
 
