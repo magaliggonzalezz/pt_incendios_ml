@@ -94,11 +94,11 @@ export default function MapLegend({
           {showFirms ? (
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">FIRMS</div>
-              <p className="legendLead">FIRMS representa <strong>anomalías térmicas detectadas por satélite</strong>; una detección no equivale por sí sola a un incendio confirmado.</p>
+              <p className="legendLead">Representa <strong>anomalías térmicas detectadas por satélite</strong>; una detección no equivale por sí sola a un incendio confirmado.</p>
               <div className="legendSubTitle">Representación del punto</div>
               <ul className="legendDefinitionList">
                 <li><strong>Color:</strong> categoría del atributo de confianza.</li>
-                <li><strong>Tamaño:</strong> FRP; una mayor potencia radiativa produce un punto visualmente mayor.</li>
+                <li><strong>Tamaño:</strong> FRP; mayor potencia radiativa, mayor tamaño visual.</li>
                 <li><strong>Borde:</strong> claro para detección diurna y oscuro para nocturna.</li>
               </ul>
               <div className="mapLegendItems">
@@ -108,7 +108,7 @@ export default function MapLegend({
               </div>
               <div className="legendNoteBlock">
                 <strong>Producto utilizado: Archive</strong>
-                <span>Se presentan únicamente observaciones del archivo histórico consolidado empleado por el proyecto; no se utilizan productos NRT ni RT.</span>
+                <span>Archivo histórico consolidado empleado por el proyecto; no se utilizan productos NRT ni RT.</span>
               </div>
               <div className="legendListBlock">
                 <strong>Tipo de detección</strong>
@@ -122,10 +122,11 @@ export default function MapLegend({
               <div className="legendListBlock compact">
                 <strong>Atributos mostrados</strong>
                 <ul>
-                  <li><b>Satélite</b> e <b>instrumento</b>: plataforma e instrumento que originaron la observación.</li>
-                  <li><b>FRP</b>: potencia radiativa asociada a la anomalía térmica.</li>
-                  <li><b>Brillo</b>: temperatura de brillo registrada por el producto.</li>
-                  <li><b>Scan / Track</b>: dimensiones espaciales asociadas a la detección.</li>
+                  <li><b>Satélite:</b> plataforma que realizó la observación.</li>
+                  <li><b>Instrumento:</b> sensor que generó la detección.</li>
+                  <li><b>FRP:</b> potencia radiativa de la anomalía térmica.</li>
+                  <li><b>Brillo:</b> temperatura de brillo registrada.</li>
+                  <li><b>Scan / Track:</b> dimensiones espaciales asociadas a la detección.</li>
                 </ul>
               </div>
             </section>
@@ -135,7 +136,7 @@ export default function MapLegend({
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">CONAFOR</div>
               <div className="mapLegendItems">
-                <div className="mapLegendItem"><span className="mapLegendSymbol dot conafor"/><div><strong>Incendio registrado</strong><span>Registro oficial individual; el tamaño visual depende de la superficie registrada cuando existe.</span></div></div>
+                <div className="mapLegendItem"><span className="mapLegendSymbol dot conafor"/><div><strong>Incendio registrado</strong><span>Registro individual; el tamaño visual depende de la superficie registrada cuando existe.</span></div></div>
               </div>
             </section>
           ) : null}
@@ -144,7 +145,7 @@ export default function MapLegend({
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">SMN-CONAGUA</div>
               <div className="mapLegendItems">
-                <div className="mapLegendItem"><span className="mapLegendSymbol station"/><div><strong>Estación meteorológica</strong><span>Estación individual del inventario; puede filtrarse por territorio, cobertura temporal y situación operativa.</span></div></div>
+                <div className="mapLegendItem"><span className="mapLegendSymbol station"/><div><strong>Estación meteorológica</strong><span>Estación individual del inventario, filtrable por territorio, cobertura temporal y situación operativa.</span></div></div>
               </div>
             </section>
           ) : null}
@@ -152,11 +153,11 @@ export default function MapLegend({
           {showInegi ? (
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">INEGI</div>
-              <p className="legendLead">Las capas temáticas distinguen sus categorías mediante colores consistentes por valor. La paleta se adapta para lectura web y contraste con el mapa base; no pretende reproducir píxel por píxel el visor oficial.</p>
+              <p className="legendLead">En las capas temáticas el color corresponde al valor o categoría representada, manteniendo contraste con el mapa base.</p>
 
               {capasActivas.fisiografiaInegi ? (
                 <>
-                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line physiography"/><div><strong>Provincias fisiográficas</strong><span>El color diferencia cada provincia presente.</span></div></div></div>
+                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line physiography"/><div><strong>Provincias fisiográficas</strong><span>Cada provincia visible conserva un color consistente.</span></div></div></div>
                   <CategoryLegend title="Provincias visibles" data={thematicLegend.fisiografia} />
                 </>
               ) : null}
@@ -170,14 +171,14 @@ export default function MapLegend({
 
               {capasActivas.usoSueloVegetacionInegi ? (
                 <>
-                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line landUse"/><div><strong>Uso de suelo y vegetación</strong><span>El color diferencia la categoría temática del producto.</span></div></div></div>
+                  <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line landUse"/><div><strong>Uso de suelo y vegetación</strong><span>El color diferencia la categoría temática representada.</span></div></div></div>
                   <CategoryLegend title="Categorías visibles" data={thematicLegend.usoSueloVegetacion} />
                 </>
               ) : null}
 
-              {capasActivas.corrientesAguaInegi ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line water"/><div><strong>Corrientes de agua</strong><span>Azul para la red hidrográfica; el grosor aumenta con el orden de corriente cuando está disponible. Los nombres se muestran cuando existen en la fuente.</span></div></div></div> : null}
-              {capasActivas.limitesEstatales ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line boundary"/><div><strong>Límite estatal</strong><span>Usa línea y halo adaptados al mapa base para mantener contraste.</span></div></div></div> : null}
-              {capasActivas.limitesMunicipales ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line boundaryMunicipal"/><div><strong>Límite municipal</strong><span>Usa línea y halo adaptados al mapa base para mantener contraste.</span></div></div></div> : null}
+              {capasActivas.corrientesAguaInegi ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line water"/><div><strong>Corrientes de agua</strong><span>Azul para la red hidrográfica; el grosor aumenta con el orden de corriente cuando está disponible.</span></div></div></div> : null}
+              {capasActivas.limitesEstatales ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line boundary"/><div><strong>Límite estatal</strong><span>El estilo se adapta al mapa base para mantener contraste.</span></div></div></div> : null}
+              {capasActivas.limitesMunicipales ? <div className="mapLegendItems compactItems"><div className="mapLegendItem"><span className="mapLegendSymbol line boundaryMunicipal"/><div><strong>Límite municipal</strong><span>El estilo se adapta al mapa base para mantener contraste.</span></div></div></div> : null}
             </section>
           ) : null}
 
@@ -197,8 +198,6 @@ export default function MapLegend({
               </div>
             </section>
           ) : null}
-
-          <div className="mapLegendFooter">La simbología explica la representación del mapa; “Fuentes de datos” queda reservado para atribución y enlaces de origen.</div>
         </div>
       ) : null}
     </aside>
