@@ -31,7 +31,7 @@ function buildTerritorioLabel(consulta, resumen) {
   const estado = consulta?.estado || resumen?.estado || "";
   const municipio = consulta?.municipio || resumen?.municipio || "";
   const nivel = consulta?.nivelAgregacion || resumen?.nivelAgregacion;
-  if (nivel === "municipio" && municipio) return estado ? `${estado} · ${municipio}` : municipio;
+  if (nivel === "municipio" && municipio) return estado ? `${estado}, ${municipio}` : municipio;
   return estado || resumen?.territorio || "México";
 }
 
@@ -151,8 +151,8 @@ export default function RightPanel({
 
         <div className="kpiCard">
           <div className="kpiHeader">
-            <span className="kpiHeaderIcon" aria-hidden="true"><MapPin size={18} /></span>
-            <span>{territorio}</span>
+            <span className="kpiHeaderIcon" aria-hidden="true"><MapPin size={19} /></span>
+            <span className="kpiHeaderTerritory">{territorio}</span>
           </div>
 
           <div className="kpiBody">
