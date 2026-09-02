@@ -2,6 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import "./MapLegend.css";
 
+const ELEVATION_LEGEND = [
+  { label: "Menos de 500 m", color: "#2E8B57" },
+  { label: "500-999 m", color: "#66A95C" },
+  { label: "1,000-1,499 m", color: "#A8C66C" },
+  { label: "1,500-1,999 m", color: "#D8D36F" },
+  { label: "2,000-2,499 m", color: "#D8A85C" },
+  { label: "2,500-2,999 m", color: "#B97A56" },
+  { label: "3,000-3,499 m", color: "#8C5A4A" },
+  { label: "3,500 m o más", color: "#F1F5F9" },
+];
+
 function sentenceCaseLegendLabel(value) {
   const text = String(value ?? "").trim();
   if (!text) return "";
@@ -62,7 +73,7 @@ export default function MapLegend({
   const showInegi = Boolean(
     capasActivas.limitesEstatales ||
     capasActivas.limitesMunicipales ||
-    capasActivas.relieveMdeInegi ||
+    capasActivas.elevacionMdeInegi ||
     capasActivas.fisiografiaInegi ||
     capasActivas.edafologiaInegi ||
     capasActivas.usoSueloVegetacionInegi ||
@@ -182,14 +193,16 @@ export default function MapLegend({
               <div className="mapLegendSectionTitle">INEGI</div>
               <p className="legendLead">En las capas temáticas el color diferencia los valores o categorías representados. El contraste se ajusta para conservar legibilidad sobre el mapa base.</p>
 
-              {capasActivas.relieveMdeInegi ? (
-                <div className="mapLegendItems compactItems">
-                  <div className="mapLegendItem">
-                    <span className="mapLegendSymbol relief" aria-hidden="true" />
-                    <div>
-                      <strong>Relieve sombreado MDE</strong>
-                      <span>Las diferencias de luz y sombra resaltan pendientes y formas del terreno. No representan clases ni altitud por color.</span>
-                    </div>
+              {capasActivas.elevacionMdeInegi ? (
+                <div className="thematicCategoryBlock">
+                  <strong>Elevación del terreno (m s. n. m.)</strong>
+                  <div className="thematicCategoryList">
+                    {ELEVATION_LEGEND.map((item) => (
+                      <div className="thematicCategoryItem" key={item.label}>
+                        <span className="thematicSwatch" style={{ "--category-color": item.color }} aria-hidden="true" />
+                        <span>{item.label}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ) : null}
