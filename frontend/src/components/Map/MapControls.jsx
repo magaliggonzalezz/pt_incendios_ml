@@ -11,6 +11,12 @@ const ICON_COLOR = "#0B4F4A";
 const ICON_SIZE = 18;
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 const MDE_TILE_URL = `${API_URL}/api/recursos/relieve-mde/tiles/{z}/{x}/{y}.png`;
+const MDE_PANE = "mdeReliefPane";
+const MDE_APPEARANCE = {
+  esri: { opacity: 0.52, filter: "contrast(1.75) brightness(1.06)" },
+  osm: { opacity: 0.68, filter: "contrast(1.9) brightness(1.04)" },
+  topo: { opacity: 0.58, filter: "contrast(1.8) brightness(1.05)" },
+};
 
 function normalize(value, width) {
   if (value === undefined || value === null || value === "") return "";
@@ -138,16 +144,35 @@ export default function MapControls({
   const stop = (event) => event.stopPropagation();
 
   useEffect(() => {
+    let pane = map.getPane(MDE_PANE);
+    if (!pane) pane = map.createPane(MDE_PANE);
+    pane.style.zIndex = "250";
+    pane.style.pointerEvents = "none";
+    pane.style.mixBlendMode = "multiply";
+  }, [map]);
+
+  useEffect(() => {
+    const appearance = MDE_APPEARANCE[baseLayerId] || MDE_APPEARANCE.osm;
+    const pane = map.getPane(MDE_PANE);
+    if (pane) pane.style.filter = appearance.filter;
+    mdeLayerRef.current?.setOpacity(appearance.opacity);
+  }, [map, baseLayerId]);
+
+  useEffect(() => {
     const onRelieveMdeChange = (event) => {
       const active = Boolean(event.detail?.active);
 
       if (active && !mdeLayerRef.current) {
+        const appearance = MDE_APPEARANCE[baseLayerId] || MDE_APPEARANCE.osm;
+        const pane = map.getPane(MDE_PANE);
+        if (pane) pane.style.filter = appearance.filter;
+
         mdeLayerRef.current = L.tileLayer(MDE_TILE_URL, {
           minZoom: 4,
           maxNativeZoom: 10,
           maxZoom: 18,
-          opacity: 0.58,
-          zIndex: 150,
+          opacity: appearance.opacity,
+          pane: MDE_PANE,
           attribution: "Relieve derivado del MDE INEGI",
           updateWhenIdle: true,
           keepBuffer: 1,
@@ -169,7 +194,7 @@ export default function MapControls({
         mdeLayerRef.current = null;
       }
     };
-  }, [map]);
+  }, [map, baseLayerId]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
