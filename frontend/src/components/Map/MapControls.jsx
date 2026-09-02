@@ -9,6 +9,8 @@ import "./MapControls.css";
 const DEFAULT_VIEW = { center: [23.6345, -102.5528], zoom: 5 };
 const ICON_COLOR = "#0B4F4A";
 const ICON_SIZE = 18;
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const MDE_TILE_URL = `${API_URL}/api/recursos/relieve-mde/tiles/{z}/{x}/{y}.png`;
 
 function normalize(value, width) {
   if (value === undefined || value === null || value === "") return "";
@@ -65,6 +67,7 @@ export default function MapControls({
 }) {
   const map = useMap();
   const controlsRef = useRef(null);
+  const mdeLayerRef = useRef(null);
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -133,6 +136,40 @@ export default function MapControls({
   };
 
   const stop = (event) => event.stopPropagation();
+
+  useEffect(() => {
+    const onRelieveMdeChange = (event) => {
+      const active = Boolean(event.detail?.active);
+
+      if (active && !mdeLayerRef.current) {
+        mdeLayerRef.current = L.tileLayer(MDE_TILE_URL, {
+          minZoom: 4,
+          maxNativeZoom: 10,
+          maxZoom: 18,
+          opacity: 0.58,
+          zIndex: 150,
+          attribution: "Relieve derivado del MDE INEGI",
+          updateWhenIdle: true,
+          keepBuffer: 1,
+        }).addTo(map);
+        return;
+      }
+
+      if (!active && mdeLayerRef.current) {
+        map.removeLayer(mdeLayerRef.current);
+        mdeLayerRef.current = null;
+      }
+    };
+
+    window.addEventListener("map:relieve-mde-change", onRelieveMdeChange);
+    return () => {
+      window.removeEventListener("map:relieve-mde-change", onRelieveMdeChange);
+      if (mdeLayerRef.current) {
+        map.removeLayer(mdeLayerRef.current);
+        mdeLayerRef.current = null;
+      }
+    };
+  }, [map]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
