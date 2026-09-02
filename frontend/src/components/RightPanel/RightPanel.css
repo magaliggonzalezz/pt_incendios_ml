@@ -51,17 +51,13 @@
 }
 
 .kpiHeader{
-    font-weight: 700;
     margin-bottom: 14px;
-    font-size: 17px;
-    line-height: 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    text-align: center;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px;
     padding: 0 12px;
+    text-align: left;
 }
 
 .kpiHeaderIcon{
@@ -70,16 +66,38 @@
     display: grid;
     place-items: center;
     flex: 0 0 auto;
+    padding-top: 1px;
 }
 
 .kpiHeaderTerritory{
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.kpiHeaderTerritory strong{
+    display: block;
     max-width: 100%;
+    color: #fff;
+    font-size: 17px;
+    line-height: 21px;
+    font-weight: 700;
     white-space: normal;
-    overflow-wrap: normal;
-    word-break: normal;
-    text-wrap: balance;
-    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.kpiHeaderTerritory span{
+    display: block;
+    max-width: 100%;
+    margin-top: 2px;
+    color: rgba(255,255,255,.84);
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .kpiBody{
