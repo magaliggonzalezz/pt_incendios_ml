@@ -13,9 +13,9 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 const MDE_TILE_URL = `${API_URL}/api/recursos/relieve-mde/tiles/{z}/{x}/{y}.png`;
 const MDE_PANE = "mdeReliefPane";
 const MDE_APPEARANCE = {
-  esri: { opacity: 0.52, filter: "contrast(1.75) brightness(1.06)" },
-  osm: { opacity: 0.68, filter: "contrast(1.9) brightness(1.04)" },
-  topo: { opacity: 0.58, filter: "contrast(1.8) brightness(1.05)" },
+  esri: { opacity: 0.72, filter: "contrast(2.15) brightness(1.12)", blendMode: "soft-light" },
+  osm: { opacity: 0.92, filter: "contrast(2.45) brightness(1.10)", blendMode: "multiply" },
+  topo: { opacity: 0.84, filter: "contrast(2.30) brightness(1.10)", blendMode: "multiply" },
 };
 
 function normalize(value, width) {
@@ -148,13 +148,15 @@ export default function MapControls({
     if (!pane) pane = map.createPane(MDE_PANE);
     pane.style.zIndex = "250";
     pane.style.pointerEvents = "none";
-    pane.style.mixBlendMode = "multiply";
   }, [map]);
 
   useEffect(() => {
     const appearance = MDE_APPEARANCE[baseLayerId] || MDE_APPEARANCE.osm;
     const pane = map.getPane(MDE_PANE);
-    if (pane) pane.style.filter = appearance.filter;
+    if (pane) {
+      pane.style.filter = appearance.filter;
+      pane.style.mixBlendMode = appearance.blendMode;
+    }
     mdeLayerRef.current?.setOpacity(appearance.opacity);
   }, [map, baseLayerId]);
 
@@ -165,7 +167,10 @@ export default function MapControls({
       if (active && !mdeLayerRef.current) {
         const appearance = MDE_APPEARANCE[baseLayerId] || MDE_APPEARANCE.osm;
         const pane = map.getPane(MDE_PANE);
-        if (pane) pane.style.filter = appearance.filter;
+        if (pane) {
+          pane.style.filter = appearance.filter;
+          pane.style.mixBlendMode = appearance.blendMode;
+        }
 
         mdeLayerRef.current = L.tileLayer(MDE_TILE_URL, {
           minZoom: 4,
