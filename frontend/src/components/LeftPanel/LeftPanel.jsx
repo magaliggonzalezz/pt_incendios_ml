@@ -70,6 +70,12 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
     }
   }, [consultaActiva?.filtrosSmn?.alcance, smnPeriodAvailable, onConsultaChange]);
 
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("map:relieve-mde-change", {
+      detail: { active: Boolean(consultaActiva?.capasActivas?.relieveMdeInegi) },
+    }));
+  }, [consultaActiva?.capasActivas?.relieveMdeInegi]);
+
   const isDirty = useMemo(() => {
     const currentLayers = consultaActiva?.capasActivas ?? {};
     const layersChanged = Object.entries(INITIAL_ACTIVE_LAYERS).some(([key, value]) => currentLayers[key] !== value);
