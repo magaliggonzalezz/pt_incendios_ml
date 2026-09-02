@@ -70,7 +70,21 @@ const BOUNDARY_STYLES = {
   },
 };
 
-const SELECTED_TERRITORY_STYLE = { color: "#0F766E", weight: 3, opacity: 1, fillOpacity: 0 };
+const SELECTED_TERRITORY_STYLES = {
+  esri: {
+    halo: { color: "#FFFFFF", weight: 6.4, opacity: 0.95, fillOpacity: 0 },
+    line: { color: "#00A6A6", weight: 3.2, opacity: 1, fillOpacity: 0 },
+  },
+  osm: {
+    halo: { color: "#FFFFFF", weight: 6.2, opacity: 0.96, fillOpacity: 0 },
+    line: { color: "#007C76", weight: 3.2, opacity: 1, fillOpacity: 0 },
+  },
+  topo: {
+    halo: { color: "#FFFFFF", weight: 6.6, opacity: 0.98, fillOpacity: 0 },
+    line: { color: "#006D77", weight: 3.4, opacity: 1, fillOpacity: 0 },
+  },
+};
+
 const FIRMS_CONFIDENCE_COLORS = { low: "#FACC15", nominal: "#F97316", high: "#DC2626" };
 const FIRMS_TYPE_LABELS = {
   0: "0 · Incendio de vegetación presunto",
@@ -150,6 +164,15 @@ function formatMapValue(value, options = {}) {
     if (Number.isFinite(number)) return number.toLocaleString("es-MX", { maximumFractionDigits: options.maximumFractionDigits ?? 2 });
   }
   return String(value);
+}
+
+function sentenceCaseMapText(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return text;
+  const letters = text.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g, "");
+  if (!letters || letters !== letters.toLocaleUpperCase("es-MX")) return text;
+  const lower = text.toLocaleLowerCase("es-MX");
+  return lower.charAt(0).toLocaleUpperCase("es-MX") + lower.slice(1);
 }
 
 function firstProp(props, keys = []) {
@@ -361,27 +384,29 @@ function bindMunicipalityInfo(feature, layer) {
 function bindPhysiographyInfo(feature, layer) {
   const props = feature?.properties || {};
   const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
-  const provincia = firstProp(props, ["fisiografia_nombre", "provincia", "PROVINCIA"]);
+  const provincia = sentenceCaseMapText(firstProp(props, ["fisiografia_nombre", "provincia", "PROVINCIA"]));
+  const entidad = sentenceCaseMapText(firstProp(props, ["fisiografia_entidad", "entidad", "ENTIDAD"]));
   bindRichInfo(layer, {
     title: provincia || "Provincia fisiográfica INEGI", kind: "fisiografia",
     tooltipRows: orderedRows(props, [["Estado", () => estado], ["Provincia fisiográfica", () => provincia], ["Clave", () => firstProp(props, ["fisiografia_clave", "clave", "CLAVE"])]]),
-    popupRows: orderedRows(props, [["Estado", () => estado], ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])], ["Provincia fisiográfica", () => provincia], ["Clave de provincia", () => firstProp(props, ["fisiografia_clave", "clave", "CLAVE"])], ["Entidad fisiográfica", () => firstProp(props, ["fisiografia_entidad", "entidad", "ENTIDAD"])]]),
+    popupRows: orderedRows(props, [["Estado", () => estado], ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])], ["Provincia fisiográfica", () => provincia], ["Clave de provincia", () => firstProp(props, ["fisiografia_clave", "clave", "CLAVE"])], ["Entidad fisiográfica", () => entidad]]),
   });
 }
 
 function bindHydrologyInfo(feature, layer) {
   const props = feature?.properties || {};
   const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
-  const corriente = firstProp(props, ["corriente_nombre", "nombre", "NOMBRE"]);
+  const corriente = sentenceCaseMapText(firstProp(props, ["corriente_nombre", "nombre", "NOMBRE"]));
+  const segmento = sentenceCaseMapText(firstProp(props, ["segmento_tipo", "tipo", "TIPO"]));
+  const tipoCorriente = sentenceCaseMapText(firstProp(props, ["corriente_tipo", "ter_gen", "Ter_Gen"]));
+  const desaparicion = sentenceCaseMapText(firstProp(props, ["condicion_desaparicion", "c_desapa", "C_DESAPA"]));
   bindRichInfo(layer, {
     title: corriente || "Corriente de agua INEGI", kind: "hidrografia",
     tooltipRows: orderedRows(props, [["Estado", () => estado], ["Corriente", () => corriente], ["Orden", () => firstProp(props, ["orden_corriente", "orden", "ORDEN"])]]),
     popupRows: orderedRows(props, [
       ["Estado", () => estado], ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])],
       ["Corriente", () => corriente], ["Orden de corriente", () => firstProp(props, ["orden_corriente", "orden", "ORDEN"])],
-      ["Tipo de segmento", () => firstProp(props, ["segmento_tipo", "tipo", "TIPO"])],
-      ["Tipo de corriente", () => firstProp(props, ["corriente_tipo", "ter_gen", "Ter_Gen"])],
-      ["Condición de desaparición", () => firstProp(props, ["condicion_desaparicion", "c_desapa", "C_DESAPA"])],
+      ["Tipo de segmento", () => segmento], ["Tipo de corriente", () => tipoCorriente], ["Condición de desaparición", () => desaparicion],
     ]),
   });
 }
@@ -389,18 +414,19 @@ function bindHydrologyInfo(feature, layer) {
 function bindSoilInfo(feature, layer) {
   const props = feature?.properties || {};
   const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
-  const suelo = firstProp(props, ["grupo1_nombre", "grupo1", "GRUPO1"]);
+  const suelo = sentenceCaseMapText(firstProp(props, ["grupo1_nombre", "grupo1", "GRUPO1"]));
+  const textura = sentenceCaseMapText(firstProp(props, ["textura_nombre", "textura", "TEXTURA"]));
   bindRichInfo(layer, {
     title: suelo || "Edafología INEGI", kind: "edafologia",
-    tooltipRows: orderedRows(props, [["Estado", () => estado], ["Grupo de suelo", () => suelo], ["Textura", () => firstProp(props, ["textura_nombre", "textura", "TEXTURA"])]]),
-    popupRows: orderedRows(props, [["Estado", () => estado], ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])], ["Grupo de suelo", () => suelo], ["Textura", () => firstProp(props, ["textura_nombre", "textura", "TEXTURA"])]]),
+    tooltipRows: orderedRows(props, [["Estado", () => estado], ["Grupo de suelo", () => suelo], ["Textura", () => textura]]),
+    popupRows: orderedRows(props, [["Estado", () => estado], ["Clave de entidad", () => firstProp(props, ["cve_ent_web", "cve_ent", "CVE_ENT"])], ["Grupo de suelo", () => suelo], ["Textura", () => textura]]),
   });
 }
 
 function bindLandUseInfo(feature, layer) {
   const props = feature?.properties || {};
   const estado = firstProp(props, ["nom_ent_web", "nom_ent", "NOM_ENT", "estado"]);
-  const descripcion = firstProp(props, ["usv_descripcion", "descripcion", "DESCRIPCION"]);
+  const descripcion = sentenceCaseMapText(firstProp(props, ["usv_descripcion", "descripcion", "DESCRIPCION"]));
   bindRichInfo(layer, {
     title: descripcion || "Uso de suelo y vegetación INEGI", kind: "uso-suelo",
     tooltipRows: orderedRows(props, [["Estado", () => estado], ["Uso de suelo / vegetación", () => descripcion]]),
@@ -562,12 +588,14 @@ function MapPopupCloser() {
       if (!(target instanceof Element) || target.closest(".leaflet-popup") || target.closest(".leaflet-interactive")) return;
       map.closePopup();
     };
-    const closeForLegend = () => map.closePopup();
+    const closeForCompetingOverlay = () => map.closePopup();
     document.addEventListener("pointerdown", closePopupFromOutside, true);
-    window.addEventListener("map:legend-open", closeForLegend);
+    window.addEventListener("map:legend-open", closeForCompetingOverlay);
+    window.addEventListener("map:controls-overlay-open", closeForCompetingOverlay);
     return () => {
       document.removeEventListener("pointerdown", closePopupFromOutside, true);
-      window.removeEventListener("map:legend-open", closeForLegend);
+      window.removeEventListener("map:legend-open", closeForCompetingOverlay);
+      window.removeEventListener("map:controls-overlay-open", closeForCompetingOverlay);
     };
   }, [map]);
   return null;
@@ -618,6 +646,7 @@ export default function MapView({
 
   const activeLayer = BASE_LAYERS[baseLayerId];
   const boundaryStyle = BOUNDARY_STYLES[baseLayerId] || BOUNDARY_STYLES.esri;
+  const selectedTerritoryStyle = SELECTED_TERRITORY_STYLES[baseLayerId] || SELECTED_TERRITORY_STYLES.esri;
   const rows = resumenConsulta?.rows ?? [];
   const mapScope = consultaEjecutada;
   const overlayScope = mapScope || consultaActiva;
@@ -817,7 +846,10 @@ export default function MapView({
           <GeoJSON key={`lim-mun-${cveEntCapas}-${baseLayerId}`} data={municipiosGeojson} style={() => boundaryStyle.municipality} onEachFeature={bindMunicipalityInfo} />
         </> : null}
 
-        {territorioSeleccionadoGeojson?.features?.length ? <GeoJSON key={`territorio-${fitKey}`} data={territorioSeleccionadoGeojson} style={() => SELECTED_TERRITORY_STYLE} interactive={false} /> : null}
+        {territorioSeleccionadoGeojson?.features?.length ? <>
+          <GeoJSON key={`territorio-halo-${fitKey}-${baseLayerId}`} data={territorioSeleccionadoGeojson} style={() => selectedTerritoryStyle.halo} interactive={false} />
+          <GeoJSON key={`territorio-${fitKey}-${baseLayerId}`} data={territorioSeleccionadoGeojson} style={() => selectedTerritoryStyle.line} interactive={false} />
+        </> : null}
         {displayGeojson?.features?.length ? <GeoJSON key={renderKey} data={displayGeojson} style={styleFeature} onEachFeature={onEachResultFeature} /> : null}
         {overlays.fisiografia?.features?.length ? <GeoJSON key={`fisiografia-${thematicKey}-${baseLayerId}`} data={overlays.fisiografia} style={(feature) => physiographyStyle(feature, baseLayerId)} onEachFeature={bindPhysiographyInfo} /> : null}
         {overlays.hidrografia?.features?.length ? <GeoJSON key={`hidrografia-${thematicKey}`} data={overlays.hidrografia} style={hydrologyStyle} onEachFeature={bindHydrologyInfo} /> : null}
