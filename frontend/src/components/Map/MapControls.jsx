@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
 import { Search, ZoomIn, ZoomOut, Home, Layers, ScanSearch } from "lucide-react";
@@ -28,7 +28,6 @@ const PLACE_OPTIONS = (() => {
 
   GEO_CATALOG.forEach((row) => {
     const cveEnt = normalize(row.CVE_ENT, 2);
-    const cveMun = normalize(row.CVE_MUN, 3);
     const cvegeo = normalize(row.CVEGEO, 5);
     if (cveEnt && !states.has(cveEnt)) {
       states.set(cveEnt, {
@@ -65,6 +64,7 @@ export default function MapControls({
   rightPanelOpen = false,
 }) {
   const map = useMap();
+  const controlsRef = useRef(null);
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -78,8 +78,22 @@ export default function MapControls({
     ).slice(0, 8);
   }, [query]);
 
+  const closeFloatingControls = () => {
+    setLayersOpen(false);
+    setSearchOpen(false);
+    setBoxZoomHint(false);
+  };
+
+  const announceControlOverlay = () => {
+    window.dispatchEvent(new CustomEvent("map:controls-overlay-open"));
+  };
+
   const toggleSearch = () => {
-    setSearchOpen((value) => !value);
+    setSearchOpen((value) => {
+      const next = !value;
+      if (next) announceControlOverlay();
+      return next;
+    });
     setLayersOpen(false);
     setBoxZoomHint(false);
   };
@@ -115,24 +129,36 @@ export default function MapControls({
 
   const resetView = () => {
     map.setView(defaultView.center, defaultView.zoom, { animate: false });
+    closeFloatingControls();
   };
 
   const stop = (event) => event.stopPropagation();
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setLayersOpen(false);
-        setSearchOpen(false);
-        setBoxZoomHint(false);
-      }
+      if (event.key === "Escape") closeFloatingControls();
     };
+    const onPointerDown = (event) => {
+      if (controlsRef.current?.contains(event.target)) return;
+      closeFloatingControls();
+    };
+    const onLegendOrPopupOpen = () => closeFloatingControls();
+
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("map:legend-open", onLegendOrPopupOpen);
+    window.addEventListener("map:feature-popup-open", onLegendOrPopupOpen);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("map:legend-open", onLegendOrPopupOpen);
+      window.removeEventListener("map:feature-popup-open", onLegendOrPopupOpen);
+    };
   }, []);
 
   return (
     <div
+      ref={controlsRef}
       className={`mapControls ${rightPanelOpen ? "rightPanelOpen" : ""}`}
       aria-label="Controles del mapa"
       onMouseDown={stop}
@@ -158,7 +184,11 @@ export default function MapControls({
         aria-label="Zoom por área"
         aria-expanded={boxZoomHint}
         onClick={() => {
-          setBoxZoomHint((value) => !value);
+          setBoxZoomHint((value) => {
+            const next = !value;
+            if (next) announceControlOverlay();
+            return next;
+          });
           setLayersOpen(false);
           setSearchOpen(false);
         }}
@@ -166,7 +196,11 @@ export default function MapControls({
         <ScanSearch size={ICON_SIZE} color={ICON_COLOR} />
       </button>
       <button className="ctl hasTooltip" data-tooltip="Mapa base" type="button" aria-label="Mapa base" aria-expanded={layersOpen} onClick={() => {
-        setLayersOpen((value) => !value);
+        setLayersOpen((value) => {
+          const next = !value;
+          if (next) announceControlOverlay();
+          return next;
+        });
         setSearchOpen(false);
         setBoxZoomHint(false);
       }}>
