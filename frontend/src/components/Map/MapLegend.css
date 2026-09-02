@@ -102,6 +102,7 @@
 .mapLegendSymbol.firmsHigh{ --symbol-color:#DC2626; }
 .mapLegendSymbol.conafor{ --symbol-color:#B91C1C; }
 .mapLegendSymbol.station{ border-radius: 999px; background: #14B8A6; border: 1px solid #0F766E; }
+.mapLegendSymbol.relief{ width:18px; height:14px; border-radius:4px; border:1px solid rgba(15,23,42,.18); background:linear-gradient(135deg,#f8fafc 0%,#cbd5e1 35%,#64748b 68%,#1f2937 100%); }
 .mapLegendSymbol.line{ width: 18px; height: 4px; border-radius: 999px; background: var(--symbol-color); }
 .mapLegendSymbol.physiography{ --symbol-color:#8B5CF6; }
 .mapLegendSymbol.soil{ --symbol-color:#A67C52; }
