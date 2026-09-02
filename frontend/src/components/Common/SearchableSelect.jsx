@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import "./SearchableSelect.css";
 
 export default function SearchableSelect({
@@ -51,26 +51,31 @@ export default function SearchableSelect({
     }
 
     const position = () => {
-      const root = rootRef.current;
-      const rect = root?.getBoundingClientRect();
-      const panel = root?.closest(".leftPanel.open");
-      const panelRect = panel?.getBoundingClientRect();
-      if (!rect || !panelRect) return;
+      const rect = rootRef.current?.getBoundingClientRect();
+      if (!rect) return;
 
-      const gap = 5;
-      const panelPadding = 10;
+      const gap = 6;
+      const viewportPadding = 12;
       const optionRows = Math.max(3, Math.min(maxVisible, 7));
       const desiredHeight = 54 + optionRows * 38;
-      const top = rect.bottom + gap;
-      const bottomLimit = panelRect.bottom - panelPadding;
-      const maxHeight = Math.max(118, Math.min(desiredHeight, bottomLimit - top));
-      const left = Math.max(panelRect.left + panelPadding, rect.left);
-      const rightLimit = panelRect.right - panelPadding;
+      const availableBelow = window.innerHeight - rect.bottom - gap - viewportPadding;
+      const availableAbove = rect.top - gap - viewportPadding;
+      const openUpward = availableBelow < Math.min(desiredHeight, 170) && availableAbove > availableBelow;
+      const availableHeight = openUpward ? availableAbove : availableBelow;
+      const maxHeight = Math.max(118, Math.min(desiredHeight, availableHeight));
+      const width = Math.min(rect.width, window.innerWidth - viewportPadding * 2);
+      const left = Math.min(
+        Math.max(viewportPadding, rect.left),
+        Math.max(viewportPadding, window.innerWidth - width - viewportPadding),
+      );
+      const top = openUpward
+        ? Math.max(viewportPadding, rect.top - gap - maxHeight)
+        : rect.bottom + gap;
 
       setPopoverStyle({
         left,
         top,
-        width: Math.min(rect.width, Math.max(180, rightLimit - left)),
+        width,
         maxHeight,
         "--visible-options": optionRows,
       });
@@ -120,11 +125,6 @@ export default function SearchableSelect({
                 autoFocus
                 aria-label={searchPlaceholder}
               />
-              {query ? (
-                <button type="button" className="searchableSelectClear" aria-label="Limpiar búsqueda" onClick={() => setQuery("")}>
-                  <X size={14} />
-                </button>
-              ) : null}
             </div>
             <div className="searchableSelectList" role="listbox">
               {filtered.map((option) => (
