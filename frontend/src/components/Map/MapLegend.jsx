@@ -62,6 +62,7 @@ export default function MapLegend({
   const showInegi = Boolean(
     capasActivas.limitesEstatales ||
     capasActivas.limitesMunicipales ||
+    capasActivas.relieveMdeInegi ||
     capasActivas.fisiografiaInegi ||
     capasActivas.edafologiaInegi ||
     capasActivas.usoSueloVegetacionInegi ||
@@ -180,6 +181,18 @@ export default function MapLegend({
             <section className="mapLegendSection">
               <div className="mapLegendSectionTitle">INEGI</div>
               <p className="legendLead">En las capas temáticas el color diferencia los valores o categorías representados. El contraste se ajusta para conservar legibilidad sobre el mapa base.</p>
+
+              {capasActivas.relieveMdeInegi ? (
+                <div className="mapLegendItems compactItems">
+                  <div className="mapLegendItem">
+                    <span className="mapLegendSymbol relief" aria-hidden="true" />
+                    <div>
+                      <strong>Relieve sombreado MDE</strong>
+                      <span>Las diferencias de luz y sombra resaltan pendientes y formas del terreno. No representan clases ni altitud por color.</span>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               {capasActivas.fisiografiaInegi ? (
                 <>
