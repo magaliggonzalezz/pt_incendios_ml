@@ -74,9 +74,13 @@ export default function MapLegend({
   }, [hasSymbology]);
 
   useEffect(() => {
-    const collapseForPopup = () => setCollapsed(true);
-    window.addEventListener("map:feature-popup-open", collapseForPopup);
-    return () => window.removeEventListener("map:feature-popup-open", collapseForPopup);
+    const collapseForCompetingOverlay = () => setCollapsed(true);
+    window.addEventListener("map:feature-popup-open", collapseForCompetingOverlay);
+    window.addEventListener("map:controls-overlay-open", collapseForCompetingOverlay);
+    return () => {
+      window.removeEventListener("map:feature-popup-open", collapseForCompetingOverlay);
+      window.removeEventListener("map:controls-overlay-open", collapseForCompetingOverlay);
+    };
   }, []);
 
   if (!hasSymbology) return null;
