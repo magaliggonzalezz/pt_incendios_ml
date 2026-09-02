@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from pathlib import Path
 
 try:
@@ -11,9 +10,7 @@ try:
     import rasterio
     from PIL import Image
     from rasterio.enums import Resampling
-    from rasterio.vrt import WarpedVRT
-    from rasterio.windows import from_bounds
-    from rasterio.warp import transform_bounds
+    from rasterio.warp import reproject, transform_bounds
 except ImportError as exc:
     raise SystemExit(
         "Faltan dependencias. Instala con: "
@@ -69,26 +66,45 @@ def tile_bounds_mercator(tile: mercantile.Tile) -> tuple[float, float, float, fl
     return bounds.left, bounds.bottom, bounds.right, bounds.top
 
 
-def render_tile(vrt: WarpedVRT, tile: mercantile.Tile) -> Image.Image | None:
+def render_tile(src: rasterio.io.DatasetReader, tile: mercantile.Tile) -> Image.Image | None:
     left, bottom, right, top = tile_bounds_mercator(tile)
-    window = from_bounds(left, bottom, right, top, transform=vrt.transform)
+    pixel_x = (right - left) / TILE_SIZE
+    pixel_y = (top - bottom) / TILE_SIZE
 
+    expanded_left = left - BUFFER * pixel_x
+    expanded_right = right + BUFFER * pixel_x
+    expanded_bottom = bottom - BUFFER * pixel_y
+    expanded_top = top + BUFFER * pixel_y
     size = TILE_SIZE + BUFFER * 2
-    data = vrt.read(
-        1,
-        window=window,
-        out_shape=(size, size),
+
+    dst_transform = rasterio.transform.from_bounds(
+        expanded_left,
+        expanded_bottom,
+        expanded_right,
+        expanded_top,
+        size,
+        size,
+    )
+    elevation = np.full((size, size), np.nan, dtype="float32")
+
+    reproject(
+        source=rasterio.band(src, 1),
+        destination=elevation,
+        src_transform=src.transform,
+        src_crs=src.crs,
+        src_nodata=src.nodata,
+        dst_transform=dst_transform,
+        dst_crs=WEB_CRS,
+        dst_nodata=np.nan,
         resampling=Resampling.bilinear,
-        boundless=True,
-        masked=True,
     )
 
-    mask = np.ma.getmaskarray(data)
+    mask = ~np.isfinite(elevation)
     if mask.all():
         return None
 
-    transform = rasterio.transform.from_bounds(left, bottom, right, top, size, size)
-    hs = hillshade(data.filled(0), transform.a, transform.e)
+    safe_elevation = np.where(mask, 0.0, elevation)
+    hs = hillshade(safe_elevation, dst_transform.a, dst_transform.e)
 
     if BUFFER:
         hs = hs[BUFFER:-BUFFER, BUFFER:-BUFFER]
@@ -130,58 +146,61 @@ def main() -> None:
     with rasterio.open(mde) as src:
         if src.crs is None:
             raise RuntimeError("El MDE no tiene CRS")
+        if src.count != 1:
+            raise RuntimeError(f"Se esperaba 1 banda y el MDE tiene {src.count}")
+        if src.nodata != 32767:
+            raise RuntimeError(f"NoData inesperado: {src.nodata}; se esperaba 32767")
+        if src.crs.to_epsg() != 6365:
+            raise RuntimeError(f"EPSG inesperado: {src.crs.to_epsg()}; se esperaba 6365")
 
-        lonlat_bounds = transform_bounds(src.crs, "EPSG:4326", *src.bounds, densify_pts=21)
+        lonlat_bounds = transform_bounds(
+            src.crs,
+            "EPSG:4326",
+            *src.bounds,
+            densify_pts=21,
+        )
         west, south, east, north = lonlat_bounds
         west = max(-180.0, west)
         east = min(180.0, east)
         south = max(-85.05112878, south)
         north = min(85.05112878, north)
 
-        with WarpedVRT(
-            src,
-            crs=WEB_CRS,
-            resampling=Resampling.bilinear,
-            nodata=src.nodata,
-        ) as vrt:
-            for zoom in range(args.zoom_min, args.zoom_max + 1):
-                tiles = list(mercantile.tiles(west, south, east, north, [zoom]))
-                zoom_written = 0
-                zoom_empty = 0
-                print(f"\nZoom {zoom}: {len(tiles):,} tiles candidatos")
+        for zoom in range(args.zoom_min, args.zoom_max + 1):
+            tiles = list(mercantile.tiles(west, south, east, north, [zoom]))
+            zoom_written = 0
+            zoom_empty = 0
+            print(f"\nZoom {zoom}: {len(tiles):,} tiles candidatos")
 
-                for index, tile in enumerate(tiles, 1):
-                    total_tiles += 1
-                    destino = salida / str(tile.z) / str(tile.x) / f"{tile.y}.png"
+            for index, tile in enumerate(tiles, 1):
+                total_tiles += 1
+                destino = salida / str(tile.z) / str(tile.x) / f"{tile.y}.png"
 
-                    if destino.is_file() and not args.recrear:
-                        omitidos_existentes += 1
-                        total_bytes += destino.stat().st_size
-                        continue
-
-                    image = render_tile(vrt, tile)
-                    if image is None:
-                        vacios += 1
-                        zoom_empty += 1
-                        continue
-
-                    destino.parent.mkdir(parents=True, exist_ok=True)
-                    image.save(destino, format="PNG", optimize=True, compress_level=9)
-                    escritos += 1
-                    zoom_written += 1
+                if destino.is_file() and not args.recrear:
+                    omitidos_existentes += 1
                     total_bytes += destino.stat().st_size
+                    continue
 
-                    if index % 250 == 0 or index == len(tiles):
-                        print(f"  {index:,}/{len(tiles):,}", end="\r")
+                image = render_tile(src, tile)
+                if image is None:
+                    vacios += 1
+                    zoom_empty += 1
+                    continue
 
-                print(
-                    f"  escritos={zoom_written:,} | vacíos={zoom_empty:,}"
-                )
-                por_zoom[str(zoom)] = {
-                    "candidatos": len(tiles),
-                    "escritos": zoom_written,
-                    "vacios": zoom_empty,
-                }
+                destino.parent.mkdir(parents=True, exist_ok=True)
+                image.save(destino, format="PNG", optimize=True, compress_level=9)
+                escritos += 1
+                zoom_written += 1
+                total_bytes += destino.stat().st_size
+
+                if index % 250 == 0 or index == len(tiles):
+                    print(f"  {index:,}/{len(tiles):,}", end="\r")
+
+            print(f"  escritos={zoom_written:,} | vacíos={zoom_empty:,}")
+            por_zoom[str(zoom)] = {
+                "candidatos": len(tiles),
+                "escritos": zoom_written,
+                "vacios": zoom_empty,
+            }
 
     manifest = {
         "capa": "relieve_mde_inegi",
@@ -190,6 +209,8 @@ def main() -> None:
         "zoom_min": args.zoom_min,
         "zoom_max": args.zoom_max,
         "tile_size": TILE_SIZE,
+        "crs_fuente_esperado": "EPSG:6365",
+        "nodata_fuente_esperado": 32767,
         "crs_tiles": WEB_CRS,
         "azimuth_deg": 315,
         "altitude_deg": 45,
@@ -204,7 +225,8 @@ def main() -> None:
     }
     manifest_path = salida / "manifest.json"
     manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
     )
 
     print("\n=== RELIEVE MDE GENERADO ===")
