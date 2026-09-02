@@ -10,13 +10,8 @@ const DEFAULT_VIEW = { center: [23.6345, -102.5528], zoom: 5 };
 const ICON_COLOR = "#0B4F4A";
 const ICON_SIZE = 18;
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-const MDE_TILE_URL = `${API_URL}/api/recursos/relieve-mde/tiles/{z}/{x}/{y}.png`;
-const MDE_PANE = "mdeReliefPane";
-const MDE_APPEARANCE = {
-  esri: { opacity: 0.72, filter: "contrast(2.15) brightness(1.12)", blendMode: "soft-light" },
-  osm: { opacity: 0.92, filter: "contrast(2.45) brightness(1.10)", blendMode: "multiply" },
-  topo: { opacity: 0.84, filter: "contrast(2.30) brightness(1.10)", blendMode: "multiply" },
-};
+const MDE_TILE_URL = `${API_URL}/api/recursos/elevacion-mde/tiles/{z}/{x}/{y}.png`;
+const MDE_PANE = "mdeElevationPane";
 
 function normalize(value, width) {
   if (value === undefined || value === null || value === "") return "";
@@ -151,34 +146,17 @@ export default function MapControls({
   }, [map]);
 
   useEffect(() => {
-    const appearance = MDE_APPEARANCE[baseLayerId] || MDE_APPEARANCE.osm;
-    const pane = map.getPane(MDE_PANE);
-    if (pane) {
-      pane.style.filter = appearance.filter;
-      pane.style.mixBlendMode = appearance.blendMode;
-    }
-    mdeLayerRef.current?.setOpacity(appearance.opacity);
-  }, [map, baseLayerId]);
-
-  useEffect(() => {
-    const onRelieveMdeChange = (event) => {
+    const onElevacionMdeChange = (event) => {
       const active = Boolean(event.detail?.active);
 
       if (active && !mdeLayerRef.current) {
-        const appearance = MDE_APPEARANCE[baseLayerId] || MDE_APPEARANCE.osm;
-        const pane = map.getPane(MDE_PANE);
-        if (pane) {
-          pane.style.filter = appearance.filter;
-          pane.style.mixBlendMode = appearance.blendMode;
-        }
-
         mdeLayerRef.current = L.tileLayer(MDE_TILE_URL, {
           minZoom: 4,
           maxNativeZoom: 10,
           maxZoom: 18,
-          opacity: appearance.opacity,
+          opacity: 0.68,
           pane: MDE_PANE,
-          attribution: "Relieve derivado del MDE INEGI",
+          attribution: "Elevación derivada del MDE INEGI",
           updateWhenIdle: true,
           keepBuffer: 1,
         }).addTo(map);
@@ -191,15 +169,15 @@ export default function MapControls({
       }
     };
 
-    window.addEventListener("map:relieve-mde-change", onRelieveMdeChange);
+    window.addEventListener("map:elevacion-mde-change", onElevacionMdeChange);
     return () => {
-      window.removeEventListener("map:relieve-mde-change", onRelieveMdeChange);
+      window.removeEventListener("map:elevacion-mde-change", onElevacionMdeChange);
       if (mdeLayerRef.current) {
         map.removeLayer(mdeLayerRef.current);
         mdeLayerRef.current = null;
       }
     };
-  }, [map, baseLayerId]);
+  }, [map]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
