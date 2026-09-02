@@ -108,9 +108,18 @@
 }
 
 .mapFeatureTooltip .mapFeatureTooltipTitle{
+    display: block;
+    position: relative;
+    padding-left: 16px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.mapFeatureTooltip .mapFeatureTooltipTitle span{
+    position: absolute;
+    left: 0;
+    top: 4px;
 }
 
 .mapFeaturePopup-firms,
@@ -120,7 +129,6 @@
 }
 .mapFeaturePopup-firms::before{ border-top-color: #F59E0B; }
 .mapFeaturePopup-firms .mapFeatureTooltipTitle span{ background: #F59E0B; }
-.mapFeaturePopup-firms dt{ color: #B45309; }
 
 .mapFeaturePopup-conafor,
 .mapFeaturePopup-conafor .leaflet-popup-content-wrapper,
@@ -129,7 +137,6 @@
 }
 .mapFeaturePopup-conafor::before{ border-top-color: #DC2626; }
 .mapFeaturePopup-conafor .mapFeatureTooltipTitle span{ background: #DC2626; }
-.mapFeaturePopup-conafor dt{ color: #B91C1C; }
 
 .mapFeaturePopup-smn,
 .mapFeaturePopup-smn .leaflet-popup-content-wrapper,
@@ -138,7 +145,6 @@
 }
 .mapFeaturePopup-smn::before{ border-top-color: #14B8A6; }
 .mapFeaturePopup-smn .mapFeatureTooltipTitle span{ background: #14B8A6; }
-.mapFeaturePopup-smn dt{ color: #0F766E; }
 
 .mapFeaturePopup-ml,
 .mapFeaturePopup-ml .leaflet-popup-content-wrapper,
@@ -147,7 +153,6 @@
 }
 .mapFeaturePopup-ml::before{ border-top-color: #7C3AED; }
 .mapFeaturePopup-ml .mapFeatureTooltipTitle span{ background: #7C3AED; }
-.mapFeaturePopup-ml dt{ color: #6D28D9; }
 
 .mapFeaturePopup-fisiografia,
 .mapFeaturePopup-fisiografia .leaflet-popup-content-wrapper,
@@ -156,7 +161,6 @@
 }
 .mapFeaturePopup-fisiografia::before{ border-top-color: #8B5CF6; }
 .mapFeaturePopup-fisiografia .mapFeatureTooltipTitle span{ background: #8B5CF6; }
-.mapFeaturePopup-fisiografia dt{ color: #6D28D9; }
 
 .mapFeaturePopup-edafologia,
 .mapFeaturePopup-edafologia .leaflet-popup-content-wrapper,
@@ -165,7 +169,6 @@
 }
 .mapFeaturePopup-edafologia::before{ border-top-color: #A67C52; }
 .mapFeaturePopup-edafologia .mapFeatureTooltipTitle span{ background: #A67C52; }
-.mapFeaturePopup-edafologia dt{ color: #7C5A3A; }
 
 .mapFeaturePopup-uso-suelo,
 .mapFeaturePopup-uso-suelo .leaflet-popup-content-wrapper,
@@ -174,7 +177,6 @@
 }
 .mapFeaturePopup-uso-suelo::before{ border-top-color: #22C55E; }
 .mapFeaturePopup-uso-suelo .mapFeatureTooltipTitle span{ background: #22C55E; }
-.mapFeaturePopup-uso-suelo dt{ color: #15803D; }
 
 .mapFeaturePopup-hidrografia,
 .mapFeaturePopup-hidrografia .leaflet-popup-content-wrapper,
@@ -183,7 +185,6 @@
 }
 .mapFeaturePopup-hidrografia::before{ border-top-color: #0284C7; }
 .mapFeaturePopup-hidrografia .mapFeatureTooltipTitle span{ background: #0284C7; }
-.mapFeaturePopup-hidrografia dt{ color: #0369A1; }
 .mapFeaturePopup-hidrografia .leaflet-popup-close-button{ color: #0369A1; }
 .mapFeaturePopup-hidrografia .leaflet-popup-close-button:hover,
 .mapFeaturePopup-hidrografia .leaflet-popup-close-button:focus{
@@ -198,7 +199,6 @@
 }
 .mapFeaturePopup-limites::before{ border-top-color: #64748B; }
 .mapFeaturePopup-limites .mapFeatureTooltipTitle span{ background: #64748B; }
-.mapFeaturePopup-limites dt{ color: #475569; }
 
 .mapFeaturePopup dl,
 .mapFeatureTooltip dl{
@@ -252,6 +252,16 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
+.mapFeaturePopup-firms dt{ color: #B45309; }
+.mapFeaturePopup-conafor dt{ color: #B91C1C; }
+.mapFeaturePopup-smn dt{ color: #0F766E; }
+.mapFeaturePopup-ml dt{ color: #6D28D9; }
+.mapFeaturePopup-fisiografia dt{ color: #6D28D9; }
+.mapFeaturePopup-edafologia dt{ color: #7C5A3A; }
+.mapFeaturePopup-uso-suelo dt{ color: #15803D; }
+.mapFeaturePopup-hidrografia dt{ color: #0369A1; }
+.mapFeaturePopup-limites dt{ color: #475569; }
 
 .conaforFireIcon{
     background: transparent;
