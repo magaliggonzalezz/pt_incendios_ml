@@ -2,9 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import "./MapLegend.css";
 
+function sentenceCaseLegendLabel(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return "";
+
+  const letters = text.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g, "");
+  if (!letters || letters !== letters.toLocaleUpperCase("es-MX")) return text;
+
+  const lower = text.toLocaleLowerCase("es-MX");
+  return lower.charAt(0).toLocaleUpperCase("es-MX") + lower.slice(1);
+}
+
 function CategoryLegend({ title, data }) {
   const items = data?.items || [];
-  const total = Number(data?.total || 0);
   if (!items.length) return null;
   return (
     <div className="thematicCategoryBlock">
@@ -13,11 +23,10 @@ function CategoryLegend({ title, data }) {
         {items.map((item) => (
           <div className="thematicCategoryItem" key={`${title}-${item.label}`}>
             <span className="thematicSwatch" style={{ "--category-color": item.color }} aria-hidden="true" />
-            <span>{item.label}</span>
+            <span>{sentenceCaseLegendLabel(item.label)}</span>
           </div>
         ))}
       </div>
-      {total > items.length ? <small>+ {total - items.length} categorías adicionales visibles</small> : null}
     </div>
   );
 }
