@@ -215,28 +215,34 @@ function categoryColor(value, palette) {
 }
 
 function thematicOutline(baseLayerId) {
-  return baseLayerId === "esri" ? "rgba(255,255,255,.72)" : "rgba(15,23,42,.66)";
+  return baseLayerId === "esri" ? "rgba(255,255,255,.88)" : "rgba(15,23,42,.72)";
+}
+
+function thematicFillOpacity(baseLayerId, kind) {
+  if (baseLayerId === "esri") return kind === "soil" ? 0.52 : 0.56;
+  if (baseLayerId === "topo") return kind === "soil" ? 0.50 : 0.54;
+  return kind === "soil" ? 0.46 : 0.50;
 }
 
 function physiographyStyle(feature, baseLayerId) {
   const props = feature?.properties || {};
   const value = firstProp(props, ["fisiografia_nombre", "fisiografia_clave", "provincia", "PROVINCIA"]);
   const fillColor = categoryColor(value, PHYSIOGRAPHY_COLORS);
-  return { color: thematicOutline(baseLayerId), weight: 0.9, fillColor, fillOpacity: baseLayerId === "esri" ? 0.34 : 0.42, opacity: 0.9 };
+  return { color: thematicOutline(baseLayerId), weight: 1, fillColor, fillOpacity: thematicFillOpacity(baseLayerId, "physiography"), opacity: 0.94 };
 }
 
 function soilStyle(feature, baseLayerId) {
   const props = feature?.properties || {};
   const value = firstProp(props, ["grupo1_nombre", "grupo1", "GRUPO1", "clave_wrb", "CLAVE_WRB"]);
   const fillColor = categoryColor(value, SOIL_COLORS);
-  return { color: thematicOutline(baseLayerId), weight: 0.65, fillColor, fillOpacity: baseLayerId === "esri" ? 0.28 : 0.38, opacity: 0.82 };
+  return { color: thematicOutline(baseLayerId), weight: 0.8, fillColor, fillOpacity: thematicFillOpacity(baseLayerId, "soil"), opacity: 0.9 };
 }
 
 function landUseStyle(feature, baseLayerId) {
   const props = feature?.properties || {};
   const value = firstProp(props, ["usv_descripcion", "usv_clave", "descripcion", "DESCRIPCION"]);
   const fillColor = categoryColor(value, LAND_USE_COLORS);
-  return { color: thematicOutline(baseLayerId), weight: 0.55, fillColor, fillOpacity: baseLayerId === "esri" ? 0.3 : 0.4, opacity: 0.8 };
+  return { color: thematicOutline(baseLayerId), weight: 0.75, fillColor, fillOpacity: thematicFillOpacity(baseLayerId, "landUse"), opacity: 0.9 };
 }
 
 function hydrologyStyle(feature) {
@@ -245,7 +251,7 @@ function hydrologyStyle(feature) {
   return { color: "#0284C7", weight: 0.75 + normalized * 0.18, opacity: 0.82 };
 }
 
-function legendItems(features, getter, palette, limit = 8) {
+function legendItems(features, getter, palette) {
   const seen = new Map();
   for (const feature of features || []) {
     const value = getter(feature?.properties || {});
@@ -254,7 +260,7 @@ function legendItems(features, getter, palette, limit = 8) {
     if (!seen.has(key)) seen.set(key, { label: key, color: categoryColor(key, palette) });
   }
   const all = [...seen.values()].sort((a, b) => a.label.localeCompare(b.label, "es-MX"));
-  return { items: all.slice(0, limit), total: all.length };
+  return { items: all, total: all.length };
 }
 
 function firmsConfidenceCategory(props) {
@@ -825,7 +831,7 @@ export default function MapView({
         <SyncTerritoryView geojson={territorioSeleccionadoGeojson} hasTerritory={Boolean(cveEntCapas || cvegeoSeleccionado)} fitKey={fitKey} />
         <MapResizeInvalidator watchKey={`${leftPanelOpen}-${rightPanelOpen}-${baseLayerId}`} />
         <MapPopupCloser />
-        <MapControls defaultView={DEFAULT_VIEW} baseLayerId={baseLayerId} onChangeLayer={setBaseLayerId} layers={BASE_LAYERS} consultaActiva={consultaActiva} onConsultaChange={onConsultaChange} onConsultar={onConsultar} rightPanelOpen={rightPanelOpen} />
+        <MapControls defaultView={DEFAULT_VIEW} baseLayerId={baseLayerId} onChangeLayer={setBaseLayerId} layers={BASE_LAYERS} estadosGeojson={estadosGeojson} rightPanelOpen={rightPanelOpen} />
       </MapContainer>
 
       {geometryError ? <div className="mapGeometryError">No fue posible cargar la geometría: {geometryError}</div> : null}
