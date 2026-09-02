@@ -71,10 +71,10 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
   }, [consultaActiva?.filtrosSmn?.alcance, smnPeriodAvailable, onConsultaChange]);
 
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent("map:relieve-mde-change", {
-      detail: { active: Boolean(consultaActiva?.capasActivas?.relieveMdeInegi) },
+    window.dispatchEvent(new CustomEvent("map:elevacion-mde-change", {
+      detail: { active: Boolean(consultaActiva?.capasActivas?.elevacionMdeInegi) },
     }));
-  }, [consultaActiva?.capasActivas?.relieveMdeInegi]);
+  }, [consultaActiva?.capasActivas?.elevacionMdeInegi]);
 
   const isDirty = useMemo(() => {
     const currentLayers = consultaActiva?.capasActivas ?? {};
