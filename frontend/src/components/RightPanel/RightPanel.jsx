@@ -31,8 +31,12 @@ function buildTerritorioLabel(consulta, resumen) {
   const estado = consulta?.estado || resumen?.estado || "";
   const municipio = consulta?.municipio || resumen?.municipio || "";
   const nivel = consulta?.nivelAgregacion || resumen?.nivelAgregacion;
-  if (nivel === "municipio" && municipio) return estado ? `${estado}, ${municipio}` : municipio;
-  return estado || resumen?.territorio || "México";
+
+  if (nivel === "municipio" && municipio) {
+    return { primary: municipio, secondary: estado || "" };
+  }
+
+  return { primary: estado || resumen?.territorio || "México", secondary: "" };
 }
 
 function formatCoverage(coverage) {
@@ -152,7 +156,10 @@ export default function RightPanel({
         <div className="kpiCard">
           <div className="kpiHeader">
             <span className="kpiHeaderIcon" aria-hidden="true"><MapPin size={19} /></span>
-            <span className="kpiHeaderTerritory">{territorio}</span>
+            <div className="kpiHeaderTerritory">
+              <strong>{territorio.primary}</strong>
+              {territorio.secondary ? <span>{territorio.secondary}</span> : null}
+            </div>
           </div>
 
           <div className="kpiBody">
