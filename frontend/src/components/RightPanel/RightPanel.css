@@ -65,9 +65,11 @@
 
 .kpiHeader span:last-child{
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    text-align: center;
 }
 
 .kpiBody{
