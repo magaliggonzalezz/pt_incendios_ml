@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import L from "leaflet";
 import { useMap } from "react-leaflet";
 import { Search, ZoomIn, ZoomOut, Home, Layers, ScanSearch } from "lucide-react";
 import { GEO_CATALOG } from "../../data/geoCatalog";
+import { obtenerGeometriasMunicipios } from "../../services/geometrias.service";
 import "./MapControls.css";
 
 const DEFAULT_VIEW = { center: [23.6345, -102.5528], zoom: 5 };
@@ -11,6 +13,13 @@ const ICON_SIZE = 18;
 function normalize(value, width) {
   if (value === undefined || value === null || value === "") return "";
   return String(value).padStart(width, "0");
+}
+
+function featureCode(feature, level) {
+  const props = feature?.properties || {};
+  return level === "municipio"
+    ? normalize(props.cvegeo ?? props.CVEGEO, 5)
+    : normalize(props.cve_ent ?? props.CVE_ENT ?? props.cvegeo ?? props.CVEGEO, 2);
 }
 
 const PLACE_OPTIONS = (() => {
@@ -27,11 +36,6 @@ const PLACE_OPTIONS = (() => {
         label: row.NOM_ENT,
         type: "Estado",
         cveEnt,
-        estado: row.NOM_ENT,
-        municipio: "",
-        cveMun: "",
-        cvegeo: "",
-        nivelAgregacion: "entidad",
       });
     }
     if (cvegeo) {
@@ -40,17 +44,13 @@ const PLACE_OPTIONS = (() => {
         label: `${row.NOM_MUN}, ${row.NOM_ENT}`,
         type: "Municipio",
         cveEnt,
-        estado: row.NOM_ENT,
-        municipio: row.NOM_MUN,
-        cveMun,
         cvegeo,
-        nivelAgregacion: "municipio",
       });
     }
   });
 
   return [
-    { id: "mx", label: "México", type: "Vista nacional", nivelAgregacion: "entidad", cveEnt: "", estado: "", municipio: "", cveMun: "", cvegeo: "" },
+    { id: "mx", label: "México", type: "Vista nacional" },
     ...states.values(),
     ...municipalities,
   ];
@@ -61,12 +61,10 @@ export default function MapControls({
   baseLayerId,
   onChangeLayer,
   layers,
-  consultaActiva = null,
-  onConsultaChange,
+  estadosGeojson,
   rightPanelOpen = false,
 }) {
   const map = useMap();
-  const previousTerritoryRef = useRef(consultaActiva?.cveEnt || "");
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -80,47 +78,43 @@ export default function MapControls({
     ).slice(0, 8);
   }, [query]);
 
-  useEffect(() => {
-    const currentTerritory = consultaActiva?.cveEnt || "";
-    if (previousTerritoryRef.current && !currentTerritory) {
-      map?.setView(defaultView.center, defaultView.zoom, { animate: false });
-    }
-    previousTerritoryRef.current = currentTerritory;
-  }, [consultaActiva?.cveEnt, defaultView.center, defaultView.zoom, map]);
-
   const toggleSearch = () => {
     setSearchOpen((value) => !value);
     setLayersOpen(false);
     setBoxZoomHint(false);
   };
 
-  const goToPlace = (place) => {
-    if (place.id === "mx") map?.setView(defaultView.center, defaultView.zoom, { animate: false });
+  const fitGeojson = (geojson, maxZoom = 11) => {
+    if (!geojson?.features?.length) return false;
+    const bounds = L.geoJSON(geojson).getBounds();
+    if (!bounds.isValid()) return false;
+    map.fitBounds(bounds, { padding: [36, 36], maxZoom });
+    return true;
+  };
 
-    onConsultaChange?.("consultaPatch", {
-      nivelAgregacion: place.nivelAgregacion,
-      cveEnt: place.cveEnt,
-      estado: place.estado,
-      municipio: place.municipio,
-      cveMun: place.cveMun,
-      cvegeo: place.cvegeo,
-    });
+  const goToPlace = async (place) => {
+    if (place.id === "mx") {
+      map.setView(defaultView.center, defaultView.zoom, { animate: false });
+    } else if (place.type === "Estado") {
+      const feature = estadosGeojson?.features?.find((item) => featureCode(item, "entidad") === place.cveEnt);
+      if (feature) fitGeojson({ type: "FeatureCollection", features: [feature] }, 9);
+    } else if (place.type === "Municipio") {
+      try {
+        const municipios = await obtenerGeometriasMunicipios(place.cveEnt);
+        const feature = municipios?.features?.find((item) => featureCode(item, "municipio") === place.cvegeo);
+        if (feature) fitGeojson({ type: "FeatureCollection", features: [feature] }, 12);
+      } catch {
+        // La búsqueda cartográfica no modifica la consulta si la geometría no está disponible.
+      }
+    }
 
     setSearchOpen(false);
     setQuery("");
-    window.setTimeout(() => map?.invalidateSize(), 220);
+    window.setTimeout(() => map.invalidateSize(), 220);
   };
 
   const resetView = () => {
-    map?.setView(defaultView.center, defaultView.zoom, { animate: false });
-    onConsultaChange?.("consultaPatch", {
-      nivelAgregacion: consultaActiva?.nivelAgregacion || "entidad",
-      cveEnt: "",
-      estado: "",
-      municipio: "",
-      cveMun: "",
-      cvegeo: "",
-    });
+    map.setView(defaultView.center, defaultView.zoom, { animate: false });
   };
 
   const stop = (event) => event.stopPropagation();
@@ -148,10 +142,10 @@ export default function MapControls({
       <button className="ctl hasTooltip" data-tooltip="Buscar territorio" type="button" aria-label="Buscar territorio" aria-expanded={searchOpen} onClick={toggleSearch}>
         <Search size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-      <button className="ctl hasTooltip" data-tooltip="Acercar" type="button" aria-label="Acercar" onClick={() => map?.zoomIn()}>
+      <button className="ctl hasTooltip" data-tooltip="Acercar" type="button" aria-label="Acercar" onClick={() => map.zoomIn()}>
         <ZoomIn size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-      <button className="ctl hasTooltip" data-tooltip="Alejar" type="button" aria-label="Alejar" onClick={() => map?.zoomOut()}>
+      <button className="ctl hasTooltip" data-tooltip="Alejar" type="button" aria-label="Alejar" onClick={() => map.zoomOut()}>
         <ZoomOut size={ICON_SIZE} color={ICON_COLOR} />
       </button>
       <button className="ctl hasTooltip" data-tooltip="Vista nacional" type="button" aria-label="Restablecer vista nacional" onClick={resetView}>
