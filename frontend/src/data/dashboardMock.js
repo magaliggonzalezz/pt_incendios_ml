@@ -37,7 +37,11 @@ export const LAYER_GROUPS = [
     layers: [
       { id: "limitesEstatales", label: "Límites estatales" },
       { id: "limitesMunicipales", label: "Límites municipales" },
-      { id: "relieveMdeInegi", label: "Relieve / MDE INEGI", helper: "Relieve sombreado derivado del Modelo Digital de Elevación; representación web XYZ, zoom 4–10." },
+      {
+        id: "relieveMdeInegi",
+        label: "Relieve sombreado MDE INEGI",
+        helper: "Sombreado derivado del Modelo Digital de Elevación. Resalta formas y pendientes del terreno mediante luces y sombras; no representa altitud por color.",
+      },
       { id: "fisiografiaInegi", label: "Provincias fisiográficas INEGI" },
       { id: "edafologiaInegi", label: "Edafología INEGI" },
       { id: "usoSueloVegetacionInegi", label: "Uso de suelo y vegetación INEGI" },
