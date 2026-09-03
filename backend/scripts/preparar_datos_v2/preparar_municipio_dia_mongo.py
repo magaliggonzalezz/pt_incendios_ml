@@ -20,6 +20,28 @@ CAMPOS_CLUSTER = {
     "prioridad_visual_app",
 }
 
+CAMPOS_REDUNDANTES = {
+    "cve_ent",
+    "cve_mun",
+    "has_conafor",
+    "has_firms",
+    "has_smn",
+    "has_inegi_contexto",
+}
+
+CAMPOS_STORAGE = {
+    "conafor_event_count": "conafor_eventos",
+    "conafor_confirmed_fire": "conafor_confirmado",
+    "conafor_total_hectareas_sum": "conafor_ha",
+    "detecciones_firms": "firms_detecciones",
+    "frp_total": "firms_frp",
+    "smn_estaciones_obs": "smn_obs",
+    "precipitacion_mm": "precip_mm",
+    "temperatura_minima_c": "temp_min_c",
+    "temperatura_maxima_c": "temp_max_c",
+    "has_infys_contexto": "infys",
+}
+
 
 def normalizar_codigo(valor, ancho: int, campo: str) -> str:
     if valor is None:
@@ -64,14 +86,19 @@ def transformar_registro(registro: dict) -> dict:
     if cluster in (None, ""):
         raise ValueError("cluster_som_k07 no puede estar vacío")
 
-    salida["cve_ent"] = cve_ent
-    salida["cve_mun"] = cve_mun
+    for campo in CAMPOS_CATALOGO | CAMPOS_CLUSTER | CAMPOS_REDUNDANTES:
+        salida.pop(campo, None)
+
     salida["cvegeo"] = cvegeo
     salida["fecha"] = fecha
     salida["cluster"] = int(cluster)
 
-    for campo in CAMPOS_CATALOGO | CAMPOS_CLUSTER:
-        salida.pop(campo, None)
+    for origen, destino in CAMPOS_STORAGE.items():
+        if origen not in salida:
+            continue
+        if destino in salida:
+            raise ValueError(f"Colisión de campo de almacenamiento: {destino}")
+        salida[destino] = salida.pop(origen)
 
     return salida
 
