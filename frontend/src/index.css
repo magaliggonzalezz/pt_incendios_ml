@@ -49,9 +49,21 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+:where(
+  button,
+  a[href],
+  input,
+  select,
+  textarea,
+  [role="button"],
+  [role="option"],
+  [tabindex]:not([tabindex="-1"])
+):focus-visible,
+.leaflet-control a:focus-visible {
+  outline: 3px solid #FF6B00 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.30) !important;
 }
 
 @media (prefers-color-scheme: light) {
