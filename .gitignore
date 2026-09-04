@@ -80,3 +80,11 @@ data_v2_mongo_ready/
 
 # Versiones generadas para despliegue / object storage
 data_deploy/
+
+# Scripts locales
+backend/scripts/
+scripts/
+
+# Reportes locales generados
+reporte_auditoria_datasets_externos.json
+reporte_layers.json
