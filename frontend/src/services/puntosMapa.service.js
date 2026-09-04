@@ -37,7 +37,8 @@ function territoryKey(params = {}) {
 function expandPeriodParams(params = {}) {
   const base = normalizePointParams(params);
 
-  if (periodScope.tipoPeriodo === "fecha" && periodScope.fechaInicio) {
+  if (periodScope.tipoPeriodo === "fecha") {
+    if (!periodScope.fechaInicio) return [];
     return [{
       ...base,
       anio: periodScope.fechaInicio.slice(0, 4),
@@ -47,10 +48,11 @@ function expandPeriodParams(params = {}) {
     }];
   }
 
-  if (periodScope.tipoPeriodo === "rango_fechas" && periodScope.fechaInicio && periodScope.fechaFin) {
+  if (periodScope.tipoPeriodo === "rango_fechas") {
+    if (!periodScope.fechaInicio || !periodScope.fechaFin || periodScope.fechaInicio > periodScope.fechaFin) return [];
     const startYear = Number(periodScope.fechaInicio.slice(0, 4));
     const endYear = Number(periodScope.fechaFin.slice(0, 4));
-    if (!Number.isInteger(startYear) || !Number.isInteger(endYear) || endYear < startYear) return [base];
+    if (!Number.isInteger(startYear) || !Number.isInteger(endYear) || endYear < startYear) return [];
 
     return Array.from({ length: endYear - startYear + 1 }, (_, index) => {
       const year = startYear + index;
@@ -82,6 +84,8 @@ function mergeCollections(collections = []) {
 
 async function obtenerPuntos(endpointBase, queuePrefix, params = {}, options = {}) {
   const requests = expandPeriodParams(params);
+  if (!requests.length) return { type: "FeatureCollection", features: [], metadata: { registros: 0 } };
+
   const collections = await Promise.all(requests.map((normalized) => {
     const query = buildQuery(normalized);
     const endpoint = `${endpointBase}${query ? `?${query}` : ""}`;
