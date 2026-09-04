@@ -10,12 +10,22 @@ function buildQuery(params = {}) {
   return query.toString();
 }
 
+export function obtenerResultadosEstadoDia(fecha) {
+  return apiFetch(`/api/resultados/estado/dia?${buildQuery({ fecha })}`);
+}
+
 export function obtenerResultadosEstadoAnio(anio) {
   return apiFetch(`/api/resultados/estado/anio?${buildQuery({ anio })}`);
 }
 
 export function obtenerResultadosEstadoMes(anio, mes) {
   return apiFetch(`/api/resultados/estado/mes?${buildQuery({ anio, mes })}`);
+}
+
+export function obtenerResultadosMunicipioDia({ fecha, cvegeo }) {
+  return apiFetch(
+    `/api/resultados/municipio/dia?${buildQuery({ fecha, cvegeo })}`
+  );
 }
 
 export function obtenerResultadosMunicipioAnio({ anio, cveEnt, cvegeo }) {
