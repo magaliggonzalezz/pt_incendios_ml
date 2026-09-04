@@ -28,6 +28,46 @@
     cursor: not-allowed;
 }
 
+.cmFocusControl{
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,.06);
+}
+
+.cmFocusHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmFocusHeader strong{
+    color: #101828;
+}
+
+.cmFocusHeader span,
+.cmFocusControl small{
+    color: #667085;
+}
+
+.cmFocusSliders{
+    position: relative;
+    display: grid;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.cmFocusSliders input[type="range"]{
+    width: 100%;
+    accent-color: #0F766E;
+    cursor: pointer;
+}
+
 .cmPagination{
     display: flex;
     align-items: center;
@@ -61,5 +101,11 @@
 
     .cmPagination{
         justify-content: space-between;
+    }
+
+    .cmFocusHeader{
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
     }
 }
