@@ -29,7 +29,11 @@
 }
 
 .ctl:active{ transform: translateY(1px); }
-.ctl:focus-visible{ outline: 3px solid rgba(11,79,74,.25); outline-offset: 2px; }
+.ctl:focus-visible{
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28), 0 10px 15px -3px rgba(0,0,0,.10), 0 4px 6px -4px rgba(0,0,0,.10);
+}
 
 .hasTooltip::after{
     content: attr(data-tooltip);
@@ -80,9 +84,12 @@
     font: inherit;
 }
 
-.searchInput:focus{
-    border-color: rgba(11,79,74,.55);
-    box-shadow: 0 0 0 3px rgba(11,79,74,.10);
+.searchInput:focus{ border-color: rgba(11,79,74,.25); box-shadow:none; }
+.searchInput:focus-visible{
+    border-color:#FF6B00;
+    outline:3px solid #FF6B00;
+    outline-offset:2px;
+    box-shadow:0 0 0 2px rgba(255,255,255,.94),0 0 0 5px rgba(255,107,0,.28);
 }
 
 .searchList{
@@ -106,10 +113,11 @@
     gap: 2px;
 }
 
-.searchItem:hover,
+.searchItem:hover{ background: rgba(11,79,74,.08); }
 .searchItem:focus-visible{
-    background: rgba(11,79,74,.08);
-    outline: none;
+    background:#FFF7ED;
+    outline:3px solid #FF6B00;
+    outline-offset:-1px;
 }
 
 .searchItemTitle{
@@ -161,6 +169,7 @@
 }
 
 .layersItem:hover{ background: rgba(11,79,74,.08); }
+.layersItem:focus-visible{ outline:3px solid #FF6B00; outline-offset:-2px; background:#FFF7ED; }
 .layersItem.isActive{ background: rgba(11,79,74,.12); font-weight: 700; }
 
 @media (max-width: 1024px){
