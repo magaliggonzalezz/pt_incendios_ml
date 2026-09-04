@@ -7,6 +7,10 @@ export class ResultadosEstadoService {
     return await repository.obtenerDia(fecha);
   }
 
+  async obtenerRango(filtros) {
+    return await repository.obtenerRango(filtros);
+  }
+
   async obtenerMes(anio, mes) {
     return await repository.obtenerMes(anio, mes);
   }
