@@ -9,9 +9,11 @@ import { buildRealDashboardResults } from "../data/dashboardRealData";
 import { obtenerClusters, obtenerEstados, obtenerMunicipios } from "../services/catalogos.service";
 import {
   obtenerResultadosEstadoDia,
+  obtenerResultadosEstadoRango,
   obtenerResultadosEstadoAnio,
   obtenerResultadosEstadoMes,
   obtenerResultadosMunicipioDia,
+  obtenerResultadosMunicipioRango,
   obtenerResultadosMunicipioAnio,
   obtenerResultadosMunicipioMes,
 } from "../services/resultados.service";
@@ -43,6 +45,11 @@ function isConsultaCompleta(consulta) {
   if (consulta.tipoPeriodo === "anio_mes") return Boolean(consulta.anio && consulta.mes);
   if (consulta.tipoPeriodo === "fecha") {
     if (!consulta.fechaInicio) return false;
+    if (consulta.nivelAgregacion === "municipio") return Boolean(consulta.cvegeo);
+    return true;
+  }
+  if (consulta.tipoPeriodo === "rango_fechas") {
+    if (!consulta.fechaInicio || !consulta.fechaFin || consulta.fechaInicio > consulta.fechaFin) return false;
     if (consulta.nivelAgregacion === "municipio") return Boolean(consulta.cvegeo);
     return true;
   }
@@ -202,11 +209,24 @@ export default function DashboardPage() {
       return rows;
     }
 
-    const row = await obtenerResultadosMunicipioDia({
-      fecha: consulta.fechaInicio,
+    const row = await obtenerResultadosMunicipioDia({ fecha: consulta.fechaInicio, cvegeo: consulta.cvegeo });
+    return row ? [row] : [];
+  };
+
+  const fetchRangeRows = async (consulta) => {
+    if (consulta.nivelAgregacion === "entidad") {
+      return obtenerResultadosEstadoRango({
+        fechaInicio: consulta.fechaInicio,
+        fechaFin: consulta.fechaFin,
+        cveEnt: consulta.cveEnt,
+      });
+    }
+
+    return obtenerResultadosMunicipioRango({
+      fechaInicio: consulta.fechaInicio,
+      fechaFin: consulta.fechaFin,
       cvegeo: consulta.cvegeo,
     });
-    return row ? [row] : [];
   };
 
   const handleConsultar = async (consultaOverride = null) => {
@@ -223,6 +243,8 @@ export default function DashboardPage() {
 
       if (consulta.tipoPeriodo === "fecha") {
         rows = await fetchDailyRows(consulta);
+      } else if (consulta.tipoPeriodo === "rango_fechas") {
+        rows = await fetchRangeRows(consulta);
       } else if (consulta.tipoPeriodo === "comparar_anios") {
         const [rowsA, rowsB] = await Promise.all([
           fetchAnnualRows(consulta, consulta.anioInicio),
