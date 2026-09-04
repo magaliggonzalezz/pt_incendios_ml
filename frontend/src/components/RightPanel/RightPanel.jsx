@@ -162,7 +162,7 @@ export default function RightPanel({
             </div>
           </div>
 
-          <div className="kpiBody">
+          <div className="kpiBody" tabIndex={-1}>
             <div className="metaGrid">
               <div className="metaBox">
                 <span className="metaIcon" aria-hidden="true"><CalendarDays size={17} /></span>
