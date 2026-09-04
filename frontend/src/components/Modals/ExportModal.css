@@ -36,14 +36,16 @@
     cursor: pointer;
 }
 
-.emCard:focus-visible{
-    outline: 3px solid rgba(0,120,111,.24);
-    outline-offset: 2px;
+.emCard:focus-visible,
+.emIconBtn:focus-visible{
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28);
 }
 
 .emCard.isActive{
-    border-color: rgba(0,120,111,0.65);
-    background: rgba(0,120,111,0.12);
+    border-color: rgba(255,107,0,.72);
+    background: #FFF7ED;
 }
 
 .emCardLeft{
@@ -59,8 +61,8 @@
     border-radius: var(--radius);
     display: grid;
     place-items: center;
-    color: #00786F;
-    opacity: 0.95;
+    color: #C2410C;
+    opacity: 0.98;
     flex: 0 0 auto;
 }
 
@@ -115,12 +117,13 @@
 .emIconBtn.isEnabled{
     opacity: 1;
     cursor: pointer;
-    color: #00786F;
-    border-color: rgba(0,120,111,0.35);
+    color: #C2410C;
+    border-color: rgba(255,107,0,.42);
 }
 
 .emIconBtn.isEnabled:hover{
-    background: rgba(0,120,111,0.08);
+    background: #FFF7ED;
+    border-color: #FF6B00;
 }
 
 .emPreview{
