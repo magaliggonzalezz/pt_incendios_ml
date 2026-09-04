@@ -14,6 +14,17 @@ export class MongoResultadosMunicipioRepository {
       );
   }
 
+  async obtenerRango({ fechaInicio, fechaFin, cvegeo }) {
+    return await this.db
+      .collection("resultados_municipio_dia")
+      .find(
+        { cvegeo, fecha: { $gte: fechaInicio, $lte: fechaFin } },
+        { projection: { _id: 0 } },
+      )
+      .sort({ fecha: 1 })
+      .toArray();
+  }
+
   async obtenerMes({ anio, mes, cveEnt, cvegeo }) {
     const query = { anio, mes };
 
