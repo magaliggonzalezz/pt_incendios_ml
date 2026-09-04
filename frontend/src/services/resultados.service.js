@@ -14,6 +14,10 @@ export function obtenerResultadosEstadoDia(fecha) {
   return apiFetch(`/api/resultados/estado/dia?${buildQuery({ fecha })}`);
 }
 
+export function obtenerResultadosEstadoRango({ fechaInicio, fechaFin, cveEnt }) {
+  return apiFetch(`/api/resultados/estado/rango?${buildQuery({ fecha_inicio: fechaInicio, fecha_fin: fechaFin, cve_ent: cveEnt })}`);
+}
+
 export function obtenerResultadosEstadoAnio(anio) {
   return apiFetch(`/api/resultados/estado/anio?${buildQuery({ anio })}`);
 }
@@ -25,6 +29,12 @@ export function obtenerResultadosEstadoMes(anio, mes) {
 export function obtenerResultadosMunicipioDia({ fecha, cvegeo }) {
   return apiFetch(
     `/api/resultados/municipio/dia?${buildQuery({ fecha, cvegeo })}`
+  );
+}
+
+export function obtenerResultadosMunicipioRango({ fechaInicio, fechaFin, cvegeo }) {
+  return apiFetch(
+    `/api/resultados/municipio/rango?${buildQuery({ fecha_inicio: fechaInicio, fecha_fin: fechaFin, cvegeo })}`
   );
 }
 
