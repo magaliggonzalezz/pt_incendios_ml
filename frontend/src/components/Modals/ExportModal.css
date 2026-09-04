@@ -3,227 +3,30 @@
     max-height: calc(100dvh - 48px);
 }
 
-.emDialog .ms-body{
-    display: block;
-}
-
-.emSubtitle{
-    margin: 0 0 14px 0;
-    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    color: #4A5565;
-}
-
-.emList{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.emCard{
-    width: 100%;
-    text-align: left;
-    border-radius: var(--radius);
-    border: 1px solid #E5E7EB;
-    background: #FFFFFF;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    cursor: pointer;
-}
-
-.emCard:focus-visible,
-.emIconBtn:focus-visible{
-    outline: 3px solid #FF6B00;
-    outline-offset: 3px;
-    box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28);
-}
-
-.emCard.isActive{
-    border-color: rgba(255,107,0,.72);
-    background: #FFF7ED;
-}
-
-.emCardLeft{
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    min-width: 0;
-}
-
-.emLeftIcon{
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius);
-    display: grid;
-    place-items: center;
-    color: #C2410C;
-    opacity: 0.98;
-    flex: 0 0 auto;
-}
-
-.emText{
-    min-width: 0;
-}
-
-.emTitle{
-    margin: 0 0 4px 0;
-    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 17px;
-    color: #101828;
-}
-
-.emDesc{
-    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 18px;
-    color: #4A5565;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.emActions{
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-}
-
-.emIconBtn{
-    width: 34px;
-    height: 34px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(0,0,0,0.10);
-    background: #FFFFFF;
-    display: grid;
-    place-items: center;
-    padding: 0;
-}
-
-.emIconBtn.isDisabled{
-    opacity: 0.35;
-    cursor: not-allowed;
-}
-
-.emIconBtn.isEnabled{
-    opacity: 1;
-    cursor: pointer;
-    color: #C2410C;
-    border-color: rgba(255,107,0,.42);
-}
-
-.emIconBtn.isEnabled:hover{
-    background: #FFF7ED;
-    border-color: #FF6B00;
-}
-
-.emPreview{
-    margin-top: 14px;
-    border: 1px solid #E5E7EB;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: #FFFFFF;
-}
-
-.emPreviewTitle{
-    padding: 9px 11px;
-    border-bottom: 1px solid #E5E7EB;
-    font-size: 13px;
-    font-weight: 600;
-    color: #101828;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.emPreviewTitle span{
-    color: #667085;
-    font-size: 11px;
-    font-weight: 400;
-}
-
-.emPreviewTableWrap{
-    max-height: min(260px, calc(100dvh - 410px));
-    overflow: auto;
-}
-
-.emPreviewTable{
-    width: max-content;
-    min-width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    line-height: 16px;
-}
-
-.emPreviewTable th,
-.emPreviewTable td{
-    padding: 8px 10px;
-    border-bottom: 1px solid #EEF0F3;
-    text-align: left;
-    white-space: nowrap;
-}
-
-.emPreviewTable th{
-    background: #F8FAFC;
-    color: #4A5565;
-    font-weight: 600;
-}
-
-.emJsonPreview{
-    margin: 0;
-    padding: 10px 12px;
-    max-height: min(300px, calc(100dvh - 410px));
-    overflow: auto;
-    background: #0F172A;
-    color: #E2E8F0;
-    font: 12px/18px Consolas, "Courier New", monospace;
-    white-space: pre;
-}
-
-.emFooter{
-    font-family: Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 18px;
-    color: #4A5565;
-    opacity: 0.85;
-}
-
-@media (max-width: 760px){
-    .emCard{
-        align-items: flex-start;
-    }
-
-    .emDesc{
-        white-space: normal;
-    }
-
-    .emPreviewTitle{
-        display: block;
-    }
-
-    .emPreviewTitle span{
-        display: block;
-        margin-top: 3px;
-    }
-}
-
-@media (max-height: 720px){
-    .emList{
-        gap: 10px;
-    }
-
-    .emPreviewTableWrap,
-    .emJsonPreview{
-        max-height: 180px;
-    }
-}
+.emDialog .ms-body{ display: block; }
+.emSubtitle{ margin:0 0 14px; font-family:Arimo,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size:14px; line-height:20px; color:#4A5565; }
+.emList{ display:flex; flex-direction:column; gap:12px; }
+.emCard{ width:100%; text-align:left; border-radius:var(--radius); border:1px solid #E5E7EB; background:#FFF; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; }
+.emCard:focus-visible,.emIconBtn:focus-visible{ outline:3px solid #FF6B00; outline-offset:3px; box-shadow:0 0 0 2px rgba(255,255,255,.94),0 0 0 5px rgba(255,107,0,.28); }
+.emCard.isActive{ border-color:rgba(0,120,111,.65); background:rgba(0,120,111,.12); }
+.emCardLeft{ display:flex; align-items:flex-start; gap:10px; min-width:0; }
+.emLeftIcon{ width:30px; height:30px; border-radius:var(--radius); display:grid; place-items:center; color:#00786F; opacity:.95; flex:0 0 auto; }
+.emText{ min-width:0; }
+.emTitle{ margin:0 0 4px; font-family:Arimo,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size:14px; font-weight:600; line-height:17px; color:#101828; }
+.emDesc{ font-family:Arimo,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size:13px; line-height:18px; color:#4A5565; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.emActions{ display:inline-flex; align-items:center; gap:6px; flex-shrink:0; }
+.emIconBtn{ width:34px; height:34px; border-radius:var(--radius); border:1px solid rgba(0,0,0,.10); background:#FFF; display:grid; place-items:center; padding:0; }
+.emIconBtn.isDisabled{ opacity:.35; cursor:not-allowed; }
+.emIconBtn.isEnabled{ opacity:1; cursor:pointer; color:#00786F; border-color:rgba(0,120,111,.35); }
+.emIconBtn.isEnabled:hover{ background:rgba(0,120,111,.08); }
+.emPreview{ margin-top:14px; border:1px solid #E5E7EB; border-radius:var(--radius); overflow:hidden; background:#FFF; }
+.emPreviewTitle{ padding:9px 11px; border-bottom:1px solid #E5E7EB; font-size:13px; font-weight:600; color:#101828; display:flex; justify-content:space-between; gap:12px; }
+.emPreviewTitle span{ color:#667085; font-size:11px; font-weight:400; }
+.emPreviewTableWrap{ max-height:min(260px,calc(100dvh - 410px)); overflow:auto; }
+.emPreviewTable{ width:max-content; min-width:100%; border-collapse:collapse; font-size:12px; line-height:16px; }
+.emPreviewTable th,.emPreviewTable td{ padding:8px 10px; border-bottom:1px solid #EEF0F3; text-align:left; white-space:nowrap; }
+.emPreviewTable th{ background:#F8FAFC; color:#4A5565; font-weight:600; }
+.emJsonPreview{ margin:0; padding:10px 12px; max-height:min(300px,calc(100dvh - 410px)); overflow:auto; background:#0F172A; color:#E2E8F0; font:12px/18px Consolas,"Courier New",monospace; white-space:pre; }
+.emFooter{ font-family:Arimo,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size:12px; line-height:18px; color:#4A5565; opacity:.85; }
+@media (max-width:760px){ .emCard{align-items:flex-start}.emDesc{white-space:normal}.emPreviewTitle{display:block}.emPreviewTitle span{display:block;margin-top:3px} }
+@media (max-height:720px){ .emList{gap:10px}.emPreviewTableWrap,.emJsonPreview{max-height:180px} }
