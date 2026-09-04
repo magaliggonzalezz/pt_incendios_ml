@@ -52,6 +52,23 @@ function isConsultaCompleta(consulta) {
   return false;
 }
 
+function buildExportFilename(consulta, format, selectedMlCluster) {
+  const nivel = consulta?.nivelAgregacion === "municipio" ? "municipal" : "estatal";
+  const territorio = consulta?.nivelAgregacion === "municipio"
+    ? (consulta?.cvegeo || "seleccion")
+    : (consulta?.cveEnt || "mexico");
+
+  let periodo = "periodo";
+  if (consulta?.tipoPeriodo === "anio") periodo = String(consulta.anio || "anio");
+  else if (consulta?.tipoPeriodo === "anio_mes") periodo = `${consulta.anio || "anio"}-${String(consulta.mes || "mes").padStart(2, "0")}`;
+  else if (consulta?.tipoPeriodo === "fecha") periodo = String(consulta.fechaInicio || "fecha");
+  else if (consulta?.tipoPeriodo === "comparar_anios") periodo = `${consulta.anioInicio || "a"}-vs-${consulta.anioFin || "b"}`;
+  else if (consulta?.tipoPeriodo === "rango_fechas") periodo = `${consulta.fechaInicio || "inicio"}_a_${consulta.fechaFin || "fin"}`;
+
+  const cluster = selectedMlCluster ? `_cluster_${selectedMlCluster}` : "";
+  return `resultado_ml_${nivel}_${territorio}_${periodo}${cluster}.${format}`;
+}
+
 const getConsultaInicial = () => ({
   ...CONSULTA_INICIAL,
   capasActivas: { ...CONSULTA_INICIAL.capasActivas },
@@ -245,10 +262,6 @@ export default function DashboardPage() {
     }
   };
 
-  const handlePreviewExport = ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
-    console.log("preview export", { format, consulta, resumen, selectedMlCluster });
-  };
-
   const handleDownloadExport = ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
     const rows = resumen?.exportRows ?? [];
     const clusterFilteredRows = selectedMlCluster
@@ -272,17 +285,22 @@ export default function DashboardPage() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `resultado_ml_${consulta?.nivelAgregacion || "entidad"}_${selectedMlCluster ? `cluster_${selectedMlCluster}` : "todos"}.${format}`;
+    anchor.download = buildExportFilename(consulta, format, selectedMlCluster);
     anchor.click();
     URL.revokeObjectURL(url);
   };
+
+  const mlLayerId = ultimaConsultaEjecutada?.nivelAgregacion === "municipio"
+    ? "resultadoMlMunicipioDia"
+    : "resultadoMlEntidadDia";
+  const resumenMapa = consultaActiva?.capasActivas?.[mlLayerId] ? resumenConsulta : null;
 
   return (
     <div className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
       <MapView
         consultaActiva={consultaActiva}
         consultaEjecutada={ultimaConsultaEjecutada}
-        resumenConsulta={resumenConsulta}
+        resumenConsulta={resumenMapa}
         onConsultaChange={handleConsultaChange}
         onConsultar={handleConsultar}
         onLayerSummaryChange={setLayerSummary}
@@ -317,7 +335,6 @@ export default function DashboardPage() {
         isExporting={false}
         isLoading={isLoading}
         error={error}
-        onPreviewExport={handlePreviewExport}
         onDownloadExport={handleDownloadExport}
         selectedMlCluster={selectedMlCluster}
         onSelectedMlClusterChange={setSelectedMlCluster}
