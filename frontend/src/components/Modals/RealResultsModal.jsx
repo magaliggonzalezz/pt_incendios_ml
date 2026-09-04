@@ -60,8 +60,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
   ) : null;
 
   return (
-    <ModalShell open={open} onClose={onClose} title="Resultados ML" width={1040} footer={footer} allowOverlayClose>
-      <div className="cmSub">Datos reales obtenidos desde la API v2 para la consulta activa.</div>
+    <ModalShell open={open} onClose={onClose} title="Resultados ML" width={1040} footer={footer} allowOverlayClose className="cmResultsDialog">
       <div className="cmTabs" role="tablist" aria-label="Resultados ML">
         {TABS.map((item) => {
           const Icon = item.icon;
@@ -116,7 +115,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
 
       {tab === "data" ? (
         <div className="cmDataPanel">
-          <div><div className="cmPanelTitle">Datos de la consulta</div><p className="cmDataSubtitle">Mostrando hasta 50 filas reales devueltas por la API v2.</p></div>
+          <div><div className="cmPanelTitle">Datos de la consulta</div><p className="cmDataSubtitle">Mostrando hasta 50 filas devueltas para la consulta ejecutada.</p></div>
           <div className="cmTableWrap isPreview"><table className="cmTable"><thead><tr>{isTemporalComparison ? <th>Año</th> : null}<th>Territorio</th><th>Clave</th><th>Cluster</th><th>Observaciones</th><th>FIRMS</th><th>CONAFOR</th><th>Hectáreas</th></tr></thead><tbody>
             {rows.slice(0, 50).map((row, index) => <tr key={`${row.cvegeo || row.cve_ent}-${row.anio_comparacion || row.anio}-${row.mes || "anio"}-${index}`}>{isTemporalComparison ? <td>{row.anio_comparacion}</td> : null}<td>{territoryName(row)}</td><td>{row.cvegeo || row.cve_ent}</td><td>{row.cluster}</td><td>{formatNumber(row.observaciones)}</td><td>{formatNumber(row.firms_detecciones)}</td><td>{formatNumber(row.conafor_eventos)}</td><td>{formatNumber(row.conafor_ha, 2)}</td></tr>)}
             {!rows.length ? <tr><td colSpan={isTemporalComparison ? 8 : 7}>No hay filas disponibles para esta consulta.</td></tr> : null}
