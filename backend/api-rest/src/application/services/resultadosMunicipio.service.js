@@ -7,6 +7,10 @@ export class ResultadosMunicipioService {
     return await repository.obtenerDia(filtros);
   }
 
+  async obtenerRango(filtros) {
+    return await repository.obtenerRango(filtros);
+  }
+
   async obtenerMes(filtros) {
     return await repository.obtenerMes(filtros);
   }
