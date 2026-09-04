@@ -14,6 +14,7 @@ export default function ModalShell({
     footer = null,
     width = 720,
     allowOverlayClose = true,
+    className = "",
 }) {
     const titleId = titleToId(title);
     const dialogRef = useRef(null);
@@ -92,7 +93,7 @@ export default function ModalShell({
         >
             <div
             ref={dialogRef}
-            className="ms-dialog"
+            className={`ms-dialog ${className}`.trim()}
             style={{ width }}
             role="dialog"
             aria-modal="true"
