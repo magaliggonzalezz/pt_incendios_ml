@@ -7,10 +7,12 @@ const estadoController = new ResultadosEstadoController();
 const municipioController = new ResultadosMunicipioController();
 
 router.get("/estado/dia", estadoController.obtenerDia.bind(estadoController));
+router.get("/estado/rango", estadoController.obtenerRango.bind(estadoController));
 router.get("/estado/mes", estadoController.obtenerMes.bind(estadoController));
 router.get("/estado/anio", estadoController.obtenerAnio.bind(estadoController));
 
 router.get("/municipio/dia", municipioController.obtenerDia.bind(municipioController));
+router.get("/municipio/rango", municipioController.obtenerRango.bind(municipioController));
 router.get("/municipio/mes", municipioController.obtenerMes.bind(municipioController));
 router.get("/municipio/anio", municipioController.obtenerAnio.bind(municipioController));
 
