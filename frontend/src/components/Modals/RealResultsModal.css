@@ -17,10 +17,27 @@
     white-space: nowrap;
 }
 
+.cmResultsDialog .cmTab.isActive,
+.cmResultsDialog .cmInnerSelector button.isActive{
+    background: #FFF7ED;
+    color: #C2410C;
+    box-shadow: inset 0 0 0 1px rgba(255,107,0,.42), 0 1px 2px rgba(16,24,40,.08);
+}
+
+.cmResultsDialog .cmTab:focus-visible,
+.cmResultsDialog .cmInnerSelector button:focus-visible,
+.cmResultsDialog .cmImageBtn:focus-visible,
+.cmResultsDialog .cmClearBtn:focus-visible,
+.cmResultsDialog .cmPagination button:focus-visible{
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28);
+}
+
 .cmImageBtn{
-    border: 1px solid rgba(11,79,74,.24);
+    border: 1px solid rgba(255,107,0,.30);
     background: #FFFFFF;
-    color: #0B4F4A;
+    color: #C2410C;
     border-radius: 999px;
     padding: 7px 10px;
     display: inline-flex;
@@ -31,7 +48,8 @@
 }
 
 .cmImageBtn:hover:not(:disabled){
-    background: #F6FEFC;
+    background: #FFF7ED;
+    border-color: #FF6B00;
 }
 
 .cmImageBtn:disabled{
@@ -39,12 +57,31 @@
     cursor: not-allowed;
 }
 
+.cmResultsExportBtn{
+    border: 1px solid #FF6B00;
+    background: #FF6B00;
+    color: #FFFFFF;
+    border-radius: 999px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font: 700 12px/14px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    cursor: pointer;
+}
+
+.cmResultsExportBtn:hover{
+    background: #E85D00;
+    border-color: #E85D00;
+    color: #FFFFFF;
+}
+
 .cmFocusControl{
     margin-top: 10px;
     padding: 10px 12px;
     border-radius: 10px;
     background: #FFF7ED;
-    border: 1px solid rgba(255,107,0,.18);
+    border: 1px solid rgba(255,107,0,.28);
 }
 
 .cmFocusHeader{
@@ -58,7 +95,7 @@
 }
 
 .cmFocusHeader strong{
-    color: #9A3412;
+    color: #C2410C;
 }
 
 .cmFocusHeader span,
@@ -77,17 +114,17 @@
     left: 0;
     right: 0;
     top: 12px;
-    height: 4px;
+    height: 5px;
     border-radius: 999px;
     background:
       linear-gradient(
         to right,
-        #D0D5DD 0%,
-        #D0D5DD var(--focus-start),
+        #E5E7EB 0%,
+        #E5E7EB var(--focus-start),
         #FF6B00 var(--focus-start),
         #FF6B00 var(--focus-end),
-        #D0D5DD var(--focus-end),
-        #D0D5DD 100%
+        #E5E7EB var(--focus-end),
+        #E5E7EB 100%
       );
 }
 
@@ -104,38 +141,48 @@
 }
 
 .cmFocusThumb::-webkit-slider-runnable-track{
-    height: 4px;
+    height: 5px;
     background: transparent;
 }
 
 .cmFocusThumb::-webkit-slider-thumb{
     appearance: none;
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    margin-top: -7px;
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
     background: #FF6B00;
-    box-shadow: 0 0 0 1px rgba(255,107,0,.28), 0 1px 3px rgba(16,24,40,.20);
+    box-shadow: 0 0 0 2px rgba(255,107,0,.30), 0 1px 3px rgba(16,24,40,.20);
     cursor: ew-resize;
     pointer-events: auto;
 }
 
 .cmFocusThumb::-moz-range-track{
-    height: 4px;
+    height: 5px;
     background: transparent;
 }
 
 .cmFocusThumb::-moz-range-thumb{
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
     background: #FF6B00;
-    box-shadow: 0 0 0 1px rgba(255,107,0,.28), 0 1px 3px rgba(16,24,40,.20);
+    box-shadow: 0 0 0 2px rgba(255,107,0,.30), 0 1px 3px rgba(16,24,40,.20);
     cursor: ew-resize;
     pointer-events: auto;
+}
+
+.cmFocusThumb:focus-visible::-webkit-slider-thumb{
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
+}
+
+.cmFocusThumb:focus-visible::-moz-range-thumb{
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
 }
 
 .cmFocusThumbStart{
@@ -157,14 +204,19 @@
 }
 
 .cmPagination button{
-    border: 1px solid rgba(0,0,0,.10);
+    border: 1px solid rgba(255,107,0,.30);
     background: #FFFFFF;
-    color: #0B4F4A;
+    color: #C2410C;
     border-radius: 999px;
     padding: 6px 10px;
     font: inherit;
     font-weight: 700;
     cursor: pointer;
+}
+
+.cmPagination button:hover:not(:disabled){
+    background: #FFF7ED;
+    border-color: #FF6B00;
 }
 
 .cmPagination button:disabled{
