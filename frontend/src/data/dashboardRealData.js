@@ -12,6 +12,10 @@ const dailyFlag = (row, aggregateField, predicate) => (
     : Number(row[aggregateField] || 0)
 );
 
+function hasField(rows, field) {
+  return rows.some((row) => row?.[field] !== undefined && row?.[field] !== null);
+}
+
 function getPeriodoLabel(consulta) {
   if (consulta.tipoPeriodo === "anio_mes") return `${String(consulta.mes).padStart(2, "0")}/${consulta.anio}`;
   if (consulta.tipoPeriodo === "comparar_anios") return `${consulta.anioInicio} vs ${consulta.anioFin}`;
@@ -123,44 +127,9 @@ function buildCatalogRows(clusters = []) {
   }));
 }
 
-function temporalRow(label, year, rows) {
-  return {
-    anio: Number(year),
-    label,
-    observaciones: rows.reduce((total, row) => total + observationWeight(row), 0),
-    firms_detection_count_total: sum(rows, "firms_detecciones"),
-    firms_frp_total: sum(rows, "firms_frp"),
-    conafor_event_count_total: sum(rows, "conafor_eventos"),
-    conafor_total_hectareas_total: sum(rows, "conafor_ha"),
-  };
-}
-
-function buildTemporalRows(consulta, rows) {
-  if (!rows.length) return [];
-  if (consulta.tipoPeriodo === "anio_mes") {
-    return [{
-      anio: Number(consulta.anio),
-      mes: Number(consulta.mes),
-      label: `${String(consulta.mes).padStart(2, "0")}/${consulta.anio}`,
-      firms_detection_count_total: sum(rows, "firms_detecciones"),
-      firms_frp_total: sum(rows, "firms_frp"),
-      conafor_event_count_total: sum(rows, "conafor_eventos"),
-      conafor_total_hectareas_total: sum(rows, "conafor_ha"),
-    }];
-  }
-  if (consulta.tipoPeriodo === "comparar_anios") {
-    const yearA = rows.filter((row) => Number(row.anio_comparacion) === Number(consulta.anioInicio));
-    const yearB = rows.filter((row) => Number(row.anio_comparacion) === Number(consulta.anioFin));
-    return [
-      temporalRow(String(consulta.anioInicio), consulta.anioInicio, yearA),
-      temporalRow(String(consulta.anioFin), consulta.anioFin, yearB),
-    ];
-  }
-  return [];
-}
-
-export function buildRealDashboardResults({ consulta, rows, clusters, estados, municipios }) {
+export function buildRealDashboardResults({ consulta, rows, clusters, estados, municipios, temporalRows = [] }) {
   const safeRows = Array.isArray(rows) ? rows : [];
+  const safeTemporalRows = Array.isArray(temporalRows) ? temporalRows : [];
   const clusterId = getDominantCluster(safeRows);
   const cluster = (clusters || []).find((item) => Number(item.cluster) === Number(clusterId));
   const estado = (estados || []).find((item) => item.cve_ent === consulta.cveEnt);
@@ -175,8 +144,8 @@ export function buildRealDashboardResults({ consulta, rows, clusters, estados, m
     periodo: getPeriodoLabel(consulta),
     territorio: municipio?.nombre || estado?.nombre || (consulta.nivelAgregacion === "municipio" ? "Municipios seleccionados" : "México"),
     observaciones: safeRows.reduce((total, row) => total + observationWeight(row), 0),
-    dias_incendio: sum(safeRows, "dias_incendio"),
-    dias_extremo: sum(safeRows, "dias_extremo"),
+    dias_incendio: hasField(safeRows, "dias_incendio") ? sum(safeRows, "dias_incendio") : null,
+    dias_extremo: hasField(safeRows, "dias_extremo") ? sum(safeRows, "dias_extremo") : null,
     conafor_eventos: sum(safeRows, "conafor_eventos"),
     conafor_ha: sum(safeRows, "conafor_ha"),
     firms_detecciones: sum(safeRows, "firms_detecciones"),
@@ -194,7 +163,7 @@ export function buildRealDashboardResults({ consulta, rows, clusters, estados, m
     catalogRows: buildCatalogRows(clusters),
     topRows: decoratedRows,
     scatterRows: decoratedRows,
-    temporalRows: buildTemporalRows(consulta, safeRows),
+    temporalRows: safeTemporalRows,
     rows: decoratedRows,
     exportRows: decoratedRows,
     exportColumns: safeRows.length ? Object.keys(safeRows[0]) : [],
