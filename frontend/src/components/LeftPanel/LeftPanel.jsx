@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import SearchableSelect from "../Common/SearchableSelect";
 import { LAYER_GROUPS, INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
+import { setPuntosMapaPeriodo } from "../../services/puntosMapa.service";
 import "./LeftPanel.css";
 
 const MESES = [
@@ -71,6 +72,10 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
 
   const stateOptions = useMemo(() => estados.map((state) => ({ value: state.cve_ent, label: state.nombre, meta: `Entidad ${state.cve_ent}` })), [estados]);
   const municipalityOptions = useMemo(() => municipios.map((municipality) => ({ value: municipality.cvegeo, label: municipality.nombre, meta: `CVEGEO ${municipality.cvegeo}` })), [municipios]);
+
+  useEffect(() => {
+    setPuntosMapaPeriodo(consultaActiva);
+  }, [tipoPeriodo, consultaActiva?.anio, consultaActiva?.mes, consultaActiva?.fechaInicio, consultaActiva?.fechaFin]);
 
   useEffect(() => {
     if (consultaActiva?.filtrosSmn?.alcance === "periodo" && !smnPeriodAvailable) {
