@@ -15,7 +15,9 @@ export default function SearchableSelect({
   onChange,
 }) {
   const rootRef = useRef(null);
+  const triggerRef = useRef(null);
   const popoverRef = useRef(null);
+  const searchRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [popoverStyle, setPopoverStyle] = useState(null);
@@ -33,6 +35,22 @@ export default function SearchableSelect({
       `${option.label} ${option.meta || ""}`.toLocaleLowerCase("es-MX").includes(normalizedQuery)
     );
   }, [availableOptions, normalizedQuery]);
+
+  const closeAndReturnFocus = () => {
+    setOpen(false);
+    setQuery("");
+    window.requestAnimationFrame(() => triggerRef.current?.focus());
+  };
+
+  const focusOption = (direction = 1) => {
+    const optionsButtons = Array.from(popoverRef.current?.querySelectorAll(".searchableSelectOption") || []);
+    if (!optionsButtons.length) return;
+    const currentIndex = optionsButtons.indexOf(document.activeElement);
+    const nextIndex = currentIndex < 0
+      ? (direction > 0 ? 0 : optionsButtons.length - 1)
+      : Math.max(0, Math.min(optionsButtons.length - 1, currentIndex + direction));
+    optionsButtons[nextIndex]?.focus();
+  };
 
   useEffect(() => {
     const handleOutside = (event) => {
@@ -93,8 +111,22 @@ export default function SearchableSelect({
 
   const choose = (option) => {
     onChange?.(String(option.value));
-    setOpen(false);
-    setQuery("");
+    closeAndReturnFocus();
+  };
+
+  const handlePopoverKeyDown = (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeAndReturnFocus();
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      focusOption(1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      focusOption(-1);
+    }
   };
 
   return (
@@ -102,6 +134,7 @@ export default function SearchableSelect({
       {label ? <label htmlFor={id}>{label}</label> : null}
       <div className={`searchableSelect ${disabled ? "isDisabled" : ""}`}>
         <button
+          ref={triggerRef}
           id={id}
           className="searchableSelectTrigger"
           type="button"
@@ -109,15 +142,23 @@ export default function SearchableSelect({
           aria-haspopup="listbox"
           aria-expanded={open}
           onClick={() => setOpen((current) => !current)}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+              event.preventDefault();
+              setOpen(true);
+              window.requestAnimationFrame(() => searchRef.current?.focus());
+            }
+          }}
         >
           <span className={value ? "" : "placeholder"}>{selected?.label || placeholder}</span>
           <ChevronDown size={16} aria-hidden="true" />
         </button>
 
         {open && popoverStyle ? createPortal(
-          <div ref={popoverRef} className="searchableSelectPopover searchableSelectPortal" style={popoverStyle}>
+          <div ref={popoverRef} className="searchableSelectPopover searchableSelectPortal" style={popoverStyle} onKeyDown={handlePopoverKeyDown}>
             <div className="searchableSelectSearchWrap">
               <input
+                ref={searchRef}
                 className="searchableSelectSearch"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
