@@ -6,6 +6,17 @@
     flex-wrap: wrap;
 }
 
+.cmChartsHeading{
+    flex: 0 1 auto;
+    min-width: max-content;
+}
+
+.cmHeaderCaption{
+    margin: 0;
+    text-align: left;
+    white-space: nowrap;
+}
+
 .cmImageBtn{
     border: 1px solid rgba(11,79,74,.24);
     background: #FFFFFF;
@@ -164,6 +175,14 @@
 @media (max-width: 760px){
     .cmChartsTools{
         justify-content: flex-start;
+    }
+
+    .cmChartsHeading{
+        min-width: 0;
+    }
+
+    .cmHeaderCaption{
+        white-space: normal;
     }
 
     .cmPagination{
