@@ -20,22 +20,9 @@ import {
 import "./DashboardPage.css";
 
 const CONSULTA_INICIAL = {
-  nivelAgregacion: "",
-  tipoPeriodo: "",
-  anio: "",
-  mes: "",
-  anioInicio: "",
-  anioFin: "",
-  fechaInicio: "",
-  fechaFin: "",
-  cveEnt: "",
-  cveMun: "",
-  cvegeo: "",
-  estado: "",
-  municipio: "",
-  cluster: "",
-  capasActivas: INITIAL_ACTIVE_LAYERS,
-  filtrosSmn: INITIAL_SMN_FILTERS,
+  nivelAgregacion: "", tipoPeriodo: "", anio: "", mes: "", anioInicio: "", anioFin: "",
+  fechaInicio: "", fechaFin: "", cveEnt: "", cveMun: "", cvegeo: "", estado: "", municipio: "", cluster: "",
+  capasActivas: INITIAL_ACTIVE_LAYERS, filtrosSmn: INITIAL_SMN_FILTERS,
 };
 
 function isConsultaCompleta(consulta) {
@@ -43,50 +30,36 @@ function isConsultaCompleta(consulta) {
   if (consulta.nivelAgregacion === "municipio" && !consulta.cveEnt) return false;
   if (consulta.tipoPeriodo === "anio") return Boolean(consulta.anio);
   if (consulta.tipoPeriodo === "anio_mes") return Boolean(consulta.anio && consulta.mes);
-  if (consulta.tipoPeriodo === "fecha") {
-    if (!consulta.fechaInicio) return false;
-    if (consulta.nivelAgregacion === "municipio") return Boolean(consulta.cvegeo);
-    return true;
-  }
-  if (consulta.tipoPeriodo === "rango_fechas") {
-    if (!consulta.fechaInicio || !consulta.fechaFin || consulta.fechaInicio > consulta.fechaFin) return false;
-    if (consulta.nivelAgregacion === "municipio") return Boolean(consulta.cvegeo);
-    return true;
-  }
-  if (consulta.tipoPeriodo === "comparar_anios") {
-    return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
-  }
+  if (consulta.tipoPeriodo === "fecha") return Boolean(consulta.fechaInicio) && (consulta.nivelAgregacion !== "municipio" || Boolean(consulta.cvegeo));
+  if (consulta.tipoPeriodo === "rango_fechas") return Boolean(consulta.fechaInicio && consulta.fechaFin && consulta.fechaInicio <= consulta.fechaFin) && (consulta.nivelAgregacion !== "municipio" || Boolean(consulta.cvegeo));
+  if (consulta.tipoPeriodo === "comparar_anios") return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
   return false;
 }
 
 function buildExportFilename(consulta, format, selectedMlCluster) {
   const nivel = consulta?.nivelAgregacion === "municipio" ? "municipal" : "estatal";
-  const territorio = consulta?.nivelAgregacion === "municipio"
-    ? (consulta?.cvegeo || "seleccion")
-    : (consulta?.cveEnt || "mexico");
-
+  const territorio = consulta?.nivelAgregacion === "municipio" ? (consulta?.cvegeo || "seleccion") : (consulta?.cveEnt || "mexico");
   let periodo = "periodo";
   if (consulta?.tipoPeriodo === "anio") periodo = String(consulta.anio || "anio");
   else if (consulta?.tipoPeriodo === "anio_mes") periodo = `${consulta.anio || "anio"}-${String(consulta.mes || "mes").padStart(2, "0")}`;
   else if (consulta?.tipoPeriodo === "fecha") periodo = String(consulta.fechaInicio || "fecha");
   else if (consulta?.tipoPeriodo === "comparar_anios") periodo = `${consulta.anioInicio || "a"}-vs-${consulta.anioFin || "b"}`;
   else if (consulta?.tipoPeriodo === "rango_fechas") periodo = `${consulta.fechaInicio || "inicio"}_a_${consulta.fechaFin || "fin"}`;
-
   const cluster = selectedMlCluster ? `_cluster_${selectedMlCluster}` : "";
   return `resultado_ml_${nivel}_${territorio}_${periodo}${cluster}.${format}`;
 }
 
-const getConsultaInicial = () => ({
-  ...CONSULTA_INICIAL,
-  capasActivas: { ...CONSULTA_INICIAL.capasActivas },
-  filtrosSmn: { ...CONSULTA_INICIAL.filtrosSmn },
-});
+function monthBounds(year, month) {
+  const m = Number(month);
+  const lastDay = new Date(Date.UTC(Number(year), m, 0)).getUTCDate();
+  return {
+    fechaInicio: `${year}-${String(m).padStart(2, "0")}-01`,
+    fechaFin: `${year}-${String(m).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`,
+  };
+}
 
-const snapshotConsulta = (consulta) => ({
-  ...consulta,
-  capasActivas: { ...(consulta.capasActivas || {}) },
-  filtrosSmn: { ...(consulta.filtrosSmn || {}) },
-});
+const getConsultaInicial = () => ({ ...CONSULTA_INICIAL, capasActivas: { ...CONSULTA_INICIAL.capasActivas }, filtrosSmn: { ...CONSULTA_INICIAL.filtrosSmn } });
+const snapshotConsulta = (consulta) => ({ ...consulta, capasActivas: { ...(consulta.capasActivas || {}) }, filtrosSmn: { ...(consulta.filtrosSmn || {}) } });
 
 export default function DashboardPage() {
   const [leftOpen, setLeftOpen] = useState(true);
@@ -106,92 +79,37 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let active = true;
-    Promise.all([obtenerClusters(), obtenerEstados()])
-      .then(([clusterRows, estadoRows]) => {
-        if (!active) return;
-        setClusters(clusterRows);
-        setEstados(estadoRows);
-      })
-      .catch((err) => {
-        if (active) setError(err.message);
-      });
+    Promise.all([obtenerClusters(), obtenerEstados()]).then(([clusterRows, estadoRows]) => {
+      if (!active) return;
+      setClusters(clusterRows); setEstados(estadoRows);
+    }).catch((err) => { if (active) setError(err.message); });
     return () => { active = false; };
   }, []);
 
   useEffect(() => {
     let active = true;
-    if (!consultaActiva.cveEnt) {
-      setMunicipios([]);
-      return () => { active = false; };
-    }
-    obtenerMunicipios(consultaActiva.cveEnt)
-      .then((rows) => {
-        if (active) setMunicipios(rows);
-      })
-      .catch((err) => {
-        if (active) setError(err.message);
-      });
+    if (!consultaActiva.cveEnt) { setMunicipios([]); return () => { active = false; }; }
+    obtenerMunicipios(consultaActiva.cveEnt).then((rows) => { if (active) setMunicipios(rows); }).catch((err) => { if (active) setError(err.message); });
     return () => { active = false; };
   }, [consultaActiva.cveEnt]);
 
-  const invalidateExecutedQuery = () => {
-    setConsultaEjecutada(false);
-    setUltimaConsultaEjecutada(null);
-    setResumenConsulta(null);
-    setSelectedMlCluster(null);
-  };
-
-  const cancelPendingQuery = () => {
-    queryRunRef.current += 1;
-    setIsLoading(false);
-  };
-
-  const invalidateForQueryChange = () => {
-    cancelPendingQuery();
-    invalidateExecutedQuery();
-    setError(null);
-  };
+  const invalidateExecutedQuery = () => { setConsultaEjecutada(false); setUltimaConsultaEjecutada(null); setResumenConsulta(null); setSelectedMlCluster(null); };
+  const cancelPendingQuery = () => { queryRunRef.current += 1; setIsLoading(false); };
+  const invalidateForQueryChange = () => { cancelPendingQuery(); invalidateExecutedQuery(); setError(null); };
 
   const handleConsultaChange = (campo, valor) => {
-    if (campo === "consultaPatch") {
-      invalidateForQueryChange();
-      setConsultaActiva((prev) => ({ ...prev, ...(valor || {}) }));
-      return;
-    }
-
+    if (campo === "consultaPatch") { invalidateForQueryChange(); setConsultaActiva((prev) => ({ ...prev, ...(valor || {}) })); return; }
     const changesOnlyVisualization = campo === "capasActivas" || campo === "filtrosSmn";
     if (!changesOnlyVisualization) invalidateForQueryChange();
-
     setConsultaActiva((prev) => {
-      if (campo === "capasActivas") {
-        const { capa, activo } = valor;
-        return { ...prev, capasActivas: { ...prev.capasActivas, [capa]: activo } };
-      }
-      if (campo === "filtrosSmn") {
-        return { ...prev, filtrosSmn: { ...prev.filtrosSmn, ...valor } };
-      }
-      if (campo === "nivelAgregacion") {
-        return {
-          ...prev,
-          nivelAgregacion: valor,
-          estado: "",
-          municipio: "",
-          cveEnt: "",
-          cveMun: "",
-          cvegeo: "",
-        };
-      }
+      if (campo === "capasActivas") { const { capa, activo } = valor; return { ...prev, capasActivas: { ...prev.capasActivas, [capa]: activo } }; }
+      if (campo === "filtrosSmn") return { ...prev, filtrosSmn: { ...prev.filtrosSmn, ...valor } };
+      if (campo === "nivelAgregacion") return { ...prev, nivelAgregacion: valor, estado: "", municipio: "", cveEnt: "", cveMun: "", cvegeo: "" };
       return { ...prev, [campo]: valor };
     });
   };
 
-  const handleResetConsulta = () => {
-    cancelPendingQuery();
-    setConsultaActiva(getConsultaInicial());
-    invalidateExecutedQuery();
-    setLayerSummary(null);
-    setError(null);
-  };
+  const handleResetConsulta = () => { cancelPendingQuery(); setConsultaActiva(getConsultaInicial()); invalidateExecutedQuery(); setLayerSummary(null); setError(null); };
 
   const fetchAnnualRows = async (consulta, anio) => {
     if (consulta.nivelAgregacion === "entidad") {
@@ -202,165 +120,111 @@ export default function DashboardPage() {
     return obtenerResultadosMunicipioAnio({ anio, cveEnt: consulta.cveEnt, cvegeo: consulta.cvegeo });
   };
 
+  const fetchMonthRows = async (consulta, anio, mes) => {
+    if (consulta.nivelAgregacion === "entidad") {
+      let rows = await obtenerResultadosEstadoMes(anio, Number(mes));
+      if (consulta.cveEnt) rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
+      return rows;
+    }
+    return obtenerResultadosMunicipioMes({ anio, mes: Number(mes), cveEnt: consulta.cveEnt, cvegeo: consulta.cvegeo });
+  };
+
   const fetchDailyRows = async (consulta) => {
     if (consulta.nivelAgregacion === "entidad") {
       let rows = await obtenerResultadosEstadoDia(consulta.fechaInicio);
       if (consulta.cveEnt) rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
       return rows;
     }
-
     const row = await obtenerResultadosMunicipioDia({ fecha: consulta.fechaInicio, cvegeo: consulta.cvegeo });
     return row ? [row] : [];
   };
 
-  const fetchRangeRows = async (consulta) => {
-    if (consulta.nivelAgregacion === "entidad") {
-      return obtenerResultadosEstadoRango({
-        fechaInicio: consulta.fechaInicio,
-        fechaFin: consulta.fechaFin,
-        cveEnt: consulta.cveEnt,
-      });
+  const fetchRangeRows = async (consulta, override = {}) => {
+    const filtros = { ...consulta, ...override };
+    if (filtros.nivelAgregacion === "entidad") {
+      return obtenerResultadosEstadoRango({ fechaInicio: filtros.fechaInicio, fechaFin: filtros.fechaFin, cveEnt: filtros.cveEnt });
+    }
+    return obtenerResultadosMunicipioRango({ fechaInicio: filtros.fechaInicio, fechaFin: filtros.fechaFin, cvegeo: filtros.cvegeo });
+  };
+
+  const fetchMonthlyTemporalRows = async (consulta, anio, serieTemporal = null) => {
+    const months = Array.from({ length: 12 }, (_, index) => index + 1);
+    const monthly = await Promise.all(months.map(async (mes) => {
+      const rows = await fetchMonthRows(consulta, anio, mes);
+      return rows.map((row) => ({ ...row, anio: Number(anio), mes, ...(serieTemporal ? { serie_temporal: String(serieTemporal) } : {}) }));
+    }));
+    return monthly.flat();
+  };
+
+  const fetchTemporalRows = async (consulta, primaryRows) => {
+    if (consulta.tipoPeriodo === "fecha") return [];
+    if (consulta.tipoPeriodo === "rango_fechas") return primaryRows;
+
+    if (consulta.tipoPeriodo === "anio_mes") {
+      if (consulta.nivelAgregacion === "municipio" && !consulta.cvegeo) return [];
+      const bounds = monthBounds(consulta.anio, consulta.mes);
+      return fetchRangeRows(consulta, bounds);
     }
 
-    return obtenerResultadosMunicipioRango({
-      fechaInicio: consulta.fechaInicio,
-      fechaFin: consulta.fechaFin,
-      cvegeo: consulta.cvegeo,
-    });
+    if (consulta.tipoPeriodo === "anio") return fetchMonthlyTemporalRows(consulta, consulta.anio);
+
+    if (consulta.tipoPeriodo === "comparar_anios") {
+      const [seriesA, seriesB] = await Promise.all([
+        fetchMonthlyTemporalRows(consulta, consulta.anioInicio, consulta.anioInicio),
+        fetchMonthlyTemporalRows(consulta, consulta.anioFin, consulta.anioFin),
+      ]);
+      return [...seriesA, ...seriesB];
+    }
+
+    return [];
   };
 
   const handleConsultar = async (consultaOverride = null) => {
     const consulta = consultaOverride ?? consultaActiva;
     if (!isConsultaCompleta(consulta)) return;
-
     const runId = queryRunRef.current + 1;
-    queryRunRef.current = runId;
-    setIsLoading(true);
-    setError(null);
+    queryRunRef.current = runId; setIsLoading(true); setError(null);
 
     try {
       let rows;
+      if (consulta.tipoPeriodo === "fecha") rows = await fetchDailyRows(consulta);
+      else if (consulta.tipoPeriodo === "rango_fechas") rows = await fetchRangeRows(consulta);
+      else if (consulta.tipoPeriodo === "comparar_anios") {
+        const [rowsA, rowsB] = await Promise.all([fetchAnnualRows(consulta, consulta.anioInicio), fetchAnnualRows(consulta, consulta.anioFin)]);
+        rows = [...rowsA.map((row) => ({ ...row, anio_comparacion: Number(consulta.anioInicio) })), ...rowsB.map((row) => ({ ...row, anio_comparacion: Number(consulta.anioFin) }))];
+      } else if (consulta.tipoPeriodo === "anio_mes") rows = await fetchMonthRows(consulta, consulta.anio, consulta.mes);
+      else rows = await fetchAnnualRows(consulta, consulta.anio);
 
-      if (consulta.tipoPeriodo === "fecha") {
-        rows = await fetchDailyRows(consulta);
-      } else if (consulta.tipoPeriodo === "rango_fechas") {
-        rows = await fetchRangeRows(consulta);
-      } else if (consulta.tipoPeriodo === "comparar_anios") {
-        const [rowsA, rowsB] = await Promise.all([
-          fetchAnnualRows(consulta, consulta.anioInicio),
-          fetchAnnualRows(consulta, consulta.anioFin),
-        ]);
-        rows = [
-          ...rowsA.map((row) => ({ ...row, anio_comparacion: Number(consulta.anioInicio) })),
-          ...rowsB.map((row) => ({ ...row, anio_comparacion: Number(consulta.anioFin) })),
-        ];
-      } else if (consulta.nivelAgregacion === "entidad") {
-        rows = consulta.tipoPeriodo === "anio_mes"
-          ? await obtenerResultadosEstadoMes(consulta.anio, Number(consulta.mes))
-          : await obtenerResultadosEstadoAnio(consulta.anio);
-        if (consulta.cveEnt) rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
-      } else {
-        const params = { anio: consulta.anio, cveEnt: consulta.cveEnt, cvegeo: consulta.cvegeo };
-        rows = consulta.tipoPeriodo === "anio_mes"
-          ? await obtenerResultadosMunicipioMes({ ...params, mes: Number(consulta.mes) })
-          : await obtenerResultadosMunicipioAnio(params);
-      }
-
+      const temporalRows = await fetchTemporalRows(consulta, rows);
       if (runId !== queryRunRef.current) return;
-
-      const resumen = buildRealDashboardResults({ consulta, rows, clusters, estados, municipios });
+      const resumen = buildRealDashboardResults({ consulta, rows, temporalRows, clusters, estados, municipios });
       if (runId !== queryRunRef.current) return;
-
-      setResumenConsulta(resumen);
-      setUltimaConsultaEjecutada(snapshotConsulta(consulta));
-      setConsultaEjecutada(true);
-      setSelectedMlCluster(null);
+      setResumenConsulta(resumen); setUltimaConsultaEjecutada(snapshotConsulta(consulta)); setConsultaEjecutada(true); setSelectedMlCluster(null);
     } catch (err) {
       if (runId !== queryRunRef.current) return;
-      invalidateExecutedQuery();
-      setError(err.message);
-    } finally {
-      if (runId === queryRunRef.current) setIsLoading(false);
-    }
+      invalidateExecutedQuery(); setError(err.message);
+    } finally { if (runId === queryRunRef.current) setIsLoading(false); }
   };
 
   const handleDownloadExport = ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
     const rows = resumen?.exportRows ?? [];
-    const clusterFilteredRows = selectedMlCluster
-      ? rows.filter((row) => Number(row.cluster) === Number(selectedMlCluster))
-      : rows;
+    const clusterFilteredRows = selectedMlCluster ? rows.filter((row) => Number(row.cluster) === Number(selectedMlCluster)) : rows;
     const columns = resumen?.exportColumns ?? [];
-    const payloadRows = columns.length
-      ? clusterFilteredRows.map((row) => Object.fromEntries(columns.map((column) => [column, row[column] ?? ""])))
-      : clusterFilteredRows;
-    const text = format === "json"
-      ? JSON.stringify(payloadRows, null, 2)
-      : [
-          columns.join(","),
-          ...payloadRows.map((row) => columns.map((column) => {
-            const value = row[column] ?? "";
-            const str = String(value);
-            return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-          }).join(",")),
-        ].join("\n");
+    const payloadRows = columns.length ? clusterFilteredRows.map((row) => Object.fromEntries(columns.map((column) => [column, row[column] ?? ""]))) : clusterFilteredRows;
+    const text = format === "json" ? JSON.stringify(payloadRows, null, 2) : [columns.join(","), ...payloadRows.map((row) => columns.map((column) => { const value = row[column] ?? ""; const str = String(value); return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str; }).join(","))].join("\n");
     const blob = new Blob([text], { type: format === "json" ? "application/json" : "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = buildExportFilename(consulta, format, selectedMlCluster);
-    anchor.click();
-    URL.revokeObjectURL(url);
+    const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = buildExportFilename(consulta, format, selectedMlCluster); anchor.click(); URL.revokeObjectURL(url);
   };
 
-  const mlLayerId = ultimaConsultaEjecutada?.nivelAgregacion === "municipio"
-    ? "resultadoMlMunicipioDia"
-    : "resultadoMlEntidadDia";
+  const mlLayerId = ultimaConsultaEjecutada?.nivelAgregacion === "municipio" ? "resultadoMlMunicipioDia" : "resultadoMlEntidadDia";
   const resumenMapa = consultaActiva?.capasActivas?.[mlLayerId] ? resumenConsulta : null;
 
   return (
     <div className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
-      <MapView
-        consultaActiva={consultaActiva}
-        consultaEjecutada={ultimaConsultaEjecutada}
-        resumenConsulta={resumenMapa}
-        onConsultaChange={handleConsultaChange}
-        onConsultar={handleConsultar}
-        onLayerSummaryChange={setLayerSummary}
-        selectedMlCluster={selectedMlCluster}
-        leftPanelOpen={leftOpen}
-        rightPanelOpen={rightOpen}
-      />
-      <Header />
-      <Footer />
-      <LeftPanel
-        open={leftOpen}
-        onToggle={() => setLeftOpen((value) => !value)}
-        consultaActiva={consultaActiva}
-        consultaEjecutada={consultaEjecutada}
-        onConsultaChange={handleConsultaChange}
-        onConsultar={handleConsultar}
-        onResetConsulta={handleResetConsulta}
-        estados={estados}
-        municipios={municipios}
-        isLoading={isLoading}
-      />
-      <RightPanel
-        open={rightOpen}
-        onToggle={() => setRightOpen((value) => !value)}
-        consultaEjecutada={consultaEjecutada}
-        consultaActiva={consultaActiva}
-        consultaResultado={ultimaConsultaEjecutada}
-        resumenConsulta={resumenConsulta}
-        layerSummary={layerSummary}
-        totalRecords={resumenConsulta?.totalRecords ?? 0}
-        availableFormats={["csv", "json"]}
-        isExporting={false}
-        isLoading={isLoading}
-        error={error}
-        onDownloadExport={handleDownloadExport}
-        selectedMlCluster={selectedMlCluster}
-        onSelectedMlClusterChange={setSelectedMlCluster}
-      />
+      <MapView consultaActiva={consultaActiva} consultaEjecutada={ultimaConsultaEjecutada} resumenConsulta={resumenMapa} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onLayerSummaryChange={setLayerSummary} selectedMlCluster={selectedMlCluster} leftPanelOpen={leftOpen} rightPanelOpen={rightOpen} />
+      <Header /><Footer />
+      <LeftPanel open={leftOpen} onToggle={() => setLeftOpen((value) => !value)} consultaActiva={consultaActiva} consultaEjecutada={consultaEjecutada} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onResetConsulta={handleResetConsulta} estados={estados} municipios={municipios} isLoading={isLoading} />
+      <RightPanel open={rightOpen} onToggle={() => setRightOpen((value) => !value)} consultaEjecutada={consultaEjecutada} consultaActiva={consultaActiva} consultaResultado={ultimaConsultaEjecutada} resumenConsulta={resumenConsulta} layerSummary={layerSummary} totalRecords={resumenConsulta?.totalRecords ?? 0} availableFormats={["csv", "json"]} isExporting={false} isLoading={isLoading} error={error} onDownloadExport={handleDownloadExport} selectedMlCluster={selectedMlCluster} onSelectedMlClusterChange={setSelectedMlCluster} />
     </div>
   );
 }
