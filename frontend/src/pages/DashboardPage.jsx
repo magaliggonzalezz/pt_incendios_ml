@@ -8,8 +8,10 @@ import { INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../data/dashboardMoc
 import { buildRealDashboardResults } from "../data/dashboardRealData";
 import { obtenerClusters, obtenerEstados, obtenerMunicipios } from "../services/catalogos.service";
 import {
+  obtenerResultadosEstadoDia,
   obtenerResultadosEstadoAnio,
   obtenerResultadosEstadoMes,
+  obtenerResultadosMunicipioDia,
   obtenerResultadosMunicipioAnio,
   obtenerResultadosMunicipioMes,
 } from "../services/resultados.service";
@@ -39,6 +41,11 @@ function isConsultaCompleta(consulta) {
   if (consulta.nivelAgregacion === "municipio" && !consulta.cveEnt) return false;
   if (consulta.tipoPeriodo === "anio") return Boolean(consulta.anio);
   if (consulta.tipoPeriodo === "anio_mes") return Boolean(consulta.anio && consulta.mes);
+  if (consulta.tipoPeriodo === "fecha") {
+    if (!consulta.fechaInicio) return false;
+    if (consulta.nivelAgregacion === "municipio") return Boolean(consulta.cvegeo);
+    return true;
+  }
   if (consulta.tipoPeriodo === "comparar_anios") {
     return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
   }
@@ -171,6 +178,20 @@ export default function DashboardPage() {
     return obtenerResultadosMunicipioAnio({ anio, cveEnt: consulta.cveEnt, cvegeo: consulta.cvegeo });
   };
 
+  const fetchDailyRows = async (consulta) => {
+    if (consulta.nivelAgregacion === "entidad") {
+      let rows = await obtenerResultadosEstadoDia(consulta.fechaInicio);
+      if (consulta.cveEnt) rows = rows.filter((row) => row.cve_ent === consulta.cveEnt);
+      return rows;
+    }
+
+    const row = await obtenerResultadosMunicipioDia({
+      fecha: consulta.fechaInicio,
+      cvegeo: consulta.cvegeo,
+    });
+    return row ? [row] : [];
+  };
+
   const handleConsultar = async (consultaOverride = null) => {
     const consulta = consultaOverride ?? consultaActiva;
     if (!isConsultaCompleta(consulta)) return;
@@ -183,7 +204,9 @@ export default function DashboardPage() {
     try {
       let rows;
 
-      if (consulta.tipoPeriodo === "comparar_anios") {
+      if (consulta.tipoPeriodo === "fecha") {
+        rows = await fetchDailyRows(consulta);
+      } else if (consulta.tipoPeriodo === "comparar_anios") {
         const [rowsA, rowsB] = await Promise.all([
           fetchAnnualRows(consulta, consulta.anioInicio),
           fetchAnnualRows(consulta, consulta.anioFin),
