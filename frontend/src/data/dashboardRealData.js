@@ -1,5 +1,17 @@
 const sum = (rows, field) => rows.reduce((total, row) => total + Number(row?.[field] || 0), 0);
 
+const observationWeight = (row) => (
+  row?.observaciones === undefined || row?.observaciones === null
+    ? 1
+    : Number(row.observaciones || 0)
+);
+
+const dailyFlag = (row, aggregateField, predicate) => (
+  row?.[aggregateField] === undefined || row?.[aggregateField] === null
+    ? Number(Boolean(predicate(row)))
+    : Number(row[aggregateField] || 0)
+);
+
 function getPeriodoLabel(consulta) {
   if (consulta.tipoPeriodo === "anio_mes") return `${String(consulta.mes).padStart(2, "0")}/${consulta.anio}`;
   if (consulta.tipoPeriodo === "comparar_anios") return `${consulta.anioInicio} vs ${consulta.anioFin}`;
@@ -12,7 +24,7 @@ function getDominantCluster(rows) {
   const totals = new Map();
   rows.forEach((row) => {
     const id = Number(row.cluster);
-    totals.set(id, (totals.get(id) || 0) + Number(row.observaciones || 0));
+    totals.set(id, (totals.get(id) || 0) + observationWeight(row));
   });
   let selected = null;
   let max = -1;
@@ -32,8 +44,10 @@ function clusterMetaById(clusters = []) {
 function decorateRow(row, { clusters, estados, municipios }) {
   const clusterMap = clusterMetaById(clusters);
   const meta = clusterMap.get(Number(row.cluster)) ?? {};
-  const estado = (estados || []).find((item) => item.cve_ent === row.cve_ent);
+  const cveEnt = row.cve_ent || (row.cvegeo ? String(row.cvegeo).slice(0, 2) : undefined);
+  const estado = (estados || []).find((item) => item.cve_ent === cveEnt);
   const municipio = (municipios || []).find((item) => item.cvegeo === row.cvegeo);
+  const observaciones = observationWeight(row);
 
   return {
     ...row,
@@ -45,8 +59,8 @@ function decorateRow(row, { clusters, estados, municipios }) {
     prioridad_visual_app: meta.prioridad_visual,
     nombre_entidad: estado?.nombre,
     nombre_municipio: municipio?.nombre,
-    n_observaciones: Number(row.observaciones || 0),
-    dias: Number(row.observaciones || 0),
+    n_observaciones: observaciones,
+    dias: observaciones,
     firms_detection_count_total: Number(row.firms_detecciones || 0),
     firms_frp_total: Number(row.firms_frp || 0),
     conafor_event_count_total: Number(row.conafor_eventos || 0),
@@ -74,11 +88,12 @@ function buildSummaryRows(rows, clusters) {
       conafor_event_count_total: 0,
       conafor_total_hectareas_total: 0,
     };
-    current.n_observaciones += Number(row.observaciones || 0);
-    current.dias += Number(row.observaciones || 0);
-    current.dias_con_firms += Number(row.dias_firms || 0);
-    current.dias_con_conafor += Number(row.dias_conafor || 0);
-    current.dias_con_smn += Number(row.dias_smn || 0);
+    const observaciones = observationWeight(row);
+    current.n_observaciones += observaciones;
+    current.dias += observaciones;
+    current.dias_con_firms += dailyFlag(row, "dias_firms", (item) => Number(item.firms_detecciones || 0) > 0);
+    current.dias_con_conafor += dailyFlag(row, "dias_conafor", (item) => Number(item.conafor_eventos || 0) > 0);
+    current.dias_con_smn += dailyFlag(row, "dias_smn", (item) => Number(item.smn_obs || 0) > 0);
     current.firms_detection_count_total += Number(row.firms_detecciones || 0);
     current.conafor_event_count_total += Number(row.conafor_eventos || 0);
     current.conafor_total_hectareas_total += Number(row.conafor_ha || 0);
@@ -112,7 +127,7 @@ function temporalRow(label, year, rows) {
   return {
     anio: Number(year),
     label,
-    observaciones: sum(rows, "observaciones"),
+    observaciones: rows.reduce((total, row) => total + observationWeight(row), 0),
     firms_detection_count_total: sum(rows, "firms_detecciones"),
     firms_frp_total: sum(rows, "firms_frp"),
     conafor_event_count_total: sum(rows, "conafor_eventos"),
@@ -158,7 +173,7 @@ export function buildRealDashboardResults({ consulta, rows, clusters, estados, m
     nivelAgregacion: consulta.nivelAgregacion,
     periodo: getPeriodoLabel(consulta),
     territorio: municipio?.nombre || estado?.nombre || (consulta.nivelAgregacion === "municipio" ? "Municipios seleccionados" : "México"),
-    observaciones: sum(safeRows, "observaciones"),
+    observaciones: safeRows.reduce((total, row) => total + observationWeight(row), 0),
     dias_incendio: sum(safeRows, "dias_incendio"),
     dias_extremo: sum(safeRows, "dias_extremo"),
     conafor_eventos: sum(safeRows, "conafor_eventos"),
