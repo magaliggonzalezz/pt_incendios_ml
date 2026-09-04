@@ -15,7 +15,19 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || env.corsOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      const error = new Error("Origen no permitido por CORS");
+      error.statusCode = 403;
+      return callback(error);
+    },
+  }),
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {
