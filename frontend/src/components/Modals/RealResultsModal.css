@@ -55,17 +55,84 @@
     color: #667085;
 }
 
-.cmFocusSliders{
+.cmFocusRange{
     position: relative;
-    display: grid;
-    gap: 4px;
-    margin-bottom: 6px;
+    height: 28px;
+    margin: 2px 0 6px;
 }
 
-.cmFocusSliders input[type="range"]{
+.cmFocusTrack{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 12px;
+    height: 4px;
+    border-radius: 999px;
+    background:
+      linear-gradient(
+        to right,
+        #D0D5DD 0%,
+        #D0D5DD var(--focus-start),
+        #0F766E var(--focus-start),
+        #0F766E var(--focus-end),
+        #D0D5DD var(--focus-end),
+        #D0D5DD 100%
+      );
+}
+
+.cmFocusThumb{
+    position: absolute;
+    inset: 0;
     width: 100%;
-    accent-color: #0F766E;
-    cursor: pointer;
+    height: 28px;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    pointer-events: none;
+}
+
+.cmFocusThumb::-webkit-slider-runnable-track{
+    height: 4px;
+    background: transparent;
+}
+
+.cmFocusThumb::-webkit-slider-thumb{
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -7px;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: #0F766E;
+    box-shadow: 0 0 0 1px rgba(15,118,110,.22), 0 1px 3px rgba(16,24,40,.20);
+    cursor: ew-resize;
+    pointer-events: auto;
+}
+
+.cmFocusThumb::-moz-range-track{
+    height: 4px;
+    background: transparent;
+}
+
+.cmFocusThumb::-moz-range-thumb{
+    width: 18px;
+    height: 18px;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: #0F766E;
+    box-shadow: 0 0 0 1px rgba(15,118,110,.22), 0 1px 3px rgba(16,24,40,.20);
+    cursor: ew-resize;
+    pointer-events: auto;
+}
+
+.cmFocusThumbStart{
+    z-index: 3;
+}
+
+.cmFocusThumbEnd{
+    z-index: 4;
 }
 
 .cmPagination{
