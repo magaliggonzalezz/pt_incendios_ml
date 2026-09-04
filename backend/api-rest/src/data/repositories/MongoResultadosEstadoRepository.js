@@ -13,6 +13,17 @@ export class MongoResultadosEstadoRepository {
       .toArray();
   }
 
+  async obtenerRango({ fechaInicio, fechaFin, cveEnt }) {
+    const query = { fecha: { $gte: fechaInicio, $lte: fechaFin } };
+    if (cveEnt) query.cve_ent = cveEnt;
+
+    return await this.db
+      .collection("resultados_estado_dia")
+      .find(query, { projection: { _id: 0 } })
+      .sort({ fecha: 1, cve_ent: 1 })
+      .toArray();
+  }
+
   async obtenerMes(anio, mes) {
     return await this.db
       .collection("resultados_estado_mes")
