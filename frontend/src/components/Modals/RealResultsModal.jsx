@@ -192,29 +192,29 @@ function buildLayerChartModel(layerSummary, capasActivas = {}) {
   const labels = [];
   const values = [];
   const colors = [];
+  const inegi = layerSummary?.inegi || {};
 
-  if (capasActivas.puntosCalorFirms) {
-    labels.push(["FIRMS", "Anomalías térmicas"]);
-    values.push(Number(layerSummary?.firms?.count || 0));
-    colors.push("#F97316");
-  }
-  if (capasActivas.incendiosConafor) {
-    labels.push(["CONAFOR", "Incendios"]);
-    values.push(Number(layerSummary?.conafor?.count || 0));
-    colors.push("#DC2626");
-  }
-  if (capasActivas.estacionesSmn) {
-    labels.push(["SMN-CONAGUA", "Estaciones"]);
-    values.push(Number(layerSummary?.smn?.count || 0));
-    colors.push("#0F766E");
-  }
+  const addLayer = (active, source, type, value, color) => {
+    if (!active) return;
+    labels.push([source, type]);
+    values.push(Number(value || 0));
+    colors.push(color);
+  };
+
+  addLayer(capasActivas.puntosCalorFirms, "FIRMS", "Anomalías térmicas", layerSummary?.firms?.count, "#F97316");
+  addLayer(capasActivas.incendiosConafor, "CONAFOR", "Incendios", layerSummary?.conafor?.count, "#DC2626");
+  addLayer(capasActivas.estacionesSmn, "SMN-CONAGUA", "Estaciones", layerSummary?.smn?.count, "#0F766E");
+  addLayer(capasActivas.fisiografiaInegi, "INEGI", "Provincias fisiográficas", inegi.fisiografia, "#7C3AED");
+  addLayer(capasActivas.edafologiaInegi, "INEGI", "Unidades edafológicas", inegi.edafologia, "#A16207");
+  addLayer(capasActivas.usoSueloVegetacionInegi, "INEGI", "Uso de suelo y vegetación", inegi.usoSueloVegetacion, "#4D7C0F");
+  addLayer(capasActivas.corrientesAguaInegi, "INEGI", "Corrientes de agua", inegi.hidrografia, "#0284C7");
 
   if (!labels.length) return null;
   return {
     type: "bar",
     orientation: "vertical",
-    title: "Registros visibles por capa observada",
-    caption: "Conteos del área visible del mapa, separados por tipo de dato.",
+    title: "Registros visibles por capa activa",
+    caption: "Conteos del área visible del mapa, separados por fuente y tipo de dato.",
     yTitle: "Cantidad visible",
     data: {
       labels,
@@ -293,12 +293,12 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
     if (!chart) return;
     const anchor = document.createElement("a");
     anchor.href = chart.toBase64Image("image/png", 1);
-    anchor.download = `grafica_ml_${safeFilePart(resumenConsulta?.territorio)}_${safeFilePart(resumenConsulta?.periodo)}_${safeFilePart(activeGraph)}.png`;
+    anchor.download = `grafica_${safeFilePart(resumenConsulta?.territorio)}_${safeFilePart(resumenConsulta?.periodo)}_${safeFilePart(activeGraph)}.png`;
     anchor.click();
   };
 
   const footer = onOpenExport ? (
-    <button type="button" className="cmClearBtn" onClick={onOpenExport} title="Descargar los datos de la consulta ejecutada">
+    <button type="button" className="cmClearBtn cmResultsExportBtn" onClick={onOpenExport} title="Descargar los datos de la consulta ejecutada">
       <Download size={15} /> Exportar datos de la consulta
     </button>
   ) : null;
@@ -338,7 +338,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
           <div className="cmChartsHeader">
             <div className="cmChartsHeading">
               <div className="cmPanelTitle">{activeGraph === "layers" ? "Capas activas" : (hasTemporalSeries ? (resumenConsulta?.tipoPeriodo === "comparar_anios" ? "Comparación temporal" : "Evolución temporal") : (isSingleSnapshot ? "Perfil del territorio" : "Comparación territorial"))}</div>
-              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas observadas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal real de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
+              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas activas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal real de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
             </div>
             <div className="cmChartsTools">
               <div className="cmInnerSelector cmGraphSelector" role="tablist" aria-label="Tipo de gráfica">
@@ -363,32 +363,10 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
                     <strong>Énfasis temporal</strong>
                     <span>{fullChartModel.data.labels[focusStart]} → {fullChartModel.data.labels[focusEnd]}</span>
                   </div>
-                  <div
-                    className="cmFocusRange"
-                    style={{
-                      "--focus-start": `${focusStartPercent}%`,
-                      "--focus-end": `${focusEndPercent}%`,
-                    }}
-                  >
+                  <div className="cmFocusRange" style={{ "--focus-start": `${focusStartPercent}%`, "--focus-end": `${focusEndPercent}%` }}>
                     <div className="cmFocusTrack" aria-hidden="true" />
-                    <input
-                      className="cmFocusThumb cmFocusThumbStart"
-                      type="range"
-                      min="0"
-                      max={temporalPointCount - 1}
-                      value={focusStart}
-                      onChange={(event) => setFocusStart(Math.min(Number(event.target.value), focusEnd))}
-                      aria-label="Inicio del énfasis temporal"
-                    />
-                    <input
-                      className="cmFocusThumb cmFocusThumbEnd"
-                      type="range"
-                      min="0"
-                      max={temporalPointCount - 1}
-                      value={focusEnd}
-                      onChange={(event) => setFocusEnd(Math.max(Number(event.target.value), focusStart))}
-                      aria-label="Fin del énfasis temporal"
-                    />
+                    <input className="cmFocusThumb cmFocusThumbStart" type="range" min="0" max={temporalPointCount - 1} value={focusStart} onChange={(event) => setFocusStart(Math.min(Number(event.target.value), focusEnd))} aria-label="Inicio del énfasis temporal" />
+                    <input className="cmFocusThumb cmFocusThumbEnd" type="range" min="0" max={temporalPointCount - 1} value={focusEnd} onChange={(event) => setFocusEnd(Math.max(Number(event.target.value), focusStart))} aria-label="Fin del énfasis temporal" />
                   </div>
                   <small>El control solo cambia la ventana visible de la gráfica; la consulta y la exportación conservan todos los datos.</small>
                 </div>
