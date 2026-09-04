@@ -43,8 +43,8 @@
     margin-top: 10px;
     padding: 10px 12px;
     border-radius: 10px;
-    background: #F8FAFC;
-    border: 1px solid rgba(0,0,0,.06);
+    background: #FFF7ED;
+    border: 1px solid rgba(255,107,0,.18);
 }
 
 .cmFocusHeader{
@@ -58,12 +58,12 @@
 }
 
 .cmFocusHeader strong{
-    color: #101828;
+    color: #9A3412;
 }
 
 .cmFocusHeader span,
 .cmFocusControl small{
-    color: #667085;
+    color: #7C2D12;
 }
 
 .cmFocusRange{
@@ -84,8 +84,8 @@
         to right,
         #D0D5DD 0%,
         #D0D5DD var(--focus-start),
-        #0F766E var(--focus-start),
-        #0F766E var(--focus-end),
+        #FF6B00 var(--focus-start),
+        #FF6B00 var(--focus-end),
         #D0D5DD var(--focus-end),
         #D0D5DD 100%
       );
@@ -116,8 +116,8 @@
     margin-top: -7px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
-    background: #0F766E;
-    box-shadow: 0 0 0 1px rgba(15,118,110,.22), 0 1px 3px rgba(16,24,40,.20);
+    background: #FF6B00;
+    box-shadow: 0 0 0 1px rgba(255,107,0,.28), 0 1px 3px rgba(16,24,40,.20);
     cursor: ew-resize;
     pointer-events: auto;
 }
@@ -132,8 +132,8 @@
     height: 18px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
-    background: #0F766E;
-    box-shadow: 0 0 0 1px rgba(15,118,110,.22), 0 1px 3px rgba(16,24,40,.20);
+    background: #FF6B00;
+    box-shadow: 0 0 0 1px rgba(255,107,0,.28), 0 1px 3px rgba(16,24,40,.20);
     cursor: ew-resize;
     pointer-events: auto;
 }
