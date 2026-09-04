@@ -1,45 +1,51 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BarChart3, Download, FileText, ImageDown, LayoutDashboard } from "lucide-react";
-import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import {
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Tooltip,
+} from "chart.js";
+import { Bar, Line } from "react-chartjs-2";
 import ModalShell from "./ModalShell";
 import "./ChartsModal.css";
 import "./RealResultsModal.css";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip, Legend);
 
 const TABS = [
   { key: "summary", label: "Resumen", icon: LayoutDashboard },
   { key: "charts", label: "Gráficas", icon: BarChart3 },
   { key: "data", label: "Datos", icon: FileText },
 ];
-const SINGLE_GRAPH_OPTIONS = [
-  { key: "activity", label: "Actividad" },
+
+const SNAPSHOT_GRAPH_OPTIONS = [
   { key: "sources", label: "Fuentes" },
   { key: "climate", label: "Clima" },
 ];
+
 const MULTI_GRAPH_OPTIONS = [
   { key: "clusters", label: "Clusters" },
   { key: "firms", label: "Top FIRMS" },
   { key: "conafor", label: "Top CONAFOR" },
   { key: "hectares", label: "Top hectáreas" },
 ];
+
 const TEMPORAL_GRAPH_OPTIONS = [
-  { key: "compareActivity", label: "Observaciones" },
-  { key: "compareFirms", label: "FIRMS" },
-  { key: "compareConafor", label: "CONAFOR" },
-  { key: "compareHectares", label: "Hectáreas" },
+  { key: "trendFirms", label: "FIRMS" },
+  { key: "trendConafor", label: "CONAFOR" },
+  { key: "trendHectares", label: "Hectáreas" },
+  { key: "trendTemperature", label: "Temperatura" },
+  { key: "trendRain", label: "Precipitación" },
 ];
 
 const PAGE_SIZE = 50;
 const formatNumber = (value, digits = 0) => Number(value || 0).toLocaleString("es-MX", { maximumFractionDigits: digits });
 const territoryName = (row) => row.nombre_municipio || row.nombre_entidad || row.cvegeo || row.cve_ent || "N/D";
-const sum = (rows, field) => rows.reduce((total, row) => total + Number(row?.[field] || 0), 0);
-const average = (rows, field) => {
-  const values = rows.map((row) => Number(row?.[field])).filter(Number.isFinite);
-  if (!values.length) return 0;
-  return values.reduce((total, value) => total + value, 0) / values.length;
-};
 
 const horizontalOptions = (xTitle = "") => ({
   indexAxis: "y",
@@ -52,24 +58,93 @@ const horizontalOptions = (xTitle = "") => ({
   },
 });
 
+const lineOptions = (yTitle = "", beginAtZero = true) => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: { mode: "index", intersect: false },
+  plugins: { legend: { display: true, position: "top" }, tooltip: { enabled: true } },
+  scales: {
+    x: { grid: { display: false }, title: { display: true, text: "Período" } },
+    y: { beginAtZero, title: { display: Boolean(yTitle), text: yTitle } },
+  },
+});
+
 function safeFilePart(value) {
   return String(value || "grafica").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9_-]+/g, "_").replace(/^_+|_+$/g, "").toLowerCase();
 }
 
+function buildTemporalChartModel(activeGraph, rows, tipoPeriodo) {
+  if (!rows.length) return null;
+  const isComparison = tipoPeriodo === "comparar_anios";
+  const seriesNames = [...new Set(rows.map((row) => row.series || "Periodo"))];
+  const labels = isComparison
+    ? [...new Set(rows.map((row) => row.periodKey.slice(5, 7)))].sort().map((month) => ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"][Number(month) - 1])
+    : rows.filter((row) => (row.series || "Periodo") === seriesNames[0]).map((row) => row.label);
+
+  const metricConfig = {
+    trendFirms: { field: "firms_detecciones", title: "Evolución de detecciones FIRMS", yTitle: "Detecciones", beginAtZero: true },
+    trendConafor: { field: "conafor_eventos", title: "Evolución de eventos CONAFOR", yTitle: "Eventos", beginAtZero: true },
+    trendHectares: { field: "conafor_ha", title: "Evolución de hectáreas CONAFOR", yTitle: "Hectáreas", beginAtZero: true },
+    trendRain: { field: "precip_mm", title: "Evolución de precipitación", yTitle: "Precipitación (mm)", beginAtZero: true },
+  }[activeGraph];
+
+  if (activeGraph === "trendTemperature") {
+    const baseSeries = isComparison ? seriesNames : [seriesNames[0]];
+    const datasets = [];
+    baseSeries.forEach((series) => {
+      const serieRows = rows.filter((row) => (row.series || "Periodo") === series);
+      const valueFor = (monthOrLabel, field) => {
+        if (isComparison) {
+          const month = String(["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"].indexOf(monthOrLabel) + 1).padStart(2, "0");
+          return serieRows.find((row) => row.periodKey.slice(5, 7) === month)?.[field] ?? null;
+        }
+        return serieRows.find((row) => row.label === monthOrLabel)?.[field] ?? null;
+      };
+      datasets.push({ label: `${seriesNames.length > 1 ? `${series} · ` : ""}Mínima`, data: labels.map((label) => valueFor(label, "temp_min_c")), tension: 0.28, pointRadius: 2.5, spanGaps: true });
+      datasets.push({ label: `${seriesNames.length > 1 ? `${series} · ` : ""}Máxima`, data: labels.map((label) => valueFor(label, "temp_max_c")), tension: 0.28, pointRadius: 2.5, spanGaps: true });
+    });
+    return { type: "line", title: "Evolución de temperatura", caption: isComparison ? "Temperaturas mínima y máxima comparadas por mes para ambos años." : "Temperaturas mínima y máxima a lo largo del período consultado.", yTitle: "Temperatura (°C)", beginAtZero: false, data: { labels, datasets } };
+  }
+
+  if (!metricConfig) return null;
+  const datasets = seriesNames.map((series) => {
+    const serieRows = rows.filter((row) => (row.series || "Periodo") === series);
+    const data = labels.map((label) => {
+      if (isComparison) {
+        const month = String(["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"].indexOf(label) + 1).padStart(2, "0");
+        return serieRows.find((row) => row.periodKey.slice(5, 7) === month)?.[metricConfig.field] ?? null;
+      }
+      return serieRows.find((row) => row.label === label)?.[metricConfig.field] ?? null;
+    });
+    return { label: seriesNames.length > 1 ? series : metricConfig.yTitle, data, tension: 0.28, pointRadius: 2.5, spanGaps: true };
+  });
+
+  return {
+    type: "line",
+    title: metricConfig.title,
+    caption: isComparison ? "Comparación mensual de los dos años seleccionados." : "Serie temporal construida con la granularidad real disponible para la consulta.",
+    yTitle: metricConfig.yTitle,
+    beginAtZero: metricConfig.beginAtZero,
+    data: { labels, datasets },
+  };
+}
+
 export default function RealResultsModal({ open, onClose, resumenConsulta = null, onOpenExport }) {
   const [tab, setTab] = useState("summary");
-  const [graphView, setGraphView] = useState("activity");
+  const [graphView, setGraphView] = useState("sources");
   const [page, setPage] = useState(1);
   const chartRef = useRef(null);
   const rows = resumenConsulta?.rows ?? [];
   const summaryRows = resumenConsulta?.summaryRows ?? [];
   const temporalRows = resumenConsulta?.temporalRows ?? [];
-  const isTemporalComparison = temporalRows.length > 1;
-  const isDateRange = resumenConsulta?.tipoPeriodo === "rango_fechas";
-  const isSingleTerritory = isDateRange || (!isTemporalComparison && rows.length <= 1);
-  const graphOptions = isTemporalComparison ? TEMPORAL_GRAPH_OPTIONS : (isSingleTerritory ? SINGLE_GRAPH_OPTIONS : MULTI_GRAPH_OPTIONS);
+  const hasTemporalSeries = temporalRows.length > 1;
+  const isSingleSnapshot = !hasTemporalSeries && rows.length <= 1;
+  const graphOptions = hasTemporalSeries ? TEMPORAL_GRAPH_OPTIONS : (isSingleSnapshot ? SNAPSHOT_GRAPH_OPTIONS : MULTI_GRAPH_OPTIONS);
   const activeGraph = graphOptions.some((option) => option.key === graphView) ? graphView : graphOptions[0]?.key;
-  const chartModel = useMemo(() => buildChartModel({ activeGraph, rows, summaryRows, temporalRows, isDateRange }), [activeGraph, rows, summaryRows, temporalRows, isDateRange]);
+  const chartModel = useMemo(() => {
+    if (hasTemporalSeries) return buildTemporalChartModel(activeGraph, temporalRows, resumenConsulta?.tipoPeriodo);
+    return buildBarChartModel({ activeGraph, rows, summaryRows });
+  }, [activeGraph, hasTemporalSeries, temporalRows, resumenConsulta?.tipoPeriodo, rows, summaryRows]);
   const ml = resumenConsulta?.resultadoMl ?? {};
   const shouldPaginate = rows.length > 100;
   const totalPages = shouldPaginate ? Math.max(1, Math.ceil(rows.length / PAGE_SIZE)) : 1;
@@ -88,19 +163,12 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
     anchor.click();
   };
 
-  const footer = onOpenExport ? (
-    <button type="button" className="cmClearBtn" onClick={onOpenExport} title="Descargar los datos de la consulta ejecutada">
-      <Download size={15} /> Exportar datos de la consulta
-    </button>
-  ) : null;
+  const footer = onOpenExport ? <button type="button" className="cmClearBtn" onClick={onOpenExport} title="Descargar los datos de la consulta ejecutada"><Download size={15} /> Exportar datos de la consulta</button> : null;
 
   return (
     <ModalShell open={open} onClose={onClose} title="Resultados ML" width={1040} footer={footer} allowOverlayClose className="cmResultsDialog">
       <div className="cmTabs" role="tablist" aria-label="Resultados ML">
-        {TABS.map((item) => {
-          const Icon = item.icon;
-          return <button key={item.key} type="button" className={`cmTab ${tab === item.key ? "isActive" : ""}`} onClick={() => setTab(item.key)} role="tab" aria-selected={tab === item.key}><Icon size={16} />{item.label}</button>;
-        })}
+        {TABS.map((item) => { const Icon = item.icon; return <button key={item.key} type="button" className={`cmTab ${tab === item.key ? "isActive" : ""}`} onClick={() => setTab(item.key)} role="tab" aria-selected={tab === item.key}><Icon size={16} />{item.label}</button>; })}
       </div>
 
       {tab === "summary" ? (
@@ -113,21 +181,14 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
             <SummaryItem label="Detecciones FIRMS" value={formatNumber(resumenConsulta?.firms_detecciones)} />
             <SummaryItem label="Eventos CONAFOR" value={formatNumber(resumenConsulta?.conafor_eventos)} />
             <SummaryItem label="Hectáreas CONAFOR" value={formatNumber(resumenConsulta?.conafor_ha, 2)} />
-            <SummaryItem label="Días con incendio" value={formatNumber(resumenConsulta?.dias_incendio)} />
-            <SummaryItem label="Días con patrón extremo" value={formatNumber(resumenConsulta?.dias_extremo)} />
+            {resumenConsulta?.dias_incendio !== null && resumenConsulta?.dias_incendio !== undefined ? <SummaryItem label="Días con incendio" value={formatNumber(resumenConsulta.dias_incendio)} /> : null}
+            {resumenConsulta?.dias_extremo !== null && resumenConsulta?.dias_extremo !== undefined ? <SummaryItem label="Días con patrón extremo" value={formatNumber(resumenConsulta.dias_extremo)} /> : null}
           </div>
-          {isTemporalComparison ? (
-            <div className="cmDominant">
-              <div className="cmPanelTitle">Comparación temporal</div>
-              <p>La consulta compara {temporalRows.map((row) => row.label).join(" vs ")}. Usa la pestaña “Gráficas” para contrastar observaciones, FIRMS, CONAFOR y hectáreas entre ambos años.</p>
-            </div>
-          ) : (
-            <div className="cmDominant" style={ml.color_sugerido_app ? { borderLeftColor: ml.color_sugerido_app } : undefined}>
-              <div className="cmPanelTitle">Patrón ML dominante</div>
-              <strong>{ml.estado_app || "Sin clasificación disponible"}</strong>
-              <p>{ml.etiqueta_final || "Sin etiqueta disponible"}</p>
-            </div>
-          )}
+          <div className="cmDominant" style={ml.color_sugerido_app ? { borderLeftColor: ml.color_sugerido_app } : undefined}>
+            <div className="cmPanelTitle">Patrón ML dominante</div>
+            <strong>{ml.estado_app || "Sin clasificación disponible"}</strong>
+            <p>{ml.etiqueta_final || "Sin etiqueta disponible"}</p>
+          </div>
         </div>
       ) : null}
 
@@ -135,10 +196,8 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
         <div className="cmChartsStack">
           <div className="cmChartsHeader">
             <div>
-              <div className="cmPanelTitle">{isTemporalComparison ? "Comparación entre años" : (isDateRange ? "Resumen del rango" : (isSingleTerritory ? "Perfil del territorio" : "Comparación territorial"))}</div>
-              <p className="cmChartCaption">
-                {isTemporalComparison ? `Contraste temporal para ${resumenConsulta?.territorio || "el territorio seleccionado"}.` : (isDateRange ? `Agregado de los registros diarios entre ${resumenConsulta?.periodo || "las fechas seleccionadas"}.` : (isSingleTerritory ? "Las gráficas cambian de métrica porque la consulta contiene un solo territorio agregado." : `Comparación de ${rows.length} territorios devueltos por la consulta.`))}
-              </p>
+              <div className="cmPanelTitle">{hasTemporalSeries ? (resumenConsulta?.tipoPeriodo === "comparar_anios" ? "Comparación temporal" : "Evolución temporal") : (isSingleSnapshot ? "Perfil del territorio" : "Comparación territorial")}</div>
+              <p className="cmChartCaption">{hasTemporalSeries ? "La gráfica usa la resolución temporal real disponible para la consulta." : (isSingleSnapshot ? "Vista del período o fecha seleccionada." : `Comparación de ${rows.length} territorios devueltos por la consulta.`)}</p>
             </div>
             <div className="cmChartsTools">
               <div className="cmInnerSelector cmGraphSelector" role="tablist" aria-label="Tipo de gráfica">
@@ -147,19 +206,24 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
               <button type="button" className="cmImageBtn" onClick={downloadChart} disabled={!chartModel} title="Descargar gráfica actual como PNG"><ImageDown size={16} /> PNG</button>
             </div>
           </div>
-          {chartModel ? <div className="cmChartCard"><div className="cmChartTitle">{chartModel.title}</div><p className="cmChartCaption">{chartModel.caption}</p><div className="cmChartCanvas"><Bar ref={chartRef} data={chartModel.data} options={horizontalOptions(chartModel.xTitle)} /></div></div> : <div className="cmChartEmpty">No hay datos suficientes para mostrar esta gráfica.</div>}
+          {chartModel ? (
+            <div className="cmChartCard">
+              <div className="cmChartTitle">{chartModel.title}</div>
+              <p className="cmChartCaption">{chartModel.caption}</p>
+              <div className="cmChartCanvas">
+                {chartModel.type === "line" ? <Line ref={chartRef} data={chartModel.data} options={lineOptions(chartModel.yTitle, chartModel.beginAtZero)} /> : <Bar ref={chartRef} data={chartModel.data} options={horizontalOptions(chartModel.xTitle)} />}
+              </div>
+            </div>
+          ) : <div className="cmChartEmpty">No hay datos suficientes para mostrar esta gráfica.</div>}
         </div>
       ) : null}
 
       {tab === "data" ? (
         <div className="cmDataPanel">
-          <div>
-            <div className="cmPanelTitle">Datos de la consulta</div>
-            <p className="cmDataSubtitle">{shouldPaginate ? `Mostrando ${PAGE_SIZE} filas por página de ${formatNumber(rows.length)} registros.` : `Mostrando ${formatNumber(rows.length)} registros en una vista con desplazamiento.`}</p>
-          </div>
-          <div className="cmTableWrap isPreview"><table className="cmTable"><thead><tr>{isTemporalComparison ? <th>Año</th> : null}{showDateColumn ? <th>Fecha</th> : null}<th>Territorio</th><th>Clave</th><th>Cluster</th><th>Observaciones</th><th>FIRMS</th><th>CONAFOR</th><th>Hectáreas</th></tr></thead><tbody>
-            {visibleRows.map((row, index) => <tr key={`${row.cvegeo || row.cve_ent}-${row.fecha || row.anio_comparacion || row.anio}-${row.mes || "periodo"}-${index}`}>{isTemporalComparison ? <td>{row.anio_comparacion}</td> : null}{showDateColumn ? <td>{row.fecha || ""}</td> : null}<td>{territoryName(row)}</td><td>{row.cvegeo || row.cve_ent}</td><td>{row.cluster}</td><td>{formatNumber(row.observaciones ?? 1)}</td><td>{formatNumber(row.firms_detecciones)}</td><td>{formatNumber(row.conafor_eventos)}</td><td>{formatNumber(row.conafor_ha, 2)}</td></tr>)}
-            {!rows.length ? <tr><td colSpan={(isTemporalComparison ? 1 : 0) + (showDateColumn ? 1 : 0) + 7}>No hay filas disponibles para esta consulta.</td></tr> : null}
+          <div><div className="cmPanelTitle">Datos de la consulta</div><p className="cmDataSubtitle">{shouldPaginate ? `Mostrando ${PAGE_SIZE} filas por página de ${formatNumber(rows.length)} registros.` : `Mostrando ${formatNumber(rows.length)} registros en una vista con desplazamiento.`}</p></div>
+          <div className="cmTableWrap isPreview"><table className="cmTable"><thead><tr>{showDateColumn ? <th>Fecha</th> : null}<th>Territorio</th><th>Clave</th><th>Cluster</th><th>Observaciones</th><th>FIRMS</th><th>CONAFOR</th><th>Hectáreas</th></tr></thead><tbody>
+            {visibleRows.map((row, index) => <tr key={`${row.cvegeo || row.cve_ent}-${row.fecha || row.anio_comparacion || row.anio}-${row.mes || "periodo"}-${index}`}>{showDateColumn ? <td>{row.fecha || ""}</td> : null}<td>{territoryName(row)}</td><td>{row.cvegeo || row.cve_ent}</td><td>{row.cluster}</td><td>{formatNumber(row.observaciones ?? 1)}</td><td>{formatNumber(row.firms_detecciones)}</td><td>{formatNumber(row.conafor_eventos)}</td><td>{formatNumber(row.conafor_ha, 2)}</td></tr>)}
+            {!rows.length ? <tr><td colSpan={(showDateColumn ? 1 : 0) + 7}>No hay filas disponibles para esta consulta.</td></tr> : null}
           </tbody></table></div>
           {shouldPaginate ? <div className="cmPagination"><button type="button" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page <= 1}>Anterior</button><span>Página {page} de {totalPages}</span><button type="button" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page >= totalPages}>Siguiente</button></div> : null}
         </div>
@@ -168,31 +232,15 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
   );
 }
 
-function buildChartModel({ activeGraph, rows, summaryRows, temporalRows, isDateRange }) {
-  if (temporalRows.length > 1 && activeGraph?.startsWith("compare")) {
-    const metric = {
-      compareActivity: { field: "observaciones", title: "Observaciones por año", xTitle: "Observaciones", color: "#0F766E" },
-      compareFirms: { field: "firms_detection_count_total", title: "Detecciones FIRMS por año", xTitle: "Detecciones FIRMS", color: "#F97316" },
-      compareConafor: { field: "conafor_event_count_total", title: "Incendios CONAFOR por año", xTitle: "Eventos CONAFOR", color: "#DC2626" },
-      compareHectares: { field: "conafor_total_hectareas_total", title: "Hectáreas CONAFOR por año", xTitle: "Hectáreas", color: "#B45309" },
-    }[activeGraph];
-    return {
-      title: metric.title,
-      caption: "Comparación directa de los dos años seleccionados para el mismo alcance territorial.",
-      xTitle: metric.xTitle,
-      data: { labels: temporalRows.map((row) => row.label), datasets: [{ label: metric.xTitle, data: temporalRows.map((row) => Number(row[metric.field] || 0)), backgroundColor: metric.color, borderRadius: 5 }] },
-    };
-  }
-
+function buildBarChartModel({ activeGraph, rows, summaryRows }) {
   if (!rows.length) return null;
-  if (rows.length === 1 || isDateRange) {
-    const row = rows[0] || {};
-    if (activeGraph === "sources") return { title: "Fuentes de detección y registro", caption: isDateRange ? "Conteos acumulados FIRMS y CONAFOR para el rango consultado." : "Conteos FIRMS y CONAFOR para el período consultado.", xTitle: "Conteo", data: { labels: ["Detecciones FIRMS", "Eventos CONAFOR"], datasets: [{ label: "Conteo", data: [isDateRange ? sum(rows, "firms_detecciones") : Number(row.firms_detecciones || 0), isDateRange ? sum(rows, "conafor_eventos") : Number(row.conafor_eventos || 0)], backgroundColor: ["#F97316", "#DC2626"], borderRadius: 5 }] } };
-    if (activeGraph === "climate") return { title: "Condiciones climáticas promedio", caption: isDateRange ? "Promedios calculados a partir de los registros diarios del rango." : "Temperatura mínima, máxima y precipitación promedio.", xTitle: "Valor", data: { labels: ["Temperatura mínima (°C)", "Temperatura máxima (°C)", "Precipitación (mm)"], datasets: [{ label: "Promedio", data: [isDateRange ? average(rows, "temp_min_c") : Number(row.temp_min_c || 0), isDateRange ? average(rows, "temp_max_c") : Number(row.temp_max_c || 0), isDateRange ? average(rows, "precip_mm") : Number(row.precip_mm || 0)], backgroundColor: ["#0EA5E9", "#F97316", "#14B8A6"], borderRadius: 5 }] } };
-    return { title: "Actividad observada durante el período", caption: isDateRange ? "Días con señales de incendio y cobertura de las fuentes dentro del rango." : "Días con señales de incendio y cobertura de las fuentes disponibles.", xTitle: "Días", data: { labels: ["Incendio activo", "Patrón extremo", "Con CONAFOR", "Con FIRMS", "Con SMN"], datasets: [{ label: "Días", data: [isDateRange ? sum(rows, "dias_incendio") : Number(row.dias_incendio || 0), isDateRange ? sum(rows, "dias_extremo") : Number(row.dias_extremo || 0), isDateRange ? rows.filter((item) => Number(item.conafor_eventos || 0) > 0).length : Number(row.dias_conafor || 0), isDateRange ? rows.filter((item) => Number(item.firms_detecciones || 0) > 0).length : Number(row.dias_firms || 0), isDateRange ? rows.filter((item) => Number(item.smn_obs || 0) > 0).length : Number(row.dias_smn || 0)], backgroundColor: ["#DC2626", "#7C3AED", "#B91C1C", "#F97316", "#0F766E"], borderRadius: 5 }] } };
+  if (rows.length === 1) {
+    const row = rows[0];
+    if (activeGraph === "climate") return { type: "bar", title: "Condiciones climáticas", caption: "Valores correspondientes al período consultado.", xTitle: "Valor", data: { labels: ["Temperatura mínima (°C)", "Temperatura máxima (°C)", "Precipitación (mm)"], datasets: [{ label: "Valor", data: [row.temp_min_c ?? 0, row.temp_max_c ?? 0, row.precip_mm ?? 0], backgroundColor: ["#0EA5E9", "#F97316", "#14B8A6"], borderRadius: 5 }] } };
+    return { type: "bar", title: "Fuentes de detección y registro", caption: "Conteos FIRMS y CONAFOR para el período consultado.", xTitle: "Conteo", data: { labels: ["Detecciones FIRMS", "Eventos CONAFOR"], datasets: [{ label: "Conteo", data: [Number(row.firms_detecciones || 0), Number(row.conafor_eventos || 0)], backgroundColor: ["#F97316", "#DC2626"], borderRadius: 5 }] } };
   }
 
-  if (activeGraph === "clusters") return { title: "Distribución de observaciones por cluster", caption: "Observaciones acumuladas agrupadas por patrón ML.", xTitle: "Observaciones", data: { labels: summaryRows.map((row) => row.estado_app || `Cluster ${row.cluster_id}`), datasets: [{ label: "Observaciones", data: summaryRows.map((row) => Number(row.n_observaciones || 0)), backgroundColor: summaryRows.map((row) => row.color_sugerido_app || "#0F766E"), borderRadius: 5 }] } };
+  if (activeGraph === "clusters") return { type: "bar", title: "Distribución de observaciones por cluster", caption: "Observaciones acumuladas agrupadas por patrón ML.", xTitle: "Observaciones", data: { labels: summaryRows.map((row) => row.estado_app || `Cluster ${row.cluster_id}`), datasets: [{ label: "Observaciones", data: summaryRows.map((row) => Number(row.n_observaciones || 0)), backgroundColor: summaryRows.map((row) => row.color_sugerido_app || "#0F766E"), borderRadius: 5 }] } };
 
   const metric = {
     firms: { field: "firms_detecciones", title: "Top territorios por detecciones FIRMS", xTitle: "Detecciones FIRMS", color: "#F97316" },
@@ -201,7 +249,7 @@ function buildChartModel({ activeGraph, rows, summaryRows, temporalRows, isDateR
   }[activeGraph];
   if (!metric) return null;
   const topRows = [...rows].sort((a, b) => Number(b[metric.field] || 0) - Number(a[metric.field] || 0)).slice(0, 12);
-  return { title: metric.title, caption: "Comparación territorial para la consulta activa.", xTitle: metric.xTitle, data: { labels: topRows.map(territoryName), datasets: [{ label: metric.xTitle, data: topRows.map((row) => Number(row[metric.field] || 0)), backgroundColor: metric.color, borderRadius: 5 }] } };
+  return { type: "bar", title: metric.title, caption: "Comparación territorial para la consulta activa.", xTitle: metric.xTitle, data: { labels: topRows.map(territoryName), datasets: [{ label: metric.xTitle, data: topRows.map((row) => Number(row[metric.field] || 0)), backgroundColor: metric.color, borderRadius: 5 }] } };
 }
 
 function SummaryItem({ label, value }) {
