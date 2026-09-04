@@ -62,6 +62,28 @@ const horizontalOptions = (xTitle = "") => ({
   },
 });
 
+const verticalOptions = (yTitle = "") => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      enabled: true,
+      callbacks: {
+        label: (context) => `${context.dataset.label}: ${Number(context.raw || 0).toLocaleString("es-MX")}`,
+      },
+    },
+  },
+  scales: {
+    x: {
+      grid: { display: false },
+      ticks: { maxRotation: 0, minRotation: 0 },
+      title: { display: true, text: "Tipo de dato" },
+    },
+    y: { beginAtZero: true, title: { display: Boolean(yTitle), text: yTitle } },
+  },
+});
+
 const lineOptions = (yTitle = "", beginAtZero = true) => ({
   responsive: true,
   maintainAspectRatio: false,
@@ -172,17 +194,17 @@ function buildLayerChartModel(layerSummary, capasActivas = {}) {
   const colors = [];
 
   if (capasActivas.puntosCalorFirms) {
-    labels.push("FIRMS");
+    labels.push(["FIRMS", "Anomalías térmicas"]);
     values.push(Number(layerSummary?.firms?.count || 0));
     colors.push("#F97316");
   }
   if (capasActivas.incendiosConafor) {
-    labels.push("CONAFOR");
+    labels.push(["CONAFOR", "Incendios"]);
     values.push(Number(layerSummary?.conafor?.count || 0));
     colors.push("#DC2626");
   }
   if (capasActivas.estacionesSmn) {
-    labels.push("SMN-CONAGUA");
+    labels.push(["SMN-CONAGUA", "Estaciones"]);
     values.push(Number(layerSummary?.smn?.count || 0));
     colors.push("#0F766E");
   }
@@ -190,12 +212,13 @@ function buildLayerChartModel(layerSummary, capasActivas = {}) {
   if (!labels.length) return null;
   return {
     type: "bar",
-    title: "Elementos visibles de las capas activas",
-    caption: "Conteos del área actualmente visible del mapa; no representan los totales analíticos de la consulta ML.",
-    xTitle: "Elementos visibles",
+    orientation: "vertical",
+    title: "Registros visibles por capa observada",
+    caption: "Conteos del área visible del mapa, separados por tipo de dato.",
+    yTitle: "Cantidad visible",
     data: {
       labels,
-      datasets: [{ label: "Elementos visibles", data: values, backgroundColor: colors, borderRadius: 5 }],
+      datasets: [{ label: "Cantidad visible", data: values, backgroundColor: colors, borderRadius: 5 }],
     },
   };
 }
@@ -313,9 +336,9 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
       {tab === "charts" ? (
         <div className="cmChartsStack">
           <div className="cmChartsHeader">
-            <div>
+            <div className="cmChartsHeading">
               <div className="cmPanelTitle">{activeGraph === "layers" ? "Capas activas" : (hasTemporalSeries ? (resumenConsulta?.tipoPeriodo === "comparar_anios" ? "Comparación temporal" : "Evolución temporal") : (isSingleSnapshot ? "Perfil del territorio" : "Comparación territorial"))}</div>
-              <p className="cmChartCaption">{activeGraph === "layers" ? "Contexto de las capas observadas actualmente visibles en el mapa." : (hasTemporalSeries ? "La gráfica usa la resolución temporal real disponible para la consulta." : (isSingleSnapshot ? "Vista del período o fecha seleccionada." : `Comparación de ${rows.length} territorios devueltos por la consulta.`))}</p>
+              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas observadas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal real de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
             </div>
             <div className="cmChartsTools">
               <div className="cmInnerSelector cmGraphSelector" role="tablist" aria-label="Tipo de gráfica">
@@ -332,7 +355,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
               <div className="cmChartCanvas">
                 {chartModel.type === "line"
                   ? <Line ref={chartRef} data={chartModel.data} options={lineOptions(chartModel.yTitle, chartModel.beginAtZero)} />
-                  : <Bar ref={chartRef} data={chartModel.data} options={horizontalOptions(chartModel.xTitle)} />}
+                  : <Bar ref={chartRef} data={chartModel.data} options={chartModel.orientation === "vertical" ? verticalOptions(chartModel.yTitle) : horizontalOptions(chartModel.xTitle)} />}
               </div>
               {fullChartModel?.type === "line" && temporalPointCount > 2 ? (
                 <div className="cmFocusControl">
