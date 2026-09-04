@@ -304,8 +304,8 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
   ) : null;
 
   return (
-    <ModalShell open={open} onClose={onClose} title="Resultados ML" width={1040} footer={footer} allowOverlayClose className="cmResultsDialog">
-      <div className="cmTabs" role="tablist" aria-label="Resultados ML">
+    <ModalShell open={open} onClose={onClose} title="Resultados" width={1040} footer={footer} allowOverlayClose className="cmResultsDialog">
+      <div className="cmTabs" role="tablist" aria-label="Resultados">
         {TABS.map((item) => {
           const Icon = item.icon;
           return <button key={item.key} type="button" className={`cmTab ${tab === item.key ? "isActive" : ""}`} onClick={() => setTab(item.key)} role="tab" aria-selected={tab === item.key}><Icon size={16} />{item.label}</button>;
