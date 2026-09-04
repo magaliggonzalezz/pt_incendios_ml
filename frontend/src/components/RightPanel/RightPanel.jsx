@@ -216,7 +216,7 @@ export default function RightPanel({
       </aside>
 
       <ExportModal open={openExport} onClose={() => setOpenExport(false)} consultaActiva={consultaResultado} resumenConsulta={resumenConsulta} totalRecords={totalRecords} availableFormats={availableFormats} isExporting={isExporting} error={error} onPreviewExport={onPreviewExport} onDownloadExport={onDownloadExport} selectedMlCluster={selectedMlCluster} />
-      <RealResultsModal open={openCharts} onClose={() => setOpenCharts(false)} resumenConsulta={resumenConsulta} onOpenExport={() => setOpenExport(true)} />
+      <RealResultsModal open={openCharts} onClose={() => setOpenCharts(false)} resumenConsulta={resumenConsulta} layerSummary={layerSummary} capasActivas={consultaActiva?.capasActivas} onOpenExport={() => setOpenExport(true)} />
     </>
   );
 }
