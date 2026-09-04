@@ -27,7 +27,7 @@ const SOURCES = [
 
 export default function SourcesModal({ open, onClose }) {
   return (
-    <ModalShell open={open} onClose={onClose} title="Fuentes de datos" width={550} allowOverlayClose={true} footer={null}>
+    <ModalShell open={open} onClose={onClose} title="Fuentes de datos" width={550} allowOverlayClose={true} footer={null} className="smDialog">
       <p className="smSubtitle">
         Esta aplicación web integra información de fuentes oficiales para capas observadas, estaciones, capas territoriales y resultados analíticos.
       </p>
