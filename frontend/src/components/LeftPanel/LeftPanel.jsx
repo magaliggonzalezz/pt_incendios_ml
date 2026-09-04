@@ -112,6 +112,14 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
     onConsultaChange?.("consultaPatch", {
       fechaInicio,
       anio: fechaInicio ? fechaInicio.slice(0, 4) : "",
+      mes: tipoPeriodo === "rango_fechas" ? `rango:${fechaInicio}:${consultaActiva?.fechaFin || ""}` : "",
+    });
+  };
+
+  const onChangeFechaFin = (fechaFin) => {
+    onConsultaChange?.("consultaPatch", {
+      fechaFin,
+      mes: `rango:${consultaActiva?.fechaInicio || ""}:${fechaFin}`,
     });
   };
 
@@ -151,7 +159,7 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
               {tipoPeriodo === "rango_fechas" ? (
                 <div className="field">
                   <label htmlFor="dateEnd">Fecha final</label>
-                  <input id="dateEnd" type="date" min={consultaActiva?.fechaInicio || MIN_DATE} max={MAX_DATE} value={consultaActiva?.fechaFin || ""} onChange={(event) => onConsultaChange?.("fechaFin", event.target.value)} />
+                  <input id="dateEnd" type="date" min={consultaActiva?.fechaInicio || MIN_DATE} max={MAX_DATE} value={consultaActiva?.fechaFin || ""} onChange={(event) => onChangeFechaFin(event.target.value)} />
                 </div>
               ) : null}
             </div>
