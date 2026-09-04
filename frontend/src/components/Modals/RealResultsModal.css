@@ -19,9 +19,9 @@
 
 .cmResultsDialog .cmTab.isActive,
 .cmResultsDialog .cmInnerSelector button.isActive{
-    background: #FFF7ED;
-    color: #C2410C;
-    box-shadow: inset 0 0 0 1px rgba(255,107,0,.42), 0 1px 2px rgba(16,24,40,.08);
+    background: #FFFFFF;
+    color: #0B4F4A;
+    box-shadow: 0 1px 2px rgba(16,24,40,.08);
 }
 
 .cmResultsDialog .cmTab:focus-visible,
@@ -35,9 +35,9 @@
 }
 
 .cmImageBtn{
-    border: 1px solid rgba(255,107,0,.30);
+    border: 1px solid rgba(11,79,74,.24);
     background: #FFFFFF;
-    color: #C2410C;
+    color: #0B4F4A;
     border-radius: 999px;
     padding: 7px 10px;
     display: inline-flex;
@@ -48,8 +48,7 @@
 }
 
 .cmImageBtn:hover:not(:disabled){
-    background: #FFF7ED;
-    border-color: #FF6B00;
+    background: #F6FEFC;
 }
 
 .cmImageBtn:disabled{
@@ -58,11 +57,11 @@
 }
 
 .cmResultsExportBtn{
-    border: 1px solid #FF6B00;
-    background: #FF6B00;
-    color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #FFFFFF;
+    color: #0B4F4A;
     border-radius: 999px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -71,17 +70,16 @@
 }
 
 .cmResultsExportBtn:hover{
-    background: #E85D00;
-    border-color: #E85D00;
-    color: #FFFFFF;
+    background: #F6FEFC;
+    border-color: rgba(11,79,74,.24);
 }
 
 .cmFocusControl{
     margin-top: 10px;
     padding: 10px 12px;
     border-radius: 10px;
-    background: #FFF7ED;
-    border: 1px solid rgba(255,107,0,.28);
+    background: #F8FAFC;
+    border: 1px solid rgba(0,0,0,.06);
 }
 
 .cmFocusHeader{
@@ -95,12 +93,12 @@
 }
 
 .cmFocusHeader strong{
-    color: #C2410C;
+    color: #101828;
 }
 
 .cmFocusHeader span,
 .cmFocusControl small{
-    color: #7C2D12;
+    color: #667085;
 }
 
 .cmFocusRange{
@@ -119,12 +117,12 @@
     background:
       linear-gradient(
         to right,
-        #E5E7EB 0%,
-        #E5E7EB var(--focus-start),
-        #FF6B00 var(--focus-start),
-        #FF6B00 var(--focus-end),
-        #E5E7EB var(--focus-end),
-        #E5E7EB 100%
+        #D0D5DD 0%,
+        #D0D5DD var(--focus-start),
+        #0B4F4A var(--focus-start),
+        #0B4F4A var(--focus-end),
+        #D0D5DD var(--focus-end),
+        #D0D5DD 100%
       );
 }
 
@@ -153,8 +151,8 @@
     margin-top: -8px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
-    background: #FF6B00;
-    box-shadow: 0 0 0 2px rgba(255,107,0,.30), 0 1px 3px rgba(16,24,40,.20);
+    background: #0B4F4A;
+    box-shadow: 0 1px 3px rgba(16,24,40,.25);
     cursor: ew-resize;
     pointer-events: auto;
 }
@@ -169,8 +167,8 @@
     height: 20px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
-    background: #FF6B00;
-    box-shadow: 0 0 0 2px rgba(255,107,0,.30), 0 1px 3px rgba(16,24,40,.20);
+    background: #0B4F4A;
+    box-shadow: 0 1px 3px rgba(16,24,40,.25);
     cursor: ew-resize;
     pointer-events: auto;
 }
@@ -204,9 +202,9 @@
 }
 
 .cmPagination button{
-    border: 1px solid rgba(255,107,0,.30);
+    border: 1px solid rgba(0,0,0,.10);
     background: #FFFFFF;
-    color: #C2410C;
+    color: #0B4F4A;
     border-radius: 999px;
     padding: 6px 10px;
     font: inherit;
@@ -215,8 +213,7 @@
 }
 
 .cmPagination button:hover:not(:disabled){
-    background: #FFF7ED;
-    border-color: #FF6B00;
+    background: #F6FEFC;
 }
 
 .cmPagination button:disabled{
