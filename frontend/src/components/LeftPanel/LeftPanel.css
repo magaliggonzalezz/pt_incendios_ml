@@ -137,7 +137,8 @@
     color-scheme: light;
 }
 
-.field input[type="date"]:focus{ box-shadow: 0 0 0 3px rgba(11,79,74,.18); }
+.field input[type="date"]:focus{ box-shadow: none; }
+.field input[type="date"]:focus-visible{ outline:3px solid #FF6B00; outline-offset:2px; box-shadow:0 0 0 2px rgba(255,255,255,.94),0 0 0 5px rgba(255,107,0,.28); }
 .field input[type="date"]::-webkit-calendar-picker-indicator{ height: 17px; width: 17px; opacity: .78; cursor: pointer; }
 
 .selectInput{
@@ -149,7 +150,8 @@
     outline: none;
     font: inherit;
 }
-.selectInput:focus{ box-shadow: 0 0 0 3px rgba(11,79,74,.18); }
+.selectInput:focus{ box-shadow:none; }
+.selectInput:focus-visible{ outline:3px solid #FF6B00; outline-offset:2px; box-shadow:0 0 0 2px rgba(255,255,255,.94),0 0 0 5px rgba(255,107,0,.28); }
 .selectInput:disabled{ opacity: .55; cursor: not-allowed; }
 
 .comparisonGrid{
@@ -172,8 +174,9 @@
 .ghostBtn:focus-visible,
 .row input[type="checkbox"]:focus-visible,
 .row input[type="radio"]:focus-visible{
-    outline: 3px solid rgba(11,79,74,.24);
-    outline-offset: 2px;
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28);
 }
 
 .primaryBtn{
