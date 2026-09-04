@@ -1,0 +1,65 @@
+.cmChartsTools{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cmImageBtn{
+    border: 1px solid rgba(11,79,74,.24);
+    background: #FFFFFF;
+    color: #0B4F4A;
+    border-radius: 999px;
+    padding: 7px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 700 12px/14px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    cursor: pointer;
+}
+
+.cmImageBtn:hover:not(:disabled){
+    background: #F6FEFC;
+}
+
+.cmImageBtn:disabled{
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.cmPagination{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    color: #4A5565;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.cmPagination button{
+    border: 1px solid rgba(0,0,0,.10);
+    background: #FFFFFF;
+    color: #0B4F4A;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cmPagination button:disabled{
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 760px){
+    .cmChartsTools{
+        justify-content: flex-start;
+    }
+
+    .cmPagination{
+        justify-content: space-between;
+    }
+}
