@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect, useMemo } from "react";
 import SearchableSelect from "../Common/SearchableSelect";
 import { LAYER_GROUPS, INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../../data/dashboardMock";
 import { setPuntosMapaPeriodo } from "../../services/puntosMapa.service";
@@ -73,7 +73,7 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
   const stateOptions = useMemo(() => estados.map((state) => ({ value: state.cve_ent, label: state.nombre, meta: `Entidad ${state.cve_ent}` })), [estados]);
   const municipalityOptions = useMemo(() => municipios.map((municipality) => ({ value: municipality.cvegeo, label: municipality.nombre, meta: `CVEGEO ${municipality.cvegeo}` })), [municipios]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPuntosMapaPeriodo(consultaActiva);
   }, [tipoPeriodo, consultaActiva?.anio, consultaActiva?.mes, consultaActiva?.fechaInicio, consultaActiva?.fechaFin]);
 
@@ -108,6 +108,13 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
     onConsultaChange?.("consultaPatch", { cvegeo, cveMun: municipality?.cve_mun || "", municipio: municipality?.nombre || "" });
   };
 
+  const onChangeFechaInicio = (fechaInicio) => {
+    onConsultaChange?.("consultaPatch", {
+      fechaInicio,
+      anio: fechaInicio ? fechaInicio.slice(0, 4) : "",
+    });
+  };
+
   return (
     <aside className={`leftPanel ${open ? "open" : "closed"}`} aria-label="Panel de filtros de consulta">
       <button className="toggleBtn" type="button" onClick={onToggle} aria-label={open ? "Ocultar panel de filtros" : "Mostrar panel de filtros"} aria-expanded={open}>{open ? "⟨" : "⟩"}</button>
@@ -139,7 +146,7 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
             <div className="dateGrid">
               <div className="field">
                 <label htmlFor="dateStart">{tipoPeriodo === "fecha" ? "Fecha" : "Fecha inicial"}</label>
-                <input id="dateStart" type="date" min={MIN_DATE} max={consultaActiva?.fechaFin || MAX_DATE} value={consultaActiva?.fechaInicio || ""} onChange={(event) => onConsultaChange?.("fechaInicio", event.target.value)} />
+                <input id="dateStart" type="date" min={MIN_DATE} max={consultaActiva?.fechaFin || MAX_DATE} value={consultaActiva?.fechaInicio || ""} onChange={(event) => onChangeFechaInicio(event.target.value)} />
               </div>
               {tipoPeriodo === "rango_fechas" ? (
                 <div className="field">
