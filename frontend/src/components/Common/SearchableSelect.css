@@ -28,8 +28,9 @@
 }
 
 .searchableSelectTrigger:focus-visible{
-  outline: 2px solid rgba(11,79,74,.22);
-  outline-offset: 1px;
+  outline: 3px solid #FF6B00;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28);
 }
 
 .searchableSelect.isDisabled{
@@ -70,9 +71,16 @@
 }
 
 .searchableSelectSearch:focus{
-  border-color: rgba(11,79,74,.44) !important;
-  box-shadow: 0 0 0 2px rgba(11,79,74,.09);
+  border-color: rgba(11,79,74,.20) !important;
+  box-shadow: none;
   outline: none;
+}
+
+.searchableSelectSearch:focus-visible{
+  border-color: #FF6B00 !important;
+  outline: 3px solid #FF6B00;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.94), 0 0 0 5px rgba(255,107,0,.28);
 }
 
 .searchableSelectList{
@@ -105,6 +113,12 @@
 
 .searchableSelectOption:hover{
   background: rgba(11,79,74,.055);
+}
+
+.searchableSelectOption:focus-visible{
+  outline: 3px solid #FF6B00;
+  outline-offset: -1px;
+  background: #FFF7ED;
 }
 
 .searchableSelectOption.isSelected{
