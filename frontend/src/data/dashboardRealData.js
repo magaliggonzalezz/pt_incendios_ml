@@ -127,6 +127,80 @@ function buildCatalogRows(clusters = []) {
   }));
 }
 
+function temporalKey(row) {
+  if (row.fecha) return String(row.fecha).slice(0, 10);
+  if (row.anio !== undefined && row.mes !== undefined) return `${row.anio}-${String(row.mes).padStart(2, "0")}`;
+  return row.periodo_serie || "";
+}
+
+function temporalLabel(key) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(key)) {
+    const [, month, day] = key.split("-");
+    return `${day}/${month}`;
+  }
+  if (/^\d{4}-\d{2}$/.test(key)) {
+    const [year, month] = key.split("-");
+    const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    return `${monthNames[Number(month) - 1]} ${year}`;
+  }
+  return key;
+}
+
+function buildTemporalSeries(rows = []) {
+  const grouped = new Map();
+
+  rows.forEach((row) => {
+    const periodKey = temporalKey(row);
+    if (!periodKey) return;
+    const series = row.serie_temporal ? String(row.serie_temporal) : "Periodo";
+    const key = `${series}|${periodKey}`;
+    const current = grouped.get(key) ?? {
+      periodKey,
+      label: temporalLabel(periodKey),
+      series,
+      observaciones: 0,
+      firms_detecciones: 0,
+      firms_frp: 0,
+      conafor_eventos: 0,
+      conafor_ha: 0,
+      precipWeighted: 0,
+      tempMinWeighted: 0,
+      tempMaxWeighted: 0,
+      climateWeight: 0,
+    };
+
+    const weight = Math.max(1, observationWeight(row));
+    current.observaciones += observationWeight(row);
+    current.firms_detecciones += Number(row.firms_detecciones || 0);
+    current.firms_frp += Number(row.firms_frp || 0);
+    current.conafor_eventos += Number(row.conafor_eventos || 0);
+    current.conafor_ha += Number(row.conafor_ha || 0);
+
+    if (row.precip_mm !== undefined && row.precip_mm !== null) current.precipWeighted += Number(row.precip_mm) * weight;
+    if (row.temp_min_c !== undefined && row.temp_min_c !== null) current.tempMinWeighted += Number(row.temp_min_c) * weight;
+    if (row.temp_max_c !== undefined && row.temp_max_c !== null) current.tempMaxWeighted += Number(row.temp_max_c) * weight;
+    if ([row.precip_mm, row.temp_min_c, row.temp_max_c].some((value) => value !== undefined && value !== null)) current.climateWeight += weight;
+
+    grouped.set(key, current);
+  });
+
+  return Array.from(grouped.values())
+    .map((row) => ({
+      periodKey: row.periodKey,
+      label: row.label,
+      series: row.series,
+      observaciones: row.observaciones,
+      firms_detecciones: row.firms_detecciones,
+      firms_frp: row.firms_frp,
+      conafor_eventos: row.conafor_eventos,
+      conafor_ha: row.conafor_ha,
+      precip_mm: row.climateWeight ? row.precipWeighted / row.climateWeight : null,
+      temp_min_c: row.climateWeight ? row.tempMinWeighted / row.climateWeight : null,
+      temp_max_c: row.climateWeight ? row.tempMaxWeighted / row.climateWeight : null,
+    }))
+    .sort((a, b) => a.periodKey.localeCompare(b.periodKey) || a.series.localeCompare(b.series));
+}
+
 export function buildRealDashboardResults({ consulta, rows, clusters, estados, municipios, temporalRows = [] }) {
   const safeRows = Array.isArray(rows) ? rows : [];
   const safeTemporalRows = Array.isArray(temporalRows) ? temporalRows : [];
@@ -163,7 +237,7 @@ export function buildRealDashboardResults({ consulta, rows, clusters, estados, m
     catalogRows: buildCatalogRows(clusters),
     topRows: decoratedRows,
     scatterRows: decoratedRows,
-    temporalRows: safeTemporalRows,
+    temporalRows: buildTemporalSeries(safeTemporalRows),
     rows: decoratedRows,
     exportRows: decoratedRows,
     exportColumns: safeRows.length ? Object.keys(safeRows[0]) : [],
