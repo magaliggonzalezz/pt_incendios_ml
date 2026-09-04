@@ -47,6 +47,14 @@ function consultaCompleta(consulta) {
   if (consulta.tipoPeriodo === "anio") return Boolean(consulta.anio);
   if (consulta.tipoPeriodo === "anio_mes") return Boolean(consulta.anio && consulta.mes);
   if (consulta.tipoPeriodo === "comparar_anios") return Boolean(consulta.anioInicio && consulta.anioFin && consulta.anioInicio !== consulta.anioFin);
+  if (consulta.tipoPeriodo === "fecha") {
+    if (!consulta.fechaInicio) return false;
+    return consulta.nivelAgregacion !== "municipio" || Boolean(consulta.cvegeo);
+  }
+  if (consulta.tipoPeriodo === "rango_fechas") {
+    if (!consulta.fechaInicio || !consulta.fechaFin || consulta.fechaInicio > consulta.fechaFin) return false;
+    return consulta.nivelAgregacion !== "municipio" || Boolean(consulta.cvegeo);
+  }
   return false;
 }
 
