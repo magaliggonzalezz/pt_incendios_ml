@@ -243,6 +243,9 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
   }, [activeGraph, layerChart, hasTemporalSeries, temporalRows, resumenConsulta?.tipoPeriodo, rows, summaryRows]);
 
   const temporalPointCount = fullChartModel?.type === "line" ? (fullChartModel.data.labels?.length || 0) : 0;
+  const focusMax = Math.max(1, temporalPointCount - 1);
+  const focusStartPercent = (focusStart / focusMax) * 100;
+  const focusEndPercent = (focusEnd / focusMax) * 100;
   const chartModel = useMemo(
     () => sliceChartModel(fullChartModel, focusStart, focusEnd),
     [fullChartModel, focusStart, focusEnd]
@@ -337,8 +340,16 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
                     <strong>Énfasis temporal</strong>
                     <span>{fullChartModel.data.labels[focusStart]} → {fullChartModel.data.labels[focusEnd]}</span>
                   </div>
-                  <div className="cmFocusSliders">
+                  <div
+                    className="cmFocusRange"
+                    style={{
+                      "--focus-start": `${focusStartPercent}%`,
+                      "--focus-end": `${focusEndPercent}%`,
+                    }}
+                  >
+                    <div className="cmFocusTrack" aria-hidden="true" />
                     <input
+                      className="cmFocusThumb cmFocusThumbStart"
                       type="range"
                       min="0"
                       max={temporalPointCount - 1}
@@ -347,6 +358,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
                       aria-label="Inicio del énfasis temporal"
                     />
                     <input
+                      className="cmFocusThumb cmFocusThumbEnd"
                       type="range"
                       min="0"
                       max={temporalPointCount - 1}
