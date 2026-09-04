@@ -170,6 +170,7 @@ export function buildRealDashboardResults({ consulta, rows, clusters, estados, m
 
   return {
     fuente: "api-v2",
+    tipoPeriodo: consulta.tipoPeriodo,
     nivelAgregacion: consulta.nivelAgregacion,
     periodo: getPeriodoLabel(consulta),
     territorio: municipio?.nombre || estado?.nombre || (consulta.nivelAgregacion === "municipio" ? "Municipios seleccionados" : "México"),
