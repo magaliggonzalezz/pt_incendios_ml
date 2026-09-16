@@ -9,7 +9,8 @@ import "./MapControls.css";
 const DEFAULT_VIEW = { center: [23.6345, -102.5528], zoom: 5 };
 const ICON_COLOR = "#0B4F4A";
 const ICON_SIZE = 18;
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL ??
+  (import.meta.env.DEV ? "http://localhost:3000" : "");
 const MDE_TILE_URL = `${API_URL}/api/recursos/elevacion-mde/tiles/{z}/{x}/{y}.png`;
 const MDE_PANE = "mdeElevationPane";
 
