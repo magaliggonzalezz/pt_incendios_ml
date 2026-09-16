@@ -22,6 +22,7 @@ Esta carpeta contiene la configuración base para desplegar la aplicación en un
 ```bash
 pm2 start deploy/ecosystem.config.cjs --env production
 pm2 save
+pm2 startup
 ```
 
 El backend queda enlazado a `127.0.0.1:3000` y no debe exponerse directamente en el Security Group.
@@ -38,13 +39,41 @@ En producción se recomienda no definir `VITE_API_URL`; el frontend utilizará e
 
 ## Nginx y HTTPS
 
-1. Reemplazar `__DOMAIN__` en `deploy/nginx/pt-incendios.conf.example` por el dominio definitivo.
-2. Copiar la configuración a `/etc/nginx/sites-available/pt-incendios`.
-3. Crear el enlace en `sites-enabled`.
-4. Emitir el certificado de Let's Encrypt para ese dominio.
-5. Validar y recargar Nginx.
+El certificado todavía no existe durante el primer arranque, por lo que el proceso se divide en dos etapas.
 
-La configuración final redirige HTTP a HTTPS, sirve `frontend/dist` y actúa como reverse proxy para `/api/`.
+### 1. Bootstrap HTTP para emitir el certificado
+
+1. Reemplazar `__DOMAIN__` en `deploy/nginx/pt-incendios.bootstrap.conf.example` por el dominio definitivo.
+2. Copiarlo a `/etc/nginx/sites-available/pt-incendios`.
+3. Crear el enlace en `/etc/nginx/sites-enabled/pt-incendios`.
+4. Validar y recargar Nginx:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+5. Instalar Certbot y emitir el certificado:
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d <dominio>
+```
+
+### 2. Configuración HTTPS definitiva
+
+Después de que Let's Encrypt haya creado los archivos del certificado:
+
+1. Reemplazar `__DOMAIN__` en `deploy/nginx/pt-incendios.conf.example`.
+2. Sustituir la configuración activa por esa versión.
+3. Validar y recargar Nginx:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+La configuración final redirige HTTP a HTTPS, sirve `frontend/dist` y actúa como reverse proxy para `/api/` hacia `127.0.0.1:3000`.
 
 ## Verificación
 
