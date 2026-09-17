@@ -466,7 +466,17 @@ export async function obtenerCapaTematica(capa, cveEnt) {
     error.statusCode = 400;
     throw error;
   }
+
   validarCveEnt(cveEnt);
+
+  if (CAPAS_TILED.has(capa)) {
+    const error = new Error(
+      `La capa ${capa} debe consultarse mediante el endpoint /viewport`,
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
   return obtenerGeoJsonR2(tematicaKey(capa, cveEnt));
 }
 
