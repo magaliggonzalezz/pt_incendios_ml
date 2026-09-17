@@ -7,6 +7,7 @@ import Footer from "../components/Footer/Footer";
 import { INITIAL_ACTIVE_LAYERS, INITIAL_SMN_FILTERS } from "../data/dashboardMock";
 import { buildRealDashboardResults } from "../data/dashboardRealData";
 import { obtenerClusters, obtenerEstados, obtenerMunicipios } from "../services/catalogos.service";
+import { descargarExportacion, generarExportacion } from "../services/exportacion.service";
 import {
   obtenerResultadosEstadoDia,
   obtenerResultadosEstadoRango,
@@ -74,6 +75,7 @@ export default function DashboardPage() {
   const [estados, setEstados] = useState([]);
   const [municipios, setMunicipios] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState(null);
   const queryRunRef = useRef(0);
 
@@ -206,14 +208,31 @@ export default function DashboardPage() {
     } finally { if (runId === queryRunRef.current) setIsLoading(false); }
   };
 
-  const handleDownloadExport = ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
+  const handleDownloadExport = async ({ format, consultaActiva: consulta, resumenConsulta: resumen }) => {
     const rows = resumen?.exportRows ?? [];
     const clusterFilteredRows = selectedMlCluster ? rows.filter((row) => Number(row.cluster) === Number(selectedMlCluster)) : rows;
     const columns = resumen?.exportColumns ?? [];
     const payloadRows = columns.length ? clusterFilteredRows.map((row) => Object.fromEntries(columns.map((column) => [column, row[column] ?? ""]))) : clusterFilteredRows;
-    const text = format === "json" ? JSON.stringify(payloadRows, null, 2) : [columns.join(","), ...payloadRows.map((row) => columns.map((column) => { const value = row[column] ?? ""; const str = String(value); return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str; }).join(","))].join("\n");
-    const blob = new Blob([text], { type: format === "json" ? "application/json" : "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = buildExportFilename(consulta, format, selectedMlCluster); anchor.click(); URL.revokeObjectURL(url);
+    const nombreCompleto = buildExportFilename(consulta, format, selectedMlCluster);
+    const nombreBase = nombreCompleto.replace(new RegExp(`\\.${format}$`, "i"), "");
+
+    setIsExporting(true);
+    setError(null);
+
+    try {
+      const generado = await generarExportacion(format, nombreBase, payloadRows);
+      const blob = await descargarExportacion(generado.archivo);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = generado.archivo;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const mlLayerId = ultimaConsultaEjecutada?.nivelAgregacion === "municipio" ? "resultadoMlMunicipioDia" : "resultadoMlEntidadDia";
@@ -224,7 +243,7 @@ export default function DashboardPage() {
       <MapView consultaActiva={consultaActiva} consultaEjecutada={ultimaConsultaEjecutada} resumenConsulta={resumenMapa} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onLayerSummaryChange={setLayerSummary} selectedMlCluster={selectedMlCluster} leftPanelOpen={leftOpen} rightPanelOpen={rightOpen} />
       <Header /><Footer />
       <LeftPanel open={leftOpen} onToggle={() => setLeftOpen((value) => !value)} consultaActiva={consultaActiva} consultaEjecutada={consultaEjecutada} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onResetConsulta={handleResetConsulta} estados={estados} municipios={municipios} isLoading={isLoading} />
-      <RightPanel open={rightOpen} onToggle={() => setRightOpen((value) => !value)} consultaEjecutada={consultaEjecutada} consultaActiva={consultaActiva} consultaResultado={ultimaConsultaEjecutada} resumenConsulta={resumenConsulta} layerSummary={layerSummary} totalRecords={resumenConsulta?.totalRecords ?? 0} availableFormats={["csv", "json"]} isExporting={false} isLoading={isLoading} error={error} onDownloadExport={handleDownloadExport} selectedMlCluster={selectedMlCluster} onSelectedMlClusterChange={setSelectedMlCluster} />
+      <RightPanel open={rightOpen} onToggle={() => setRightOpen((value) => !value)} consultaEjecutada={consultaEjecutada} consultaActiva={consultaActiva} consultaResultado={ultimaConsultaEjecutada} resumenConsulta={resumenConsulta} layerSummary={layerSummary} totalRecords={resumenConsulta?.totalRecords ?? 0} availableFormats={["csv", "json"]} isExporting={isExporting} isLoading={isLoading} error={error} onDownloadExport={handleDownloadExport} selectedMlCluster={selectedMlCluster} onSelectedMlClusterChange={setSelectedMlCluster} />
     </div>
   );
 }
