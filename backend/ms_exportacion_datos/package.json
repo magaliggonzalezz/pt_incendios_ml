@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node src/app.js"
+    "dev": "node src/app.js",
+    "start": "node src/app.js"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
