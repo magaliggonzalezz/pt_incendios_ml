@@ -1,4 +1,4 @@
-import { parquetReadObjects } from "hyparquet";
+import { parquetMetadataAsync, parquetReadObjects } from "hyparquet";
 import { compressors } from "hyparquet-compressors";
 
 import { crearAsyncBufferR2 } from "../../data/storage/r2.js";
@@ -8,6 +8,7 @@ const FIRMS_YEAR_MAX = 2025;
 const CONAFOR_KEY = "fuentes/conafor/conafor_incendios_eventos.parquet";
 const ROW_CACHE_TTL_MS = 10 * 60 * 1000;
 const MAX_PARQUET_CACHE_ENTRIES = 2;
+const PARQUET_BATCH_ROWS = 25_000;
 
 const parquetRowsCache = new Map();
 const parquetInFlight = new Map();
@@ -161,6 +162,30 @@ async function leerParquetR2(key, columns) {
   }
 }
 
+async function procesarParquetR2PorBloques(key, columns, procesarFilas) {
+  const { file, metadata, obtenerEstadisticas } = await crearAsyncBufferR2(key);
+  const parquetMetadata = await parquetMetadataAsync(file);
+  const totalRows = Number(parquetMetadata.num_rows);
+
+  if (!Number.isSafeInteger(totalRows) || totalRows < 0) {
+    throw new Error(`Número de filas inválido en ${key}`);
+  }
+
+  for (let rowStart = 0; rowStart < totalRows; rowStart += PARQUET_BATCH_ROWS) {
+    const rowEnd = Math.min(rowStart + PARQUET_BATCH_ROWS, totalRows);
+    const rows = await parquetReadObjects({
+      file,
+      columns,
+      compressors,
+      rowStart,
+      rowEnd,
+    });
+    procesarFilas(rows);
+  }
+
+  return { metadata, estadisticas: obtenerEstadisticas() };
+}
+
 function featureCollection(features, metadata) {
   return { type: "FeatureCollection", features, metadata };
 }
@@ -206,21 +231,25 @@ export async function obtenerFirmsMapa(params = {}) {
   }
 
   const key = firmsKey(anio);
-  const { rows, metadata, estadisticas, cache } = await leerParquetR2(key, FIRMS_COLUMNS);
   const features = [];
+  const { metadata, estadisticas } = await procesarParquetR2PorBloques(
+    key,
+    FIRMS_COLUMNS,
+    (rows) => {
+      for (const row of rows) {
+        const fecha = fechaIso(row.fecha ?? row.acq_date);
+        if (!coincideTerritorio(row, cveEnt, cvegeo)) continue;
+        if (!coincideFecha(fecha, fechaInicio, fechaFin, mes)) continue;
+        if (!dentroBbox(row.longitude, row.latitude, bbox)) continue;
 
-  for (const row of rows) {
-    const fecha = fechaIso(row.fecha ?? row.acq_date);
-    if (!coincideTerritorio(row, cveEnt, cvegeo)) continue;
-    if (!coincideFecha(fecha, fechaInicio, fechaFin, mes)) continue;
-    if (!dentroBbox(row.longitude, row.latitude, bbox)) continue;
+        const longitude = Number(row.longitude);
+        const latitude = Number(row.latitude);
+        if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) continue;
 
-    const longitude = Number(row.longitude);
-    const latitude = Number(row.latitude);
-    if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) continue;
-
-    features.push(crearFirmsFeature(row, fecha, longitude, latitude));
-  }
+        features.push(crearFirmsFeature(row, fecha, longitude, latitude));
+      }
+    },
+  );
 
   return featureCollection(features, {
     fuente: "FIRMS",
@@ -233,7 +262,7 @@ export async function obtenerFirmsMapa(params = {}) {
     fecha_fin: fechaFin,
     registros: features.length,
     representacion: "detecciones-originales",
-    cache_parquet: cache,
+    cache_parquet: false,
     r2: {
       key,
       bytes_objeto: valorJson(metadata.bytes),
