@@ -8,6 +8,7 @@ import {
   obtenerEstacionesSmn,
   obtenerGeometriasEstados,
   obtenerGeometriasMunicipios,
+  obtenerGeometriasMunicipiosViewport,
 } from "../../services/geometrias.service";
 import { obtenerIncendiosConafor, obtenerPuntosFirms } from "../../services/puntosMapa.service";
 import "leaflet/dist/leaflet.css";
@@ -674,11 +675,26 @@ export default function MapView({
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
-    if (!cveEntCapas) return () => { active = false; };
-    obtenerGeometriasMunicipios(cveEntCapas).then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); }).catch((error) => { if (active) setGeometryError(error.message); });
-    return () => { active = false; };
-  }, [cveEntCapas]);
+
+    if (cveEntCapas) {
+      obtenerGeometriasMunicipios(cveEntCapas, { signal: controller.signal })
+        .then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
+        .catch((error) => { if (active && !isAbortError(error)) setGeometryError(error.message); });
+      return () => { active = false; controller.abort(); };
+    }
+
+    if (!capasActivas.limitesMunicipales || !viewportReady) {
+      return () => { active = false; controller.abort(); };
+    }
+
+    obtenerGeometriasMunicipiosViewport(viewportBbox, "", { signal: controller.signal })
+      .then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
+      .catch((error) => { if (active && !isAbortError(error)) setGeometryError(error.message); });
+
+    return () => { active = false; controller.abort(); };
+  }, [cveEntCapas, capasActivas.limitesMunicipales, viewportBbox, viewportReady]);
 
   useEffect(() => {
     let active = true;
@@ -691,7 +707,7 @@ export default function MapView({
     let active = true;
     const controller = new AbortController();
     const overlayKeys = ["fisiografia", "hidrografia", "edafologia", "usoSueloVegetacion"];
-    if (!cveEntCapas || !viewportReady) {
+    if (!viewportReady) {
       overlayKeys.forEach((key) => setOverlay(key, EMPTY_FEATURE_COLLECTION));
       return () => { active = false; controller.abort(); };
     }
