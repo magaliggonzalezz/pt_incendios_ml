@@ -57,6 +57,10 @@ async function sendMdeTile(req, res, prefix) {
     });
     objeto.body.pipe(res);
   } catch (error) {
+    const statusCode = error?.$metadata?.httpStatusCode || error.statusCode || 500;
+    if (statusCode === 404) {
+      return res.status(204).end();
+    }
     sendR2Error(res, error);
   }
 }
