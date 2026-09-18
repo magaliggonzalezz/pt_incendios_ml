@@ -5,6 +5,7 @@ const router = Router();
 const controller = new GeometriasController();
 
 router.get("/estados", controller.estados.bind(controller));
+router.get("/municipios/viewport", controller.municipiosViewport.bind(controller));
 router.get("/municipios", controller.municipios.bind(controller));
 router.get("/smn", controller.smn.bind(controller));
 router.get("/tematicas/:capa/viewport", controller.tematicaViewport.bind(controller));
