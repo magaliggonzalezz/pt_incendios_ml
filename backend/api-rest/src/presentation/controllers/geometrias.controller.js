@@ -4,7 +4,10 @@ import {
   obtenerGeometriasEstados,
   obtenerGeometriasMunicipios,
 } from "../../application/services/geometrias.service.js";
-import { obtenerCapaTematicaViewportLigera } from "../../application/services/geometrias-viewport.service.js";
+import {
+  obtenerCapaTematicaViewportLigera,
+  obtenerMunicipiosViewportLigero,
+} from "../../application/services/geometrias-viewport.service.js";
 
 export class GeometriasController {
   async estados(req, res) {
@@ -19,6 +22,18 @@ export class GeometriasController {
   async municipios(req, res) {
     try {
       const data = await obtenerGeometriasMunicipios(req.query.cve_ent);
+      res.json(data);
+    } catch (error) {
+      res.status(error.statusCode || 502).json({ error: error.message });
+    }
+  }
+
+  async municipiosViewport(req, res) {
+    try {
+      const data = await obtenerMunicipiosViewportLigero(
+        req.query.cve_ent,
+        req.query.bbox,
+      );
       res.json(data);
     } catch (error) {
       res.status(error.statusCode || 502).json({ error: error.message });

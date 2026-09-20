@@ -2,6 +2,9 @@ import * as turf from "@turf/turf";
 import polygonClipping from "polygon-clipping";
 import { descargarObjetoR2 } from "../../data/storage/r2.js";
 
+const ESTADOS_KEY = "capas_web/inegi/inegi_entidades.geojson";
+const MUNICIPAL_SIMPLIFY_BASE = 0.0015;
+
 const CAPAS_TEMATICAS = new Set([
   "fisiografia",
   "edafologia",
@@ -20,6 +23,7 @@ const MAX_SMALL_CACHE_ENTRIES = 8;
 
 const manifestCache = new Map();
 const municipioCache = new Map();
+const estadosCache = new Map();
 
 function errorHttp(message, statusCode = 400) {
   const error = new Error(message);
@@ -30,6 +34,11 @@ function errorHttp(message, statusCode = 400) {
 function validarCveEnt(cveEnt) {
   if (!/^\d{2}$/.test(cveEnt || "")) throw errorHttp("cve_ent debe tener 2 dígitos");
   return cveEnt;
+}
+
+function validarCveEntOpcional(cveEnt) {
+  if (cveEnt === undefined || cveEnt === null || cveEnt === "") return null;
+  return validarCveEnt(String(cveEnt).trim());
 }
 
 function validarCvegeo(cvegeo) {
@@ -106,6 +115,28 @@ function getCvegeo(feature) {
   const props = feature?.properties || {};
   const value = props.cvegeo ?? props.CVEGEO ?? props.cve_geo ?? props.CVE_GEO;
   return value === undefined || value === null ? "" : String(value).trim().padStart(5, "0");
+}
+
+function getCveEnt(feature) {
+  const props = feature?.properties || {};
+  const value = props.cve_ent ?? props.CVE_ENT ?? props.cvegeo ?? props.CVEGEO;
+  if (value === undefined || value === null || value === "") return "";
+  return String(value).trim().padStart(2, "0").slice(0, 2);
+}
+
+async function obtenerEstadosIntersectantes(viewportBbox) {
+  let estados = cacheGet(estadosCache, ESTADOS_KEY);
+  if (!estados) {
+    estados = parseGeoJson(await descargarObjetoR2(ESTADOS_KEY), ESTADOS_KEY);
+    cacheSet(estadosCache, ESTADOS_KEY, estados);
+  }
+
+  return [...new Set(
+    estados.features
+      .filter((feature) => featureIntersectsBbox(feature, viewportBbox))
+      .map(getCveEnt)
+      .filter(Boolean),
+  )].sort();
 }
 
 async function obtenerMunicipioFeature(cveEnt, cvegeo) {
@@ -226,6 +257,16 @@ function simplifyGeometry(geometry, tolerance) {
   return geometry;
 }
 
+function municipalityTolerance(bbox) {
+  const span = Math.max(Math.abs(bbox[2] - bbox[0]), Math.abs(bbox[3] - bbox[1]));
+  let factor = 0.75;
+  if (span >= 12) factor = 8;
+  else if (span >= 6) factor = 5;
+  else if (span >= 3) factor = 3;
+  else if (span >= 1.5) factor = 1.75;
+  return Number((MUNICIPAL_SIMPLIFY_BASE * factor).toFixed(6));
+}
+
 function thematicTolerance(capa, bbox) {
   const base = THEMATIC_SIMPLIFY_TOLERANCE[capa] || 0;
   const span = Math.max(Math.abs(bbox[2] - bbox[0]), Math.abs(bbox[3] - bbox[1]));
@@ -334,10 +375,46 @@ async function procesarObjetoGeoJson(key, effectiveBbox, tolerance, municipioFea
   }
 }
 
+export async function obtenerMunicipiosViewportLigero(cveEntRaw, bboxRaw) {
+  const cveEnt = validarCveEntOpcional(cveEntRaw);
+  const viewportBbox = parseBbox(bboxRaw);
+  const estados = cveEnt ? [cveEnt] : await obtenerEstadosIntersectantes(viewportBbox);
+  const tolerance = municipalityTolerance(viewportBbox);
+  const features = [];
+
+  for (const estado of estados) {
+    const key = municipiosKey(estado);
+    const data = parseGeoJson(await descargarObjetoR2(key), key);
+    for (const feature of data.features) {
+      if (!featureIntersectsBbox(feature, viewportBbox)) continue;
+      features.push({
+        ...feature,
+        geometry: simplifyGeometry(feature.geometry, tolerance),
+      });
+    }
+  }
+
+  return {
+    type: "FeatureCollection",
+    features,
+    metadata: {
+      cve_ent: cveEnt,
+      estados,
+      bbox: viewportBbox,
+      features: features.length,
+      tolerancia_web_grados: tolerance,
+      estrategia_memoria: "estado-por-estado-viewport",
+    },
+  };
+}
+
 export async function obtenerCapaTematicaViewportLigera(capa, cveEntRaw, bboxRaw, cvegeoRaw = null) {
   if (!CAPAS_TEMATICAS.has(capa)) throw errorHttp("capa temática no válida");
-  const cveEnt = validarCveEnt(cveEntRaw);
+
+  const cveEnt = validarCveEntOpcional(cveEntRaw);
   const cvegeo = validarCvegeo(cvegeoRaw);
+  if (cvegeo && !cveEnt) throw errorHttp("cve_ent es obligatorio cuando se envía cvegeo");
+
   const viewportBbox = parseBbox(bboxRaw);
   const municipioFeature = cvegeo ? await obtenerMunicipioFeature(cveEnt, cvegeo) : null;
   const municipioBbox = municipioFeature ? geometryBbox(municipioFeature.geometry) : null;
@@ -351,43 +428,46 @@ export async function obtenerCapaTematicaViewportLigera(capa, cveEntRaw, bboxRaw
     };
   }
 
+  const estados = cveEnt ? [cveEnt] : await obtenerEstadosIntersectantes(effectiveBbox);
   const tolerance = thematicTolerance(capa, effectiveBbox);
   const features = [];
-  const metadata = {};
+  const tilesUsados = [];
+  let cantidadTiles = 0;
 
-  if (CAPAS_TILED.has(capa)) {
-    const prefix = tiledPrefix(capa, cveEnt);
-    const manifest = await obtenerManifest(capa, cveEnt);
-    const tiles = manifest.tiles.filter((tile) =>
-      Array.isArray(tile.bbox) && tile.bbox.length === 4 && bboxIntersects(tile.bbox, effectiveBbox),
-    );
+  for (const estado of estados) {
+    if (CAPAS_TILED.has(capa)) {
+      const prefix = tiledPrefix(capa, estado);
+      const manifest = await obtenerManifest(capa, estado);
+      const tiles = manifest.tiles.filter((tile) =>
+        Array.isArray(tile.bbox) && tile.bbox.length === 4 && bboxIntersects(tile.bbox, effectiveBbox),
+      );
 
-    for (const tile of tiles) {
-      await procesarObjetoGeoJson(`${prefix}/${tile.archivo}`, effectiveBbox, tolerance, municipioFeature, features);
+      for (const tile of tiles) {
+        await procesarObjetoGeoJson(`${prefix}/${tile.archivo}`, effectiveBbox, tolerance, municipioFeature, features);
+        tilesUsados.push(`${estado}:${tile.id}`);
+      }
+      cantidadTiles += tiles.length;
+    } else {
+      await procesarObjetoGeoJson(tematicaKey(capa, estado), effectiveBbox, tolerance, municipioFeature, features);
     }
-
-    metadata.tiles_usados = tiles.map((tile) => tile.id);
-    metadata.cantidad_tiles = tiles.length;
-    metadata.tolerancia_origen_m = manifest.tolerancia_m;
-    metadata.tile_grados = manifest.tile_grados;
-  } else {
-    await procesarObjetoGeoJson(tematicaKey(capa, cveEnt), effectiveBbox, tolerance, municipioFeature, features);
   }
 
   return {
     type: "FeatureCollection",
     features,
     metadata: {
-      ...metadata,
       capa,
       cve_ent: cveEnt,
       cvegeo,
+      estados,
       bbox: viewportBbox,
       bbox_efectivo: effectiveBbox,
       features: features.length,
-      recorte: municipioFeature ? "municipio-exacto-viewport" : "viewport",
+      recorte: municipioFeature ? "municipio-exacto-viewport" : cveEnt ? "viewport-estado" : "viewport-nacional",
       tolerancia_web_grados: tolerance,
-      estrategia_memoria: "stream-por-objeto-sin-cache-de-viewports",
+      cantidad_tiles: cantidadTiles,
+      tiles_usados: tilesUsados,
+      estrategia_memoria: "estado-por-estado-viewport-sin-cache-de-respuesta",
     },
   };
 }

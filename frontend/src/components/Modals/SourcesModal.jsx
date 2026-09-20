@@ -4,14 +4,14 @@ import { ExternalLink } from "lucide-react";
 
 const SOURCES = [
   {
-    name: "NASA FIRMS",
-    subtitle: "Fire Information for Resource Management System",
-    url: "https://firms.modaps.eosdis.nasa.gov/",
-  },
-  {
     name: "CONAFOR",
     subtitle: "Comisión Nacional Forestal",
     url: "https://www.gob.mx/conafor",
+  },
+  {
+    name: "NASA FIRMS",
+    subtitle: "Fire Information for Resource Management System",
+    url: "https://firms.modaps.eosdis.nasa.gov/",
   },
   {
     name: "SMN-CONAGUA",
@@ -22,6 +22,11 @@ const SOURCES = [
     name: "INEGI",
     subtitle: "Instituto Nacional de Estadística y Geografía",
     url: "https://www.inegi.org.mx/",
+  },
+  {
+    name: "INFyS-CONAFOR",
+    subtitle: "Inventario Nacional Forestal y de Suelos",
+    url: "https://snmf.cnf.gob.mx/infys/",
   },
 ];
 

@@ -33,6 +33,7 @@
     line-height: 28px;
     white-space: nowrap;
     overflow: visible;
+    margin: 0;
 }
 
 @media (min-width: 1920px){

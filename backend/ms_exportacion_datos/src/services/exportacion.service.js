@@ -1,6 +1,15 @@
 import fs from "fs/promises";
 import path from "path";
 
+function normalizarNombreArchivo(nombre) {
+  const limpio = String(nombre || "exportacion")
+    .trim()
+    .replace(/[^a-zA-Z0-9_-]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+  return limpio || "exportacion";
+}
+
 export class ExportacionService {
   constructor() {
     this.exportsPath = process.env.EXPORTS_PATH || "./exports";
@@ -14,7 +23,8 @@ export class ExportacionService {
     await this.asegurarCarpeta();
 
     const { nombre = "exportacion", datos = [] } = payload;
-    const fileName = `${nombre}_${Date.now()}.json`;
+    const baseName = normalizarNombreArchivo(nombre);
+    const fileName = `${baseName}_${Date.now()}.json`;
     const filePath = path.join(this.exportsPath, fileName);
 
     await fs.writeFile(filePath, JSON.stringify(datos, null, 2), "utf-8");
@@ -23,7 +33,6 @@ export class ExportacionService {
       mensaje: "Archivo JSON generado correctamente",
       formato: "JSON",
       archivo: fileName,
-      ruta: filePath
     };
   }
 
@@ -42,8 +51,8 @@ export class ExportacionService {
     );
 
     const csv = [headers.join(","), ...rows].join("\n");
-
-    const fileName = `${nombre}_${Date.now()}.csv`;
+    const baseName = normalizarNombreArchivo(nombre);
+    const fileName = `${baseName}_${Date.now()}.csv`;
     const filePath = path.join(this.exportsPath, fileName);
 
     await fs.writeFile(filePath, csv, "utf-8");
@@ -52,7 +61,6 @@ export class ExportacionService {
       mensaje: "Archivo CSV generado correctamente",
       formato: "CSV",
       archivo: fileName,
-      ruta: filePath
     };
   }
 
@@ -63,11 +71,22 @@ export class ExportacionService {
 
     return {
       total: archivos.length,
-      archivos
+      archivos,
     };
   }
 
-  obtenerRutaArchivo(nombreArchivo) {
-  return path.join(this.exportsPath, nombreArchivo);
-}
+  async obtenerRutaArchivo(nombreArchivo) {
+    await this.asegurarCarpeta();
+
+    const nombreSeguro = path.basename(String(nombreArchivo || ""));
+    if (!nombreSeguro || nombreSeguro !== nombreArchivo) {
+      const error = new Error("Nombre de archivo no válido");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const filePath = path.join(this.exportsPath, nombreSeguro);
+    await fs.access(filePath);
+    return filePath;
+  }
 }
