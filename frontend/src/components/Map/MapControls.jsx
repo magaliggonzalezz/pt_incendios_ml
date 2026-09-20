@@ -69,6 +69,9 @@ export default function MapControls({
 }) {
   const map = useMap();
   const controlsRef = useRef(null);
+  const searchButtonRef = useRef(null);
+  const boxZoomButtonRef = useRef(null);
+  const layersButtonRef = useRef(null);
   const mdeLayerRef = useRef(null);
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -83,10 +86,11 @@ export default function MapControls({
     ).slice(0, 8);
   }, [query]);
 
-  const closeFloatingControls = () => {
+  const closeFloatingControls = (focusTarget = null) => {
     setLayersOpen(false);
     setSearchOpen(false);
     setBoxZoomHint(false);
+    if (focusTarget) window.requestAnimationFrame(() => focusTarget.current?.focus());
   };
 
   const announceControlOverlay = () => {
@@ -129,6 +133,7 @@ export default function MapControls({
 
     setSearchOpen(false);
     setQuery("");
+    window.requestAnimationFrame(() => searchButtonRef.current?.focus());
     window.setTimeout(() => map.invalidateSize(), 220);
   };
 
@@ -182,7 +187,10 @@ export default function MapControls({
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.key === "Escape") closeFloatingControls();
+      if (event.key !== "Escape") return;
+      if (searchOpen) closeFloatingControls(searchButtonRef);
+      else if (layersOpen) closeFloatingControls(layersButtonRef);
+      else if (boxZoomHint) closeFloatingControls(boxZoomButtonRef);
     };
     const onPointerDown = (event) => {
       if (controlsRef.current?.contains(event.target)) return;
@@ -200,7 +208,7 @@ export default function MapControls({
       window.removeEventListener("map:legend-open", onLegendOrPopupOpen);
       window.removeEventListener("map:feature-popup-open", onLegendOrPopupOpen);
     };
-  }, []);
+  }, [searchOpen, layersOpen, boxZoomHint]);
 
   return (
     <div
@@ -211,7 +219,7 @@ export default function MapControls({
       onDoubleClick={stop}
       onTouchStart={stop}
     >
-      <button className="ctl hasTooltip" data-tooltip="Buscar territorio" type="button" aria-label="Buscar territorio" aria-expanded={searchOpen} onClick={toggleSearch}>
+      <button ref={searchButtonRef} className="ctl hasTooltip" data-tooltip="Buscar territorio" type="button" aria-label="Buscar territorio" aria-expanded={searchOpen} onClick={toggleSearch}>
         <Search size={ICON_SIZE} color={ICON_COLOR} />
       </button>
       <button className="ctl hasTooltip" data-tooltip="Acercar" type="button" aria-label="Acercar" onClick={() => map.zoomIn()}>
@@ -224,6 +232,7 @@ export default function MapControls({
         <Home size={ICON_SIZE} color={ICON_COLOR} />
       </button>
       <button
+        ref={boxZoomButtonRef}
         className="ctl hasTooltip"
         data-tooltip="Zoom por área"
         type="button"
@@ -241,7 +250,7 @@ export default function MapControls({
       >
         <ScanSearch size={ICON_SIZE} color={ICON_COLOR} />
       </button>
-      <button className="ctl hasTooltip" data-tooltip="Mapa base" type="button" aria-label="Mapa base" aria-expanded={layersOpen} onClick={() => {
+      <button ref={layersButtonRef} className="ctl hasTooltip" data-tooltip="Mapa base" type="button" aria-label="Mapa base" aria-expanded={layersOpen} onClick={() => {
         setLayersOpen((value) => {
           const next = !value;
           if (next) announceControlOverlay();
@@ -263,7 +272,7 @@ export default function MapControls({
             placeholder="Estado o municipio..."
             autoFocus
           />
-          <div className="searchList" role="listbox" aria-label="Resultados de búsqueda">
+          <div className="searchList" role="group" aria-label="Resultados de búsqueda">
             {query.trim() ? suggestions.map((place) => (
               <button key={place.id} className="searchItem" type="button" onClick={() => goToPlace(place)}>
                 <span className="searchItemTitle">{place.label}</span>
@@ -292,6 +301,7 @@ export default function MapControls({
               onClick={() => {
                 onChangeLayer?.(id);
                 setLayersOpen(false);
+                window.requestAnimationFrame(() => layersButtonRef.current?.focus());
               }}
             >
               {layer.name}

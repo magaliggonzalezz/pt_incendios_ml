@@ -153,7 +153,7 @@ export default function RightPanel({
           {open ? "⟩" : "⟨"}
         </button>
 
-        <div className="kpiCard">
+        <div className="kpiCard" aria-hidden={!open} inert={open ? undefined : ""}>
           <div className="kpiHeader">
             <span className="kpiHeaderIcon" aria-hidden="true"><MapPin size={19} /></span>
             <div className="kpiHeaderTerritory">

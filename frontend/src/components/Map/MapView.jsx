@@ -197,6 +197,58 @@ function infoRowsHtml(rows) {
 }
 
 function bindRichInfo(layer, { title, kind = "generic", tooltipRows, popupRows }) {
+  const makeKeyboardAccessible = () => {
+    const element = layer.getElement?.();
+    const mapContainer = layer._map?.getContainer?.();
+    if (!element || !mapContainer) return;
+
+    if (element.dataset.mapKeyboardReady === "true") return;
+    element.dataset.mapKeyboard = "true";
+    element.dataset.mapKeyboardReady = "true";
+    element.setAttribute("role", "button");
+    element.setAttribute("aria-label", `${title}. Presiona Enter o Espacio para ver detalles.`);
+
+    const existingEntry = mapContainer.querySelector('[data-map-keyboard="true"][tabindex="0"]');
+    element.setAttribute("tabindex", existingEntry && existingEntry !== element ? "-1" : "0");
+
+    element.addEventListener("focus", () => {
+      mapContainer.querySelectorAll('[data-map-keyboard="true"]').forEach((item) => {
+        item.setAttribute("tabindex", item === element ? "0" : "-1");
+      });
+    });
+
+    element.addEventListener("keydown", (event) => {
+      const items = Array.from(mapContainer.querySelectorAll('[data-map-keyboard="true"]'));
+      const index = items.indexOf(element);
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        layer.openPopup?.();
+        return;
+      }
+
+      let nextIndex = null;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") nextIndex = Math.min(items.length - 1, index + 1);
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") nextIndex = Math.max(0, index - 1);
+      else if (event.key === "Home") nextIndex = 0;
+      else if (event.key === "End") nextIndex = items.length - 1;
+
+      if (nextIndex !== null && items[nextIndex]) {
+        event.preventDefault();
+        items[nextIndex].focus();
+      }
+    });
+  };
+
+  layer.on("add", () => window.requestAnimationFrame(makeKeyboardAccessible));
+  layer.on("remove", () => {
+    window.requestAnimationFrame(() => {
+      const mapContainer = layer._map?.getContainer?.() || document.querySelector(".leafletMap");
+      if (!mapContainer || mapContainer.querySelector('[data-map-keyboard="true"][tabindex="0"]')) return;
+      mapContainer.querySelector('[data-map-keyboard="true"]')?.setAttribute("tabindex", "0");
+    });
+  });
+
   const tooltipBody = infoRowsHtml(tooltipRows);
   if (tooltipBody) {
     layer.bindTooltip(
@@ -847,8 +899,8 @@ export default function MapView({
 
   return (
     <div className="mapWrap" role="region" aria-label="Mapa interactivo de incendios forestales en México" aria-describedby="map-accessible-summary">
-      <p id="map-accessible-summary" className="srOnly">Mapa interactivo de México con resultados ML y capas geográficas seleccionables.</p>
-      <MapContainer center={DEFAULT_VIEW.center} zoom={DEFAULT_VIEW.zoom} minZoom={3} className="leafletMap" zoomControl={false} keyboard={true} preferCanvas={true}>
+      <p id="map-accessible-summary" className="srOnly">Mapa interactivo de México con resultados ML y capas geográficas seleccionables. Usa Tab para entrar a los elementos del mapa, las flechas para recorrerlos y Enter o Espacio para abrir sus detalles.</p>
+      <MapContainer center={DEFAULT_VIEW.center} zoom={DEFAULT_VIEW.zoom} minZoom={3} className="leafletMap" zoomControl={false} keyboard={true} preferCanvas={false}>
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
         <MapViewportTracker onChange={handleViewportChange} />
 

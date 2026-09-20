@@ -139,7 +139,7 @@ function OptionActions({ enabled, onPreview, onDownload }) {
 
 function IconBtn({ enabled, label, onClick, children }) {
   return (
-    <button type="button" className={`emIconBtn ${enabled ? "isEnabled" : "isDisabled"}`} aria-label={label} title={label} onClick={enabled ? onClick : undefined}>
+    <button type="button" className={`emIconBtn ${enabled ? "isEnabled" : "isDisabled"}`} aria-label={label} title={label} disabled={!enabled} onClick={enabled ? onClick : undefined}>
       {children}
     </button>
   );

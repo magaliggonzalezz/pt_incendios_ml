@@ -126,7 +126,7 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
   return (
     <aside className={`leftPanel ${open ? "open" : "closed"}`} aria-label="Panel de filtros de consulta">
       <button className="toggleBtn" type="button" onClick={onToggle} aria-label={open ? "Ocultar panel de filtros" : "Mostrar panel de filtros"} aria-expanded={open}>{open ? "⟨" : "⟩"}</button>
-      <div className="panelContent">
+      <div className="panelContent" aria-hidden={!open} inert={open ? undefined : ""}>
         <div className="panelCard">
           <h2 className="panelTitle">Consulta</h2>
           <div className="field">

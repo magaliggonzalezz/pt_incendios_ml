@@ -305,10 +305,27 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
 
   return (
     <ModalShell open={open} onClose={onClose} title="Resultados" width={1040} footer={footer} allowOverlayClose className="cmResultsDialog">
-      <div className="cmTabs" role="tablist" aria-label="Resultados">
+      <div
+        className="cmTabs"
+        role="tablist"
+        aria-label="Resultados"
+        onKeyDown={(event) => {
+          if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+          const tabs = Array.from(event.currentTarget.querySelectorAll('[role="tab"]'));
+          const currentIndex = tabs.indexOf(document.activeElement);
+          let nextIndex = currentIndex;
+          if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabs.length;
+          else if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          else if (event.key === "Home") nextIndex = 0;
+          else if (event.key === "End") nextIndex = tabs.length - 1;
+          event.preventDefault();
+          tabs[nextIndex]?.focus();
+          tabs[nextIndex]?.click();
+        }}
+      >
         {TABS.map((item) => {
           const Icon = item.icon;
-          return <button key={item.key} type="button" className={`cmTab ${tab === item.key ? "isActive" : ""}`} onClick={() => setTab(item.key)} role="tab" aria-selected={tab === item.key}><Icon size={16} />{item.label}</button>;
+          return <button key={item.key} type="button" className={`cmTab ${tab === item.key ? "isActive" : ""}`} onClick={() => setTab(item.key)} role="tab" aria-selected={tab === item.key} tabIndex={tab === item.key ? 0 : -1}><Icon size={16} />{item.label}</button>;
         })}
       </div>
 
@@ -341,8 +358,25 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
               <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas activas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal real de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
             </div>
             <div className="cmChartsTools">
-              <div className="cmInnerSelector cmGraphSelector" role="tablist" aria-label="Tipo de gráfica">
-                {graphOptions.map((option) => <button key={option.key} type="button" className={activeGraph === option.key ? "isActive" : ""} onClick={() => setGraphView(option.key)}>{option.label}</button>)}
+              <div
+                className="cmInnerSelector cmGraphSelector"
+                role="tablist"
+                aria-label="Tipo de gráfica"
+                onKeyDown={(event) => {
+                  if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+                  const tabs = Array.from(event.currentTarget.querySelectorAll('[role="tab"]'));
+                  const currentIndex = tabs.indexOf(document.activeElement);
+                  let nextIndex = currentIndex;
+                  if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabs.length;
+                  else if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+                  else if (event.key === "Home") nextIndex = 0;
+                  else if (event.key === "End") nextIndex = tabs.length - 1;
+                  event.preventDefault();
+                  tabs[nextIndex]?.focus();
+                  tabs[nextIndex]?.click();
+                }}
+              >
+                {graphOptions.map((option) => <button key={option.key} type="button" role="tab" aria-selected={activeGraph === option.key} tabIndex={activeGraph === option.key ? 0 : -1} className={activeGraph === option.key ? "isActive" : ""} onClick={() => setGraphView(option.key)}>{option.label}</button>)}
               </div>
               <button type="button" className="cmImageBtn" onClick={downloadChart} disabled={!chartModel} title="Descargar gráfica actual como PNG"><ImageDown size={16} /> PNG</button>
             </div>
