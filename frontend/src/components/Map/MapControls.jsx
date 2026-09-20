@@ -257,6 +257,7 @@ export default function MapControls({
         <div className="searchPanel" role="dialog" aria-label="Búsqueda en el marco geoestadístico">
           <input
             className="searchInput"
+            aria-label="Buscar estado o municipio"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Estado o municipio..."
