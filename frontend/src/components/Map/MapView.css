@@ -263,6 +263,12 @@
 .mapFeaturePopup-hidrografia dt{ color: #0369A1; }
 .mapFeaturePopup-limites dt{ color: #475569; }
 
+.leaflet-interactive[data-map-keyboard="true"]:focus-visible{
+    outline: 3px solid #FF6B00;
+    outline-offset: 3px;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,.95)) drop-shadow(0 0 4px rgba(255,107,0,.9));
+}
+
 .conaforFireIcon{
     background: transparent;
     border: 0;
