@@ -6,9 +6,9 @@ export default function Header() {
         <header className="appHeader">
             <div className="appHeaderTitleRow">
                 <img className="appHeaderIcon" src={fireIcon} alt="" />
-                <span className="appHeaderTitle">
+                <h1 className="appHeaderTitle">
                     Sistema de Análisis de Incendios Forestales en México
-                </span>
+                </h1>
             </div>
         </header>
     );
