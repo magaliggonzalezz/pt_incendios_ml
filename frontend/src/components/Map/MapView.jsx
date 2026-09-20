@@ -202,7 +202,9 @@ function bindRichInfo(layer, { title, kind = "generic", tooltipRows, popupRows }
     const mapContainer = layer._map?.getContainer?.();
     if (!element || !mapContainer) return;
 
+    if (element.dataset.mapKeyboardReady === "true") return;
     element.dataset.mapKeyboard = "true";
+    element.dataset.mapKeyboardReady = "true";
     element.setAttribute("role", "button");
     element.setAttribute("aria-label", `${title}. Presiona Enter o Espacio para ver detalles.`);
 
@@ -239,6 +241,13 @@ function bindRichInfo(layer, { title, kind = "generic", tooltipRows, popupRows }
   };
 
   layer.on("add", () => window.requestAnimationFrame(makeKeyboardAccessible));
+  layer.on("remove", () => {
+    window.requestAnimationFrame(() => {
+      const mapContainer = layer._map?.getContainer?.() || document.querySelector(".leafletMap");
+      if (!mapContainer || mapContainer.querySelector('[data-map-keyboard="true"][tabindex="0"]')) return;
+      mapContainer.querySelector('[data-map-keyboard="true"]')?.setAttribute("tabindex", "0");
+    });
+  });
 
   const tooltipBody = infoRowsHtml(tooltipRows);
   if (tooltipBody) {
@@ -890,7 +899,7 @@ export default function MapView({
 
   return (
     <div className="mapWrap" role="region" aria-label="Mapa interactivo de incendios forestales en México" aria-describedby="map-accessible-summary">
-      <p id="map-accessible-summary" className="srOnly">Mapa interactivo de México con resultados ML y capas geográficas seleccionables.</p>
+      <p id="map-accessible-summary" className="srOnly">Mapa interactivo de México con resultados ML y capas geográficas seleccionables. Usa Tab para entrar a los elementos del mapa, las flechas para recorrerlos y Enter o Espacio para abrir sus detalles.</p>
       <MapContainer center={DEFAULT_VIEW.center} zoom={DEFAULT_VIEW.zoom} minZoom={3} className="leafletMap" zoomControl={false} keyboard={true} preferCanvas={false}>
         <TileLayer url={activeLayer.url} attribution={activeLayer.attribution} />
         <MapViewportTracker onChange={handleViewportChange} />
