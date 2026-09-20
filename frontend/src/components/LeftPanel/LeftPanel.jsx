@@ -128,7 +128,7 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
       <button className="toggleBtn" type="button" onClick={onToggle} aria-label={open ? "Ocultar panel de filtros" : "Mostrar panel de filtros"} aria-expanded={open}>{open ? "⟨" : "⟩"}</button>
       <div className="panelContent">
         <div className="panelCard">
-          <div className="panelTitle">Consulta</div>
+          <h2 className="panelTitle">Consulta</h2>
           <div className="field">
             <label htmlFor="aggregationLevel">Nivel de análisis</label>
             <select id="aggregationLevel" className="selectInput" value={consultaActiva?.nivelAgregacion ?? ""} onChange={(event) => onConsultaChange?.("nivelAgregacion", event.target.value)}>
@@ -173,7 +173,7 @@ export default function LeftPanel({ open, onToggle, consultaActiva, consultaEjec
         </div>
 
         <div className="panelCard layersCard">
-          <div className="panelTitle">Capas disponibles</div>
+          <h2 className="panelTitle">Capas disponibles</h2>
           <div className="layerGroups">
             {LAYER_GROUPS.map((group) => (
               <section className="layerGroup" key={group.id} aria-label={group.title}>
