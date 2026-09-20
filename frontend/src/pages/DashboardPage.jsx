@@ -239,7 +239,7 @@ export default function DashboardPage() {
   const resumenMapa = consultaActiva?.capasActivas?.[mlLayerId] ? resumenConsulta : null;
 
   return (
-    <div className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
+    <div role="main" className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
       <MapView consultaActiva={consultaActiva} consultaEjecutada={ultimaConsultaEjecutada} resumenConsulta={resumenMapa} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onLayerSummaryChange={setLayerSummary} selectedMlCluster={selectedMlCluster} leftPanelOpen={leftOpen} rightPanelOpen={rightOpen} />
       <Header /><Footer />
       <LeftPanel open={leftOpen} onToggle={() => setLeftOpen((value) => !value)} consultaActiva={consultaActiva} consultaEjecutada={consultaEjecutada} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onResetConsulta={handleResetConsulta} estados={estados} municipios={municipios} isLoading={isLoading} />
