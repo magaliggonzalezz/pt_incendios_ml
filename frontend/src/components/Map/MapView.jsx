@@ -656,16 +656,27 @@ function MapPopupCloser() {
 
 function SyncTerritoryView({ geojson, hasTerritory, fitKey }) {
   const map = useMap();
+  const lastFittedKeyRef = useRef("");
+
   useEffect(() => {
     if (!hasTerritory) {
-      map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, { animate: true });
+      if (lastFittedKeyRef.current !== "national") {
+        map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, { animate: true });
+        lastFittedKeyRef.current = "national";
+      }
       return;
     }
-    if (!geojson?.features?.length) return;
+
+    if (!geojson?.features?.length || lastFittedKeyRef.current === fitKey) return;
+
     const layer = L.geoJSON(geojson);
     const bounds = layer.getBounds();
-    if (bounds.isValid()) map.fitBounds(bounds, { padding: [36, 36], maxZoom: 11 });
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [36, 36], maxZoom: 11 });
+      lastFittedKeyRef.current = fitKey;
+    }
   }, [map, geojson, hasTerritory, fitKey]);
+
   return null;
 }
 
@@ -726,16 +737,25 @@ export default function MapView({
   }, []);
 
   useEffect(() => {
+    if (!cveEntCapas) return undefined;
+
     let active = true;
     const controller = new AbortController();
     setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
 
-    if (cveEntCapas) {
-      obtenerGeometriasMunicipios(cveEntCapas, { signal: controller.signal })
-        .then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
-        .catch((error) => { if (active && !isAbortError(error)) setGeometryError(error.message); });
-      return () => { active = false; controller.abort(); };
-    }
+    obtenerGeometriasMunicipios(cveEntCapas, { signal: controller.signal })
+      .then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
+      .catch((error) => { if (active && !isAbortError(error)) setGeometryError(error.message); });
+
+    return () => { active = false; controller.abort(); };
+  }, [cveEntCapas]);
+
+  useEffect(() => {
+    if (cveEntCapas) return undefined;
+
+    let active = true;
+    const controller = new AbortController();
+    setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
 
     if (!capasActivas.limitesMunicipales || !viewportReady) {
       return () => { active = false; controller.abort(); };
