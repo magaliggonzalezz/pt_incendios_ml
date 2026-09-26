@@ -181,7 +181,7 @@ function buildTemporalChartModel(activeGraph, rows, tipoPeriodo) {
   return {
     type: "line",
     title: metricConfig.title,
-    caption: isComparison ? "Comparación mensual de los dos años seleccionados." : "Serie temporal construida con la granularidad real disponible para la consulta.",
+    caption: isComparison ? "Comparación mensual de los dos años seleccionados." : "Serie temporal construida con la granularidad disponible para la consulta.",
     yTitle: metricConfig.yTitle,
     beginAtZero: metricConfig.beginAtZero,
     data: { labels, datasets },
@@ -355,7 +355,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
           <div className="cmChartsHeader">
             <div className="cmChartsHeading">
               <div className="cmPanelTitle">{activeGraph === "layers" ? "Capas activas" : (hasTemporalSeries ? (resumenConsulta?.tipoPeriodo === "comparar_anios" ? "Comparación temporal" : "Evolución temporal") : (isSingleSnapshot ? "Perfil del territorio" : "Comparación territorial"))}</div>
-              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas activas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal real de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
+              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas activas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
             </div>
             <div className="cmChartsTools">
               <div
