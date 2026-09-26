@@ -1,3 +1,23 @@
+.cmResultsDialog .ms-body{
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cmResultsDialog .cmTabs{
+    flex: 0 0 auto;
+}
+
+.cmResultsDialog .cmPanel,
+.cmResultsDialog .cmChartsStack,
+.cmResultsDialog .cmDataPanel{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
 .cmChartsTools{
     display: flex;
     align-items: center;
