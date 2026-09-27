@@ -31,6 +31,56 @@
   --right-safe: var(--gap);
 }
 
+.queryLoadingIndicator{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 700;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid rgba(11,79,74,.18);
+    border-radius: 999px;
+    background: rgba(255,255,255,.94);
+    box-shadow: 0 8px 24px rgba(16,24,40,.16);
+    color: #0B4F4A;
+    font: 700 13px/16px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+}
+
+.queryLoadingDots{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 14px;
+}
+
+.queryLoadingDots span{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: queryLoadingBounce .9s ease-in-out infinite;
+}
+
+.queryLoadingDots span:nth-child(2){ animation-delay: .15s; }
+.queryLoadingDots span:nth-child(3){ animation-delay: .3s; }
+
+@keyframes queryLoadingBounce{
+    0%, 60%, 100%{ transform: translateY(0); opacity: .45; }
+    30%{ transform: translateY(-4px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .queryLoadingDots span{
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @media (max-width: 1100px){
   .dash{
     --left-panel-w: 276px;
