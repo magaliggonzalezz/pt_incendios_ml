@@ -241,6 +241,12 @@ export default function DashboardPage() {
   return (
     <div role="main" className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
       <MapView consultaActiva={consultaActiva} consultaEjecutada={ultimaConsultaEjecutada} resumenConsulta={resumenMapa} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onLayerSummaryChange={setLayerSummary} selectedMlCluster={selectedMlCluster} leftPanelOpen={leftOpen} rightPanelOpen={rightOpen} />
+      {isLoading ? (
+        <div className="queryLoadingIndicator" role="status" aria-live="polite" aria-label="Procesando consulta">
+          <span>Procesando consulta</span>
+          <span className="queryLoadingDots" aria-hidden="true"><span /><span /><span /></span>
+        </div>
+      ) : null}
       <Header /><Footer />
       <LeftPanel open={leftOpen} onToggle={() => setLeftOpen((value) => !value)} consultaActiva={consultaActiva} consultaEjecutada={consultaEjecutada} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onResetConsulta={handleResetConsulta} estados={estados} municipios={municipios} isLoading={isLoading} />
       <RightPanel open={rightOpen} onToggle={() => setRightOpen((value) => !value)} consultaEjecutada={consultaEjecutada} consultaActiva={consultaActiva} consultaResultado={ultimaConsultaEjecutada} resumenConsulta={resumenConsulta} layerSummary={layerSummary} totalRecords={resumenConsulta?.totalRecords ?? 0} availableFormats={["csv", "json"]} isExporting={isExporting} isLoading={isLoading} error={error} onDownloadExport={handleDownloadExport} selectedMlCluster={selectedMlCluster} onSelectedMlClusterChange={setSelectedMlCluster} />
