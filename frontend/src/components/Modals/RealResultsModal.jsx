@@ -45,11 +45,36 @@ const TEMPORAL_GRAPH_OPTIONS = [
 
 const LAYERS_GRAPH_OPTION = { key: "layers", label: "Capas activas" };
 const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+const MONTH_NAMES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const SERIES_COLORS = ["#0F766E", "#7C3AED", "#2563EB", "#D97706"];
 const PAGE_SIZE = 50;
 
 const formatNumber = (value, digits = 0) => Number(value || 0).toLocaleString("es-MX", { maximumFractionDigits: digits });
 const territoryName = (row) => row.nombre_municipio || row.nombre_entidad || row.cvegeo || row.cve_ent || "N/D";
+
+function formatSpanishDate(value) {
+  const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return value;
+  const [, year, month, day] = match;
+  return `${Number(day)} de ${MONTH_NAMES[Number(month) - 1]} de ${year}`;
+}
+
+function buildTemporalCaption(tipoPeriodo, periodo) {
+  if (tipoPeriodo === "anio") return `Serie temporal de ${periodo} mostrada por mes.`;
+  if (tipoPeriodo === "anio_mes") {
+    const match = String(periodo || "").match(/^(\d{2})\/(\d{4})$/);
+    if (match) return `Serie temporal de ${MONTH_NAMES[Number(match[1]) - 1]} de ${match[2]} mostrada por día.`;
+  }
+  if (tipoPeriodo === "rango_fechas") {
+    const [from, to] = String(periodo || "").split(" a ");
+    if (from && to) return `Serie temporal del ${formatSpanishDate(from)} al ${formatSpanishDate(to)} mostrada por día.`;
+  }
+  if (tipoPeriodo === "comparar_anios") {
+    const [first, second] = String(periodo || "").split(" vs ");
+    if (first && second) return `Comparación temporal de ${first} y ${second} mostrada por mes.`;
+  }
+  return periodo ? `Serie temporal de ${periodo}.` : "Serie temporal de la consulta.";
+}
 
 const horizontalOptions = (xTitle = "") => ({
   indexAxis: "y",
@@ -116,13 +141,14 @@ function withLineStyle(dataset, color) {
   };
 }
 
-function buildTemporalChartModel(activeGraph, rows, tipoPeriodo) {
+function buildTemporalChartModel(activeGraph, rows, tipoPeriodo, periodo) {
   if (!rows.length) return null;
   const isComparison = tipoPeriodo === "comparar_anios";
   const seriesNames = [...new Set(rows.map((row) => row.series || "Periodo"))];
   const labels = isComparison
     ? [...new Set(rows.map((row) => row.periodKey.slice(5, 7)))].sort().map((month) => MONTHS[Number(month) - 1])
     : rows.filter((row) => (row.series || "Periodo") === seriesNames[0]).map((row) => row.label);
+  const temporalCaption = buildTemporalCaption(tipoPeriodo, periodo);
 
   const metricConfig = {
     trendFirms: { field: "firms_detecciones", title: "Evolución de detecciones FIRMS", yTitle: "Detecciones", beginAtZero: true, color: "#F97316" },
@@ -157,7 +183,7 @@ function buildTemporalChartModel(activeGraph, rows, tipoPeriodo) {
     return {
       type: "line",
       title: "Evolución de temperatura",
-      caption: isComparison ? "Temperaturas mínima y máxima comparadas por mes para ambos años." : "Temperaturas mínima y máxima a lo largo del período consultado.",
+      caption: temporalCaption,
       yTitle: "Temperatura (°C)",
       beginAtZero: false,
       data: { labels, datasets },
@@ -181,7 +207,7 @@ function buildTemporalChartModel(activeGraph, rows, tipoPeriodo) {
   return {
     type: "line",
     title: metricConfig.title,
-    caption: isComparison ? "Comparación mensual de los dos años seleccionados." : "Serie temporal construida con la granularidad disponible para la consulta.",
+    caption: temporalCaption,
     yTitle: metricConfig.yTitle,
     beginAtZero: metricConfig.beginAtZero,
     data: { labels, datasets },
@@ -261,9 +287,9 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
 
   const fullChartModel = useMemo(() => {
     if (activeGraph === "layers") return layerChart;
-    if (hasTemporalSeries) return buildTemporalChartModel(activeGraph, temporalRows, resumenConsulta?.tipoPeriodo);
+    if (hasTemporalSeries) return buildTemporalChartModel(activeGraph, temporalRows, resumenConsulta?.tipoPeriodo, resumenConsulta?.periodo);
     return buildBarChartModel({ activeGraph, rows, summaryRows });
-  }, [activeGraph, layerChart, hasTemporalSeries, temporalRows, resumenConsulta?.tipoPeriodo, rows, summaryRows]);
+  }, [activeGraph, layerChart, hasTemporalSeries, temporalRows, resumenConsulta?.tipoPeriodo, resumenConsulta?.periodo, rows, summaryRows]);
 
   const temporalPointCount = fullChartModel?.type === "line" ? (fullChartModel.data.labels?.length || 0) : 0;
   const focusMax = Math.max(1, temporalPointCount - 1);
