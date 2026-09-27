@@ -33,22 +33,34 @@
 
 .queryLoadingIndicator{
     position: absolute;
-    top: 50%;
-    left: 50%;
+    inset: 0;
     z-index: 700;
-    transform: translate(-50%, -50%);
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    padding: 10px 14px;
-    border: 1px solid rgba(11,79,74,.18);
-    border-radius: 999px;
-    background: rgba(255,255,255,.94);
-    box-shadow: 0 8px 24px rgba(16,24,40,.16);
+    background: rgba(15,23,42,.12);
     color: #0B4F4A;
     font: 700 13px/16px Arimo, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    pointer-events: none;
-    backdrop-filter: blur(4px);
+    pointer-events: auto;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.queryLoadingIndicator::before{
+    content: "";
+    position: absolute;
+    width: 210px;
+    height: 44px;
+    border: 1px solid rgba(11,79,74,.18);
+    border-radius: 999px;
+    background: rgba(255,255,255,.95);
+    box-shadow: 0 8px 24px rgba(16,24,40,.16);
+}
+
+.queryLoadingIndicator > span{
+    position: relative;
+    z-index: 1;
 }
 
 .queryLoadingDots{
