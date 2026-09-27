@@ -60,18 +60,18 @@ function formatSpanishDate(value) {
 }
 
 function buildTemporalCaption(tipoPeriodo, periodo) {
-  if (tipoPeriodo === "anio") return `Serie temporal de ${periodo} mostrada por mes.`;
+  if (tipoPeriodo === "anio") return `Serie temporal de ${periodo}.`;
   if (tipoPeriodo === "anio_mes") {
     const match = String(periodo || "").match(/^(\d{2})\/(\d{4})$/);
-    if (match) return `Serie temporal de ${MONTH_NAMES[Number(match[1]) - 1]} de ${match[2]} mostrada por día.`;
+    if (match) return `Serie temporal de ${MONTH_NAMES[Number(match[1]) - 1]} de ${match[2]}.`;
   }
   if (tipoPeriodo === "rango_fechas") {
     const [from, to] = String(periodo || "").split(" a ");
-    if (from && to) return `Serie temporal del ${formatSpanishDate(from)} al ${formatSpanishDate(to)} mostrada por día.`;
+    if (from && to) return `Serie temporal del ${formatSpanishDate(from)} al ${formatSpanishDate(to)}.`;
   }
   if (tipoPeriodo === "comparar_anios") {
     const [first, second] = String(periodo || "").split(" vs ");
-    if (first && second) return `Comparación temporal de ${first} y ${second} mostrada por mes.`;
+    if (first && second) return `Comparación temporal de ${first} y ${second}.`;
   }
   return periodo ? `Serie temporal de ${periodo}.` : "Serie temporal de la consulta.";
 }
@@ -381,7 +381,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
           <div className="cmChartsHeader">
             <div className="cmChartsHeading">
               <div className="cmPanelTitle">{activeGraph === "layers" ? "Capas activas" : (hasTemporalSeries ? (resumenConsulta?.tipoPeriodo === "comparar_anios" ? "Comparación temporal" : "Evolución temporal") : (isSingleSnapshot ? "Perfil del territorio" : "Comparación territorial"))}</div>
-              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas activas visibles en el mapa." : (hasTemporalSeries ? "Resolución temporal de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
+              <p className="cmChartCaption cmHeaderCaption">{activeGraph === "layers" ? "Capas activas visibles en el mapa." : (hasTemporalSeries ? "Período de la consulta." : (isSingleSnapshot ? "Vista del período seleccionado." : `Comparación de ${rows.length} territorios.`))}</p>
             </div>
             <div className="cmChartsTools">
               <div
