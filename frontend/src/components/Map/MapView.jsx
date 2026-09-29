@@ -687,6 +687,7 @@ export default function MapView({
   onConsultaChange,
   onConsultar,
   onLayerSummaryChange,
+  onLayersLoadingChange,
   leftPanelOpen = false,
   rightPanelOpen = false,
   selectedMlCluster = null,
@@ -708,6 +709,7 @@ export default function MapView({
     usoSueloVegetacion: EMPTY_FEATURE_COLLECTION,
   });
 
+  const loadingLayerGroupsRef = useRef(new Set());
   const activeLayer = BASE_LAYERS[baseLayerId];
   const boundaryStyle = BOUNDARY_STYLES[baseLayerId] || BOUNDARY_STYLES.esri;
   const selectedTerritoryStyle = SELECTED_TERRITORY_STYLES[baseLayerId] || SELECTED_TERRITORY_STYLES.esri;
@@ -722,6 +724,8 @@ export default function MapView({
   const territoryKey = `${overlayScope?.nivelAgregacion || "entidad"}:${cveEntCapas || "mx"}:${cvegeoSeleccionado || "all"}`;
   const viewportReady = Boolean(viewportBbox && viewportTerritoryKey === territoryKey);
 
+  const setLayerGroupLoading = useCallback((group, loading) => {if (loading) { loadingLayerGroupsRef.current.add(group);} else {loadingLayerGroupsRef.current.delete(group);}onLayersLoadingChange?.(loadingLayerGroupsRef.current.size > 0);}, [onLayersLoadingChange]);
+  const handleMdeLoadingChange = useCallback((loading) => {setLayerGroupLoading("mde", loading);}, [setLayerGroupLoading]);
   const setOverlay = (key, data) => setOverlays((prev) => ({ ...prev, [key]: data || EMPTY_FEATURE_COLLECTION }));
   const handleViewportChange = useCallback((bbox) => { setViewportBbox(bbox); setViewportTerritoryKey(territoryKey); }, [territoryKey]);
 
@@ -750,30 +754,27 @@ export default function MapView({
     return () => { active = false; controller.abort(); };
   }, [cveEntCapas]);
 
-  useEffect(() => {
-    if (cveEntCapas) return undefined;
-
-    let active = true;
-    const controller = new AbortController();
+  useEffect(() => { if (cveEntCapas) return undefined; let active = true; const controller = new AbortController();
     setMunicipiosGeojson(EMPTY_FEATURE_COLLECTION);
-
     if (!capasActivas.limitesMunicipales || !viewportReady) {
-      return () => { active = false; controller.abort(); };
-    }
+    return () => { active = false; controller.abort();};
+  }
+    setLayerGroupLoading("municipios", true);
+    obtenerGeometriasMunicipiosViewport( viewportBbox,"",{ signal: controller.signal })
+      .then((data) => { if (!active) return;setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
+      .catch((error) => {if (active && !isAbortError(error)) {setGeometryError(error.message);}})
+      .finally(() => {if (active) {setLayerGroupLoading("municipios", false);}});
+    return () => {active = false; controller.abort();
+    setLayerGroupLoading("municipios", false);};
+  }, [cveEntCapas, capasActivas.limitesMunicipales, viewportBbox, viewportReady,setLayerGroupLoading]);
 
-    obtenerGeometriasMunicipiosViewport(viewportBbox, "", { signal: controller.signal })
-      .then((data) => { if (active) setMunicipiosGeojson(data || EMPTY_FEATURE_COLLECTION); })
-      .catch((error) => { if (active && !isAbortError(error)) setGeometryError(error.message); });
-
-    return () => { active = false; controller.abort(); };
-  }, [cveEntCapas, capasActivas.limitesMunicipales, viewportBbox, viewportReady]);
-
-  useEffect(() => {
-    let active = true;
-    if (!capasActivas.estacionesSmn) { setOverlay("smn", EMPTY_FEATURE_COLLECTION); return () => { active = false; }; }
-    obtenerEstacionesSmn().then((data) => { if (active) setOverlay("smn", data); }).catch((error) => { if (active && !isAbortError(error)) setLayerError(`SMN: ${error.message}`); });
-    return () => { active = false; };
-  }, [capasActivas.estacionesSmn]);
+  useEffect(() => { let active = true;   if (!capasActivas.estacionesSmn) {setOverlay("smn", EMPTY_FEATURE_COLLECTION);
+    return () => { active = false; setLayerGroupLoading("smn", false); };}
+    setLayerGroupLoading("smn", true);
+    obtenerEstacionesSmn() .then((data) => { if (active) { setOverlay("smn", data);}})
+    .catch((error) => { if (active && !isAbortError(error)) { setLayerError(`SMN: ${error.message}`); } }).finally(() => { if (active) { setLayerGroupLoading("smn", false); }});
+  return () => { active = false; setLayerGroupLoading("smn", false); };
+  }, [capasActivas.estacionesSmn,setLayerGroupLoading]);
 
   useEffect(() => {
     let active = true;
@@ -793,13 +794,31 @@ export default function MapView({
     addTask(capasActivas.corrientesAguaInegi, "hidrografia", "hidrografia");
     addTask(capasActivas.edafologiaInegi, "edafologia", "edafologia");
     addTask(capasActivas.usoSueloVegetacionInegi, "uso_suelo_vegetacion", "usoSueloVegetacion");
+    if (tasks.length > 0) {
+      setLayerGroupLoading("tematicas", true);
+    }
     Promise.allSettled(tasks).then((results) => {
-      if (!active) return;
-      const errors = results.filter((result) => result.status === "rejected" && !isAbortError(result.reason)).map((result) => result.reason?.message).filter(Boolean);
-      if (errors.length) setLayerError(errors.join(" | "));
-    });
-    return () => { active = false; controller.abort(); };
-  }, [cveEntCapas, cvegeoSeleccionado, viewportBbox, viewportReady, capasActivas.fisiografiaInegi, capasActivas.corrientesAguaInegi, capasActivas.edafologiaInegi, capasActivas.usoSueloVegetacionInegi]);
+  if (!active) return;
+
+  const errors = results
+    .filter(
+      (result) =>
+        result.status === "rejected" &&
+        !isAbortError(result.reason)
+    )
+    .map((result) => result.reason?.message)
+    .filter(Boolean);
+
+  if (errors.length) setLayerError(errors.join(" | "));
+
+  setLayerGroupLoading("tematicas", false);
+  });
+   return () => {
+  active = false;
+  controller.abort();
+  setLayerGroupLoading("tematicas", false);
+    };
+  }, [cveEntCapas, cvegeoSeleccionado, viewportBbox, viewportReady, capasActivas.fisiografiaInegi, capasActivas.corrientesAguaInegi, capasActivas.edafologiaInegi, capasActivas.usoSueloVegetacionInegi, setLayerGroupLoading]);
 
   useEffect(() => {
     let active = true;
@@ -816,13 +835,17 @@ export default function MapView({
     else setOverlay("firms", EMPTY_FEATURE_COLLECTION);
     if (capasActivas.incendiosConafor) tasks.push(obtenerIncendiosConafor(puntosParams, { signal: controller.signal }).then((data) => { if (active) setOverlay("conafor", data); }));
     else setOverlay("conafor", EMPTY_FEATURE_COLLECTION);
+    if (tasks.length > 0) {
+    setLayerGroupLoading("puntos", true);
+    }
     Promise.allSettled(tasks).then((results) => {
       if (!active) return;
       const errors = results.filter((result) => result.status === "rejected" && !isAbortError(result.reason)).map((result) => result.reason?.message).filter(Boolean);
       if (errors.length) setLayerError(errors.join(" | "));
+      setLayerGroupLoading("puntos", false);
     });
-    return () => { active = false; controller.abort(); };
-  }, [capasActivas.puntosCalorFirms, capasActivas.incendiosConafor, viewportBbox, viewportReady, overlayScope?.anio, overlayScope?.mes, overlayScope?.tipoPeriodo, overlayScope?.cveEnt, overlayScope?.cvegeo]);
+    return () => { active = false; controller.abort(); setLayerGroupLoading("puntos", false); };
+  }, [capasActivas.puntosCalorFirms, capasActivas.incendiosConafor, viewportBbox, viewportReady, overlayScope?.anio, overlayScope?.mes, overlayScope?.tipoPeriodo, overlayScope?.cveEnt, overlayScope?.cvegeo,setLayerGroupLoading]);
 
   const estadoSeleccionadoGeojson = useMemo(() => cveEntCapas ? filterFeatureCollection(estadosGeojson, (feature) => getFeatureKey(feature, "entidad") === cveEntCapas) : EMPTY_FEATURE_COLLECTION, [estadosGeojson, cveEntCapas]);
   const municipioSeleccionadoGeojson = useMemo(() => cvegeoSeleccionado ? filterFeatureCollection(municipiosGeojson, (feature) => getFeatureKey(feature, "municipio") === cvegeoSeleccionado) : EMPTY_FEATURE_COLLECTION, [municipiosGeojson, cvegeoSeleccionado]);
@@ -951,7 +974,16 @@ export default function MapView({
         <SyncTerritoryView geojson={territorioSeleccionadoGeojson} hasTerritory={Boolean(cveEntCapas || cvegeoSeleccionado)} fitKey={fitKey} />
         <MapResizeInvalidator watchKey={`${leftPanelOpen}-${rightPanelOpen}-${baseLayerId}`} />
         <MapPopupCloser />
-        <MapControls defaultView={DEFAULT_VIEW} baseLayerId={baseLayerId} onChangeLayer={setBaseLayerId} layers={BASE_LAYERS} estadosGeojson={estadosGeojson} rightPanelOpen={rightPanelOpen} />
+        <MapControls
+          defaultView={DEFAULT_VIEW}
+          baseLayerId={baseLayerId}
+          onChangeLayer={setBaseLayerId}
+          layers={BASE_LAYERS}
+          estadosGeojson={estadosGeojson}
+          territorioSeleccionadoGeojson={territorioSeleccionadoGeojson}
+          onLayersLoadingChange={handleMdeLoadingChange}
+          rightPanelOpen={rightPanelOpen}
+        />
       </MapContainer>
 
       {geometryError ? <div className="mapGeometryError">No fue posible cargar la geometría: {geometryError}</div> : null}

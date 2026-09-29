@@ -75,6 +75,7 @@ export default function DashboardPage() {
   const [estados, setEstados] = useState([]);
   const [municipios, setMunicipios] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingLayers, setIsLoadingLayers] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState(null);
   const queryRunRef = useRef(0);
@@ -240,8 +241,8 @@ export default function DashboardPage() {
 
   return (
     <div role="main" className={`dash ${rightOpen ? "right-open" : "right-closed"} ${leftOpen ? "left-open" : "left-closed"}`}>
-      <MapView consultaActiva={consultaActiva} consultaEjecutada={ultimaConsultaEjecutada} resumenConsulta={resumenMapa} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onLayerSummaryChange={setLayerSummary} selectedMlCluster={selectedMlCluster} leftPanelOpen={leftOpen} rightPanelOpen={rightOpen} />
-      {isLoading ? (
+      <MapView consultaActiva={consultaActiva} consultaEjecutada={ultimaConsultaEjecutada} resumenConsulta={resumenMapa} onConsultaChange={handleConsultaChange} onConsultar={handleConsultar} onLayerSummaryChange={setLayerSummary} onLayersLoadingChange={setIsLoadingLayers} selectedMlCluster={selectedMlCluster} leftPanelOpen={leftOpen} rightPanelOpen={rightOpen} />
+      {(isLoading || isLoadingLayers) ? (
         <div className="queryLoadingIndicator" role="status" aria-live="polite" aria-label="Procesando consulta">
           <span>Procesando consulta</span>
           <span className="queryLoadingDots" aria-hidden="true"><span /><span /><span /></span>

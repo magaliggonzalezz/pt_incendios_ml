@@ -14,6 +14,87 @@ const API_URL = import.meta.env.VITE_API_URL ??
 const MDE_TILE_URL = `${API_URL}/api/recursos/elevacion-mde/tiles/{z}/{x}/{y}.png`;
 const MDE_PANE = "mdeElevationPane";
 
+const MdeClippedTileLayer = L.TileLayer.extend({
+    createTile(coords, done) {
+    this.options.onLoadingChange?.(true);
+    const canvas = document.createElement("canvas");
+    const size = this.getTileSize();
+
+    canvas.width = size.x;
+    canvas.height = size.y;
+
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+
+    image.onload = () => {
+      const territory = this.options.territory;
+
+      if (!territory?.features?.length) {
+        ctx.drawImage(image, 0, 0, size.x, size.y);
+        done(null, canvas);
+        return;
+      }
+
+      const tileBounds = this._tileCoordsToBounds(coords);
+      const northWest = tileBounds.getNorthWest();
+      const southEast = tileBounds.getSouthEast();
+
+      const projectPoint = ([lng, lat]) => {
+      const point = this._map.project(L.latLng(lat, lng), coords.z);
+      const tileOrigin = L.point(
+      coords.x * size.x,
+      coords.y * size.y
+      );
+      return [point.x - tileOrigin.x, point.y - tileOrigin.y,
+      ];
+    };
+      ctx.save();
+      ctx.beginPath();
+
+      const addRing = (ring) => {
+        ring.forEach((coordinate, index) => {
+          const [x, y] = projectPoint(coordinate);
+
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+
+        ctx.closePath();
+      };
+
+      territory.features.forEach((feature) => {
+        const geometry = feature?.geometry;
+        if (!geometry) return;
+
+        if (geometry.type === "Polygon") {
+          geometry.coordinates.forEach(addRing);
+        } else if (geometry.type === "MultiPolygon") {
+          geometry.coordinates.forEach((polygon) => {
+            polygon.forEach(addRing);
+          });
+        }
+      });
+
+      ctx.clip("evenodd");
+      ctx.drawImage(image, 0, 0, size.x, size.y);
+      ctx.restore();
+
+      done(null, canvas);
+    };
+
+    image.onerror = () => {
+      done(new Error("No fue posible cargar el tile MDE"), canvas);
+    };
+
+    image.src = this.getTileUrl(coords);
+
+    return canvas;
+  },
+});
+
+
+
 function normalize(value, width) {
   if (value === undefined || value === null || value === "") return "";
   return String(value).padStart(width, "0");
@@ -65,14 +146,24 @@ export default function MapControls({
   onChangeLayer,
   layers,
   estadosGeojson,
+  territorioSeleccionadoGeojson,
+  onLayersLoadingChange,
   rightPanelOpen = false,
 }) {
   const map = useMap();
+  const mdeBounds = useMemo(() => {
+  if (!territorioSeleccionadoGeojson?.features?.length) return null;
+
+  const bounds = L.geoJSON(territorioSeleccionadoGeojson).getBounds();
+  return bounds.isValid() ? bounds : null;
+}, [territorioSeleccionadoGeojson]);
   const controlsRef = useRef(null);
   const searchButtonRef = useRef(null);
   const boxZoomButtonRef = useRef(null);
   const layersButtonRef = useRef(null);
   const mdeLayerRef = useRef(null);
+  const mdeActiveRef = useRef(false);
+  const mdeTerritoryRef = useRef(territorioSeleccionadoGeojson);
   const [layersOpen, setLayersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -145,27 +236,47 @@ export default function MapControls({
   const stop = (event) => event.stopPropagation();
 
   useEffect(() => {
+  mdeTerritoryRef.current = territorioSeleccionadoGeojson;
+}, [territorioSeleccionadoGeojson]);
+
+  useEffect(() => {
     let pane = map.getPane(MDE_PANE);
     if (!pane) pane = map.createPane(MDE_PANE);
     pane.style.zIndex = "250";
     pane.style.pointerEvents = "none";
   }, [map]);
 
+
+
   useEffect(() => {
     const onElevacionMdeChange = (event) => {
       const active = Boolean(event.detail?.active);
+      mdeActiveRef.current = active;
 
       if (active && !mdeLayerRef.current) {
-        mdeLayerRef.current = L.tileLayer(MDE_TILE_URL, {
+        mdeLayerRef.current = new MdeClippedTileLayer(MDE_TILE_URL, {
           minZoom: 4,
           maxNativeZoom: 10,
           maxZoom: 18,
           opacity: 0.68,
           pane: MDE_PANE,
+          territory: mdeTerritoryRef.current,
+          bounds: mdeBounds || undefined,
+          onLoadingChange: onLayersLoadingChange,
           attribution: "Elevación derivada del MDE INEGI",
           updateWhenIdle: true,
           keepBuffer: 1,
-        }).addTo(map);
+        })
+        mdeLayerRef.current.on("loading", () => {
+          onLayersLoadingChange?.(true);
+        });
+        mdeLayerRef.current.on("load", () => {
+          onLayersLoadingChange?.(false);
+        });
+        mdeLayerRef.current.on("tileerror", () => {
+          onLayersLoadingChange?.(false);
+        });
+        mdeLayerRef.current.addTo(map);
         return;
       }
 
@@ -183,7 +294,41 @@ export default function MapControls({
         mdeLayerRef.current = null;
       }
     };
-  }, [map]);
+}, [map,mdeBounds,onLayersLoadingChange]);
+
+  useEffect(() => {
+  if (!mdeActiveRef.current) return;
+
+  if (mdeLayerRef.current) {
+    map.removeLayer(mdeLayerRef.current);
+    mdeLayerRef.current = null;
+    onLayersLoadingChange?.(false);
+  }
+
+  mdeLayerRef.current = new MdeClippedTileLayer(MDE_TILE_URL, {
+    minZoom: 4,
+    maxNativeZoom: 10,
+    maxZoom: 18,
+    opacity: 0.68,
+    pane: MDE_PANE,
+    territory: mdeTerritoryRef.current,
+    bounds: mdeBounds || undefined,
+    onLoadingChange: onLayersLoadingChange,
+    attribution: "Elevación derivada del MDE INEGI",
+    updateWhenIdle: true,
+    keepBuffer: 1,
+  });
+  mdeLayerRef.current.on("loading", () => {
+  onLayersLoadingChange?.(true);
+  });
+  mdeLayerRef.current.on("load", () => {
+  onLayersLoadingChange?.(false);
+  });
+  mdeLayerRef.current.on("tileerror", () => {
+  onLayersLoadingChange?.(false);
+  });
+  mdeLayerRef.current.addTo(map);
+}, [map, mdeBounds,onLayersLoadingChange]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
