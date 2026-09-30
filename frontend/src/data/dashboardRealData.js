@@ -1,3 +1,4 @@
+import { CLUSTER_APP_METADATA_BY_ID } from "./dashboardMock";
 const sum = (rows, field) => rows.reduce((total, row) => total + Number(row?.[field] || 0), 0);
 
 const observationWeight = (row) => (
@@ -57,10 +58,12 @@ function decorateRow(row, { clusters, estados, municipios }) {
     ...row,
     cluster_som_k07: row.cluster,
     cluster_id: row.cluster,
-    estado_app: meta.estado_app,
-    etiqueta_final: meta.etiqueta_final,
-    color_sugerido_app: meta.color,
-    prioridad_visual_app: meta.prioridad_visual,
+    estado_app: CLUSTER_APP_METADATA_BY_ID.get(Number(row.cluster))?.estado_app ?? meta.estado_app,
+    etiqueta_final: CLUSTER_APP_METADATA_BY_ID.get(Number(row.cluster))?.etiqueta_final ?? meta.etiqueta_final,
+    descripcion_app: CLUSTER_APP_METADATA_BY_ID.get(Number(row.cluster))?.descripcion_app ?? "",
+    explicacion_app: CLUSTER_APP_METADATA_BY_ID.get(Number(row.cluster))?.explicacion_app ?? "",
+    color_sugerido_app: CLUSTER_APP_METADATA_BY_ID.get(Number(row.cluster))?.color_sugerido_app ?? meta.color,
+    prioridad_visual_app: CLUSTER_APP_METADATA_BY_ID.get(Number(row.cluster))?.prioridad_visual_app ?? meta.prioridad_visual,
     nombre_entidad: estado?.nombre,
     nombre_municipio: municipio?.nombre,
     n_observaciones: observaciones,
@@ -117,14 +120,20 @@ function buildSummaryRows(rows, clusters) {
 }
 
 function buildCatalogRows(clusters = []) {
-  return clusters.map((cluster) => ({
-    cluster_som_k07: cluster.cluster,
-    cluster_id: cluster.cluster,
-    estado_app: cluster.estado_app,
-    etiqueta_final: cluster.etiqueta_final,
-    color_sugerido_app: cluster.color,
-    prioridad_visual_app: cluster.prioridad_visual,
-  }));
+  return clusters.map((cluster) => {
+    const meta = CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster));
+
+    return {
+      cluster_som_k07: cluster.cluster,
+      cluster_id: cluster.cluster,
+      estado_app: meta?.estado_app ?? cluster.estado_app,
+      etiqueta_final: meta?.etiqueta_final ?? cluster.etiqueta_final,
+      descripcion_app: meta?.descripcion_app ?? "",
+      explicacion_app: meta?.explicacion_app ?? "",
+      color_sugerido_app: meta?.color_sugerido_app ?? cluster.color,
+      prioridad_visual_app: meta?.prioridad_visual_app ?? cluster.prioridad_visual,
+    };
+  });
 }
 
 function temporalKey(row) {
@@ -226,12 +235,14 @@ export function buildRealDashboardResults({ consulta, rows, clusters, estados, m
     firms_frp: sum(safeRows, "firms_frp"),
     clusterId,
     resultadoMl: cluster ? {
-      cluster_id: cluster.cluster,
-      cluster_som_k07: cluster.cluster,
-      estado_app: cluster.estado_app,
-      etiqueta_final: cluster.etiqueta_final,
-      color_sugerido_app: cluster.color,
-      prioridad_visual_app: cluster.prioridad_visual,
+    cluster_id: cluster.cluster,
+    cluster_som_k07: cluster.cluster,
+    estado_app: CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster))?.estado_app ?? cluster.estado_app,
+    etiqueta_final: CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster))?.etiqueta_final ?? cluster.etiqueta_final,
+    descripcion_app: CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster))?.descripcion_app ?? "",
+    explicacion_app: CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster))?.explicacion_app ?? "",
+    color_sugerido_app: CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster))?.color_sugerido_app ?? cluster.color,
+    prioridad_visual_app: CLUSTER_APP_METADATA_BY_ID.get(Number(cluster.cluster))?.prioridad_visual_app ?? cluster.prioridad_visual,
     } : null,
     summaryRows,
     catalogRows: buildCatalogRows(clusters),

@@ -371,7 +371,7 @@ export default function RealResultsModal({ open, onClose, resumenConsulta = null
           <div className="cmDominant" style={ml.color_sugerido_app ? { borderLeftColor: ml.color_sugerido_app } : undefined}>
             <div className="cmPanelTitle">Patrón ML dominante</div>
             <strong>{ml.estado_app || "Sin clasificación disponible"}</strong>
-            <p>{ml.etiqueta_final || "Sin etiqueta disponible"}</p>
+            <p>{ml.descripcion_app || "Sin características disponibles"}</p>
           </div>
         </div>
       ) : null}

@@ -918,7 +918,7 @@ export default function MapView({
     return { ...resultadoBaseGeojson, features: resultadoBaseGeojson.features.map((feature) => {
       const key = getFeatureKey(feature, nivelMapa);
       const row = rowByKey.get(key) ?? null;
-      const clusterMatches = selectedMlCluster === null || selectedMlCluster === "" || Number(row?.cluster) === Number(selectedMlCluster);
+      const clusterMatches = selectedMlCluster === null || selectedMlCluster === "" || Number(row?.cluster) === Number(selectedMlxxxxxxxxxxxxxxxx);
       return { ...feature, properties: { ...(feature.properties || {}), __map_key: key, __resultado: row, __map_style: { color: row ? "#FFFFFF" : "rgba(255,255,255,.65)", weight: row ? 1.6 : 0.8, fillColor: row?.color_sugerido_app || "#64748B", fillOpacity: row ? (clusterMatches ? 0.72 : 0.16) : 0.05 } } };
     }) };
   }, [resultadoBaseGeojson, rowByKey, nivelMapa, selectedMlCluster]);
@@ -932,7 +932,7 @@ export default function MapView({
     bindRichInfo(layer, {
       title: name, kind: "ml",
       tooltipRows: orderedRows(row, [["Estado", "nombre_entidad"], ["Municipio", "nombre_municipio"], ["Cluster", "cluster"], ["Observaciones", "observaciones", { number: true }]]),
-      popupRows: orderedRows(row, [["Estado", "nombre_entidad"], ["Municipio", "nombre_municipio"], ["Clave", nivelMapa === "municipio" ? "cvegeo" : "cve_ent"], ["Cluster", "cluster"], ["Estado ML", "estado_app"], ["Etiqueta", "etiqueta_final"], ["Observaciones", "observaciones", { number: true }], ["Detecciones FIRMS", "firms_detecciones", { number: true }], ["Eventos CONAFOR", "conafor_eventos", { number: true }]]),
+      popupRows: orderedRows(row, [["Estado", "nombre_entidad"], ["Municipio", "nombre_municipio"], ["Clave", nivelMapa === "municipio" ? "cvegeo" : "cve_ent"],["Cluster", "cluster"], ["Patrón", "estado_app"], ["Características", "descripcion_app"], ["Observaciones", "observaciones", { number: true }], ["Detecciones FIRMS", "firms_detecciones", { number: true }], ["Eventos CONAFOR", "conafor_eventos", { number: true }]]),
     });
   };
 

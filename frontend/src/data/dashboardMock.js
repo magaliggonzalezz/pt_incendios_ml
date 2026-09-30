@@ -95,70 +95,84 @@ export const CLUSTER_APP_COLORS = {
 const CLUSTER_APP_METADATA = [
   {
     cluster_id: 0,
-    estado_app: "Sin incendio activo",
-    etiqueta_final: "Condicion estable sin actividad termica relevante",
-    descripcion_app: "Predomina una condicion estable sin senales recientes de incendio activo.",
-    explicacion_app: "El patron combina baja deteccion satelital, baja afectacion oficial y condiciones climaticas sin presion extrema.",
+    estado_app: "Frío-seco",
+    etiqueta_final: "Frío-seco",
+    descripcion_app:
+      "Temperatura máxima media de 24.00 °C, temperatura mínima de 6.75 °C y precipitación acumulada media de 1.90 mm; 0.52 % de los registros presentan detecciones térmicas.",
+    explicacion_app:
+      "Patrón caracterizado por condiciones frías y secas, con una proporción reducida de registros con detecciones térmicas.",
     color_sugerido_app: CLUSTER_APP_COLORS[0],
     prioridad_visual_app: 7,
     dias: 92000,
   },
   {
     cluster_id: 1,
-    estado_app: "Baja actividad termica",
-    etiqueta_final: "Actividad satelital aislada",
-    descripcion_app: "Se observan senales termicas aisladas, sin acumulacion critica.",
-    explicacion_app: "El patron concentra detecciones dispersas y baja relacion con registros oficiales de incendio.",
+    estado_app: "Cálido con evaporación elevada",
+    etiqueta_final: "Cálido con evaporación elevada",
+    descripcion_app:
+      "Presenta las mayores temperaturas medias entre los grupos (33.53 °C máxima y 18.39 °C mínima) y la mayor evaporación media, 6.50 mm.",
+    explicacion_app:
+      "Patrón caracterizado por temperaturas elevadas y la mayor evaporación media entre los grupos analizados.",
     color_sugerido_app: CLUSTER_APP_COLORS[1],
     prioridad_visual_app: 5,
     dias: 37000,
   },
   {
     cluster_id: 2,
-    estado_app: "Incendio activo extremo",
-    etiqueta_final: "Alta actividad termica y afectacion registrada",
-    descripcion_app: "Patron con alta intensidad satelital y registros oficiales relevantes.",
-    explicacion_app: "Combina conteos FIRMS elevados, FRP acumulado alto y superficie registrada por CONAFOR.",
+    estado_app: "Actividad térmica elevada",
+    etiqueta_final: "Actividad térmica elevada",
+    descripcion_app:
+      "El 100 % de los registros presenta detecciones térmicas; promedio de 9.3754 detecciones y 143.0353 unidades de FRP por registro; frecuencia histórica CONAFOR 11.00 veces el promedio global.",
+    explicacion_app:
+      "Patrón caracterizado por una elevada actividad térmica y una frecuencia histórica CONAFOR considerablemente superior al promedio global.",
     color_sugerido_app: CLUSTER_APP_COLORS[2],
     prioridad_visual_app: 1,
     dias: 18500,
   },
   {
     cluster_id: 3,
-    estado_app: "Condicion humeda sin incendio activo",
-    etiqueta_final: "Baja actividad por humedad o precipitacion",
-    descripcion_app: "Condicion con baja actividad termica asociada a mayor humedad o lluvia.",
-    explicacion_app: "El patron presenta baja deteccion satelital y precipitacion promedio relativamente alta.",
+    estado_app: "Precipitación elevada",
+    etiqueta_final: "Precipitación elevada",
+    descripcion_app:
+      "Presenta la mayor precipitación acumulada media, 47.80 mm, y la menor amplitud térmica media, 11.96 °C.",
+    explicacion_app:
+      "Patrón caracterizado por la mayor precipitación acumulada media y la menor amplitud térmica entre los grupos.",
     color_sugerido_app: CLUSTER_APP_COLORS[3],
     prioridad_visual_app: 6,
     dias: 42000,
   },
   {
     cluster_id: 4,
-    estado_app: "Condicion de riesgo climatico",
-    etiqueta_final: "Temperatura elevada sin confirmacion de incendio",
-    descripcion_app: "Riesgo ambiental elevado sin acumulacion equivalente de incendios confirmados.",
-    explicacion_app: "Predominan temperaturas altas y baja precipitacion, con actividad termica moderada o incipiente.",
+    estado_app: "Seco con alta amplitud térmica y señal histórica de CONAFOR",
+    etiqueta_final: "Seco con alta amplitud térmica y señal histórica de CONAFOR",
+    descripcion_app:
+      "Precipitación acumulada media de 3.21 mm, mayor amplitud térmica media entre los grupos, 18.34 °C, y frecuencia histórica CONAFOR 1.75 veces el promedio global.",
+    explicacion_app:
+      "Patrón caracterizado por condiciones secas, alta amplitud térmica y presencia de señal histórica de CONAFOR.",
     color_sugerido_app: CLUSTER_APP_COLORS[4],
     prioridad_visual_app: 3,
     dias: 61000,
   },
   {
     cluster_id: 5,
-    estado_app: "Incendio activo moderado",
-    etiqueta_final: "Actividad termica con registro parcial",
-    descripcion_app: "Patron con actividad termica clara y afectacion oficial moderada.",
-    explicacion_app: "Combina detecciones FIRMS persistentes con registros CONAFOR acotados.",
+    estado_app: "Actividad térmica de menor magnitud",
+    etiqueta_final: "Actividad térmica de menor magnitud",
+    descripcion_app:
+      "El 100 % de los registros presenta detecciones térmicas; promedio de 1.4737 detecciones y 9.3277 unidades de FRP por registro; frecuencia histórica CONAFOR 4.35 veces el promedio global.",
+    explicacion_app:
+      "Patrón con presencia constante de detecciones térmicas, pero de menor magnitud que el grupo de actividad térmica elevada.",
     color_sugerido_app: CLUSTER_APP_COLORS[5],
     prioridad_visual_app: 2,
     dias: 28500,
   },
   {
     cluster_id: 6,
-    estado_app: "Actividad residual o dispersa",
-    etiqueta_final: "Senales termicas bajas o fragmentadas",
-    descripcion_app: "Senales termicas dispersas que no forman un episodio dominante.",
-    explicacion_app: "El patron agrupa observaciones de baja magnitud, con poca continuidad temporal y territorial.",
+    estado_app: "Templado con precipitación intermedia",
+    etiqueta_final: "Templado con precipitación intermedia",
+    descripcion_app:
+      "Temperatura máxima media de 27.57 °C, mínima de 15.29 °C y precipitación acumulada media de 7.32 mm.",
+    explicacion_app:
+      "Patrón caracterizado por condiciones térmicas templadas y niveles intermedios de precipitación.",
     color_sugerido_app: CLUSTER_APP_COLORS[6],
     prioridad_visual_app: 4,
     dias: 13000,
@@ -167,10 +181,10 @@ const CLUSTER_APP_METADATA = [
 
 const CLUSTER_APP_METADATA_BY_ID = new Map(CLUSTER_APP_METADATA.map((row) => [Number(row.cluster_id), row]));
 
-const clusterLegendItems = (ML_APP_READY_DATA.entidad.catalog ?? []).map((cluster) => ({
-  label: cluster.cluster_label,
-  detail: cluster.cluster_name,
-  color: cluster.color_sugerido,
+const clusterLegendItems = CLUSTER_APP_METADATA.map((cluster) => ({
+  label: `Clúster ${cluster.cluster_id}`,
+  detail: cluster.estado_app,
+  color: cluster.color_sugerido_app,
   symbol: "fill",
 }));
 
